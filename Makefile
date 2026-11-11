@@ -12,7 +12,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 transform quality e2e-smoke smoke test-cov benchmark backup restore evidence
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 transform quality e2e-smoke smoke test-cov benchmark backup restore evidence
 
 help:
 	@echo "BMIP targets:"
@@ -33,6 +33,7 @@ help:
 	@echo "  ingest-live  Read a few trades and posts from the live sources"
 	@echo "  replay       Run the same replay without writing evidence"
 	@echo "  evidence-cp2 Refresh CP2 evidence from existing bronze and ledger rows"
+	@echo "  evidence-cp3 Replay twice and write T-26 idempotence evidence"
 	@echo "  transform    Run dbt silver and gold (W1-B)"
 	@echo "  quality      Run GX checkpoint (W1-C)"
 	@echo "  e2e-smoke    End-to-end smoke test (W1-A Tahap 3)"
@@ -109,6 +110,9 @@ replay: $(PYTHON)
 
 evidence-cp2: $(PYTHON)
 	$(PYTHON) scripts/cp2_evidence.py
+
+evidence-cp3: $(PYTHON)
+	$(PYTHON) scripts/cp3_evidence.py
 
 transform:
 	@echo "[stub] transform: implemented in W1-B"
