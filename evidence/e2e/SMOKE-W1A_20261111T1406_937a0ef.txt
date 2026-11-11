@@ -1,0 +1,92 @@
+id        : E2E-W1A
+timestamp : 2026-11-11T14:06:27Z
+commit    : 937a0ef
+command   : python scripts/e2e_smoke.py
+result    : PASS
+owner     : dhea
+
+| Check | Status | Detail |
+|---|---|---|
+| `traefik/ping` | PASS | HTTP 200 |
+| `traefik/api` | PASS | HTTP 200 |
+| `api/ready` | PASS | HTTP 200 |
+| `minio/live` | PASS | HTTP 200 |
+| `lakekeeper/health` | PASS | HTTP 200 |
+| `ingest/market/first` | PASS | exit=0 status=skipped_identical |
+| `ingest/social/first` | PASS | exit=0 status=skipped_identical |
+| `ingest/market/second` | PASS | exit=0 status=skipped_identical |
+| `ingest/social/second` | PASS | exit=0 status=skipped_identical |
+| `ingest/market/idempotent` | PASS | first=skipped_identical second=skipped_identical |
+| `ingest/social/idempotent` | PASS | first=skipped_identical second=skipped_identical |
+| `bronze/counts-stable` | PASS | before={"bronze.market_trade_raw": 3, "bronze.social_post_raw": 2} after={"bronze.market_trade_raw": 3, "bronze.social_post_raw": 2} |
+| `ledger/batches` | PASS | expected=['market-binance_vision-20261110T140001-900000003', 'social-bluesky-20261110T140500-d2383bf8'] rows=[{'batch_id': 'market-binance_vision-20261110T140001-900000003', 'checksum': 'fca553007fd161c60f64169d7626123bc7ff7aca12667f76b4ecba25d389ba07', 'row_count': 3, 'status': 'skipped_identical'}, {'batch_id': 'social-bluesky-20261110T140500-d2383bf8', 'checksum': 'd2383bf82cfdeb21ecb709ceb8249ab29aa0a98ee93a6dfd236f7e83dd3947ca', 'row_count': 2, 'status': 'skipped_identical'}] |
+
+=== replay output ===
+$ python -m bmip.ingestion.cli market --replay tests/fixtures/binance_agg_trades.jsonl
+exit_code: 0
+{"ts": "2026-11-11T14:06:32.368+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:32.466+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:32.563+00:00", "level": "INFO", "logger": "bmip.ingestion.pipeline", "message": "batch skipped because the checksum is unchanged", "batch_id": "market-binance_vision-20261110T140001-900000003", "checksum": "fca553007fd161c60f64169d7626123bc7ff7aca12667f76b4ecba25d389ba07"}
+{
+  "market": {
+    "batch_id": "market-binance_vision-20261110T140001-900000003",
+    "source": "binance_vision",
+    "row_count": 3,
+    "checksum": "fca553007fd161c60f64169d7626123bc7ff7aca12667f76b4ecba25d389ba07",
+    "status": "skipped_identical",
+    "bronze_table": "bronze.market_trade_raw",
+    "quarantined": 0
+  }
+}
+
+$ python -m bmip.ingestion.cli social --replay tests/fixtures/bluesky_posts.json
+exit_code: 0
+{"ts": "2026-11-11T14:06:37.415+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:37.488+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:37.574+00:00", "level": "INFO", "logger": "bmip.ingestion.pipeline", "message": "batch skipped because the checksum is unchanged", "batch_id": "social-bluesky-20261110T140500-d2383bf8", "checksum": "d2383bf82cfdeb21ecb709ceb8249ab29aa0a98ee93a6dfd236f7e83dd3947ca"}
+{
+  "social": {
+    "batch_id": "social-bluesky-20261110T140500-d2383bf8",
+    "source": "bluesky",
+    "row_count": 2,
+    "checksum": "d2383bf82cfdeb21ecb709ceb8249ab29aa0a98ee93a6dfd236f7e83dd3947ca",
+    "status": "skipped_identical",
+    "bronze_table": "bronze.social_post_raw",
+    "quarantined": 0
+  }
+}
+
+$ python -m bmip.ingestion.cli market --replay tests/fixtures/binance_agg_trades.jsonl
+exit_code: 0
+{"ts": "2026-11-11T14:06:41.725+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:41.795+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:41.904+00:00", "level": "INFO", "logger": "bmip.ingestion.pipeline", "message": "batch skipped because the checksum is unchanged", "batch_id": "market-binance_vision-20261110T140001-900000003", "checksum": "fca553007fd161c60f64169d7626123bc7ff7aca12667f76b4ecba25d389ba07"}
+{
+  "market": {
+    "batch_id": "market-binance_vision-20261110T140001-900000003",
+    "source": "binance_vision",
+    "row_count": 3,
+    "checksum": "fca553007fd161c60f64169d7626123bc7ff7aca12667f76b4ecba25d389ba07",
+    "status": "skipped_identical",
+    "bronze_table": "bronze.market_trade_raw",
+    "quarantined": 0
+  }
+}
+
+$ python -m bmip.ingestion.cli social --replay tests/fixtures/bluesky_posts.json
+exit_code: 0
+{"ts": "2026-11-11T14:06:44.892+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:44.960+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-11T14:06:45.038+00:00", "level": "INFO", "logger": "bmip.ingestion.pipeline", "message": "batch skipped because the checksum is unchanged", "batch_id": "social-bluesky-20261110T140500-d2383bf8", "checksum": "d2383bf82cfdeb21ecb709ceb8249ab29aa0a98ee93a6dfd236f7e83dd3947ca"}
+{
+  "social": {
+    "batch_id": "social-bluesky-20261110T140500-d2383bf8",
+    "source": "bluesky",
+    "row_count": 2,
+    "checksum": "d2383bf82cfdeb21ecb709ceb8249ab29aa0a98ee93a6dfd236f7e83dd3947ca",
+    "status": "skipped_identical",
+    "bronze_table": "bronze.social_post_raw",
+    "quarantined": 0
+  }
+}
+

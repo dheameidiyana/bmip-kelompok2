@@ -13,7 +13,9 @@ Proyek kelompok TBP Advanced Data Platform Engineering. Arsitektur lengkap ada d
 W1-A selesai dan gate CP1-CP3 lulus: enam service dev berjalan, kontrak dan replay
 ingestion menulis ke bronze, serta replay identik idempoten (`T-26`). Bronze social
 menyimpan `event_date` dan `ingest_ts`; harvester Bluesky memakai retry/backoff dan
-bisa berjalan per jam. Berikutnya W1-B (stream processing) dan W1-D (API).
+bisa berjalan per jam. `make e2e-smoke` memeriksa health, replay, bronze counts,
+ledger, dan idempotensi dalam satu gate. Berikutnya W1-B (stream processing) dan
+W1-D (API).
 
 ## Stack
 

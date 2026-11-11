@@ -115,27 +115,35 @@ local passwords survive the reset.
 
 ## Evidence
 
+Final evidence for commit `937a0ef`:
+
 CP1:
 
-- `evidence/deploy/health_<ts>_<sha>.md`
-- `evidence/deploy/compose-config_<ts>_<sha>.yml`
+- `evidence/deploy/health_20261111T1404_937a0ef.md`
+- `evidence/deploy/compose-config_20261111T1406_937a0ef.yml`
 
 CP2:
 
 - `evidence/tests/T01.json` — valid social post passes the contract
 - `evidence/tests/T02.json` — negative price is rejected at `$.price`
-- `evidence/ingestion/counts_<ts>.csv` — bronze row counts and timestamp range
-- `evidence/batch/ledger_<ts>.csv` — `ops.batch_runs` rows with checksums
+- `evidence/ingestion/counts_20261111T1405.csv` — bronze row counts and timestamp range
+- `evidence/batch/ledger_20261111T1405.csv` — `ops.batch_runs` rows with checksums
 
 CP3:
 
 - `evidence/batch/T26.json` — both replays return `skipped_identical`; counts
   are equal before and after
-- `evidence/ingestion/replay_<ts>.txt` — full output of two replay runs
+- `evidence/ingestion/replay_20261111T1405.txt` — full output of two replay runs
+
+E2E-W1A:
+
+- `evidence/e2e/SMOKE-W1A_20261111T1406_937a0ef.txt` — health endpoints, replay,
+  bronze counts, ledger rows, and idempotence
 
 `make doctor` refreshes the health file. `make compose-config` refreshes the
 compose file. `make evidence-cp2` and `make evidence-cp3` refresh the CP2/CP3
-files. All are generated, not hand-written.
+files. `make e2e-smoke` refreshes the E2E file. All are generated, not
+hand-written.
 
 Secret check: `.env` is not tracked, `.env.example` contains every key used by
 `.env`, and no `.env` password value appears in tracked files.
