@@ -10,8 +10,7 @@ Proyek kelompok TBP Advanced Data Platform Engineering. Arsitektur lengkap ada d
 
 ## Status
 
-Tahap 0 (repo skeleton). Implementasi W1-A sedang berjalan; belum ada layanan yang
-bisa dijalankan sampai compose dev tersedia.
+Implementasi W1-A (Foundation dan bronze) sedang berjalan.
 
 ## Stack
 
@@ -31,10 +30,14 @@ bisa dijalankan sampai compose dev tersedia.
 ```text
 contracts/        JSON Schema kontrak data
 deploy/           compose, env, policy MinIO, init PostgreSQL, Traefik
+dbt/              dbt project (silver + gold)
 src/bmip/         kode aplikasi
-  common/         config, logging, validator kontrak
-  ingest/         producer Binance, harvester Bluesky, adapter
-  process/        stream processor dan penulis bronze/silver
+  common/         config, logging, kontrak, ledger
+  ingestion/      producer Binance, harvester Bluesky, adapter, bronze writer
+  transform/      transformasi silver dan gold
+  quality/        Great Expectations
+  serving/        loader serving dan API
+  ml/             fitur, training, inference, drift
 tests/            unit, contract, integration
 docs/             ADR, runbook, handoff
 evidence/         bukti test, deploy, ingestion
