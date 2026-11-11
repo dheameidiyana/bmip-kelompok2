@@ -16,6 +16,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install
+        timeout-minutes: 10
         run: pip install -e ".[dev]"
 
       - name: Prepare compose env
