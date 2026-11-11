@@ -10,7 +10,7 @@
 - CP1: PASS
 - CP2: PASS
 - CP3: PASS
-- Tag: `w1-a-ok` (created after this commit)
+- Tag: `w1-a-ok` (dipindah ke commit evidence final)
 
 Gate: trade and post are in bronze in replay mode; `T-26` shows a second
 identical replay is skipped and bronze counts stay unchanged.
@@ -45,8 +45,14 @@ Ingestion (CP2) now works end to end:
 - Binance `aggTrade` producer over WebSocket plus a Binance Vision/download
   replay path. The replay fixture produces the same `market.trades` messages.
 - Bluesky search harvester with a replay fixture and a persisted watermark.
-- Append-only PyIceberg tables `bronze.market_trade_raw` (partitioned by
-  `event_date`) and `bronze.social_post_raw` (partitioned by `ingest_date`).
+  Live requests retry `429`/`5xx`/transport errors up to five times with
+  exponential backoff (1-60s), honor `Retry-After`, and cache only successful
+  pages. `social --live --interval 3600` repeats the harvest hourly.
+- Social records carry both `created_at` and required `ingest_ts`; the contract
+  rejects `ingest_ts` that is more than one second before `created_at`.
+- Append-only PyIceberg tables `bronze.market_trade_raw` and
+  `bronze.social_post_raw`, both partitioned by `event_date`. Social bronze also
+  stores `ingest_ts`.
 - `ops.batch_runs` records deterministic batch ids, checksums, row counts, and
   terminal status. Replaying identical data returns `skipped_identical` without
   appending duplicate bronze rows.
@@ -82,6 +88,12 @@ Windows (recommended, handles Git's `sh` path for GNU Make):
 the CP2 evidence. `make replay` skips evidence generation. `make ingest-live`
 reads a small number of live records; it needs outbound access to Binance and
 Bluesky.
+
+Harvest sosial per jam (Ctrl+C berhenti bersih):
+
+```powershell
+.venv\Scripts\python.exe -m bmip.ingestion.cli social --live --interval 3600
+```
 
 Linux/macOS or a shell where `make` and `/bin/sh` are native:
 
@@ -141,6 +153,9 @@ Key points:
 - Bronze tables have explicit locations under
   `s3://lakehouse/warehouse/bronze.db/`. Without an explicit location Lakekeeper
   uses a per-table UUID path, which makes the MinIO policy needlessly broad.
+- Social bronze moved from `ingest_date` to event-time `event_date` plus
+  `ingest_ts`, matching the market table. The dev stack must be reset once when
+  moving from an older schema because Iceberg partition specs are immutable.
 - Host-side PyIceberg bypasses Lakekeeper remote signing. The warehouse endpoint
   (`host.docker.internal:9000`) is only reachable from containers, so the bronze
   writer replaces the table IO with the host endpoint (`localhost:9000`) while
@@ -154,7 +169,7 @@ Key points:
 2. Read `evidence/batch/T26.json` and the ledger to see the batch id and
    checksum conventions W1-B must preserve.
 3. Consume `market.trades` from Redpanda; bronze rows already carry `batch_id`,
-   `payload_hash`, `event_ts`, and `ingest_ts`.
+   `payload_hash`, `event_date`/`event_ts`, and `ingest_ts`.
 4. Keep `make ci` green before opening the W1-B PR.
 
 ## Notes for other slots

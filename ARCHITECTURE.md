@@ -1089,8 +1089,8 @@ MinIO buckets:
 ```text
 s3://lakehouse/
   bronze/
-    social/source=bluesky/ingest_date=2026-11-10/hour=14/part-000.jsonl.zst
-    social/source=bluesky/ingest_date=2026-11-10/hour=14/_manifest.json
+    social/source=bluesky/event_date=2026-11-10/hour=14/part-000.jsonl.zst
+    social/source=bluesky/event_date=2026-11-10/hour=14/_manifest.json
     market/source=binance_ws/event_date=2026-11-10/hour=14/part-<batch_start>.parquet
     klines/source=binance_vision/symbol=BTCUSDT/interval=1m/year=2026/month=10/
   quarantine/
@@ -1113,7 +1113,7 @@ Lakekeeper is the REST catalog. Its metadata lives in `postgres-core`. The wareh
 
 | Table | Layer | Grain | Partition | Retention | Owner |
 |---|---|---|---|---|---|
-| `bronze.social_post_raw` | Bronze | One row per raw post | `ingest_date` | 14 days | Data engineering |
+| `bronze.social_post_raw` | Bronze | One row per raw post | `event_date` | 14 days | Data engineering |
 | `bronze.market_trade_raw` | Bronze | One row per trade | `event_date` | 14 days | Data engineering |
 | `bronze.market_kline_raw` | Bronze | One row per minute kline | `event_date` | 14 days | Data engineering |
 | `silver.social_post` | Silver | One row per unique post, keyed by `post_key` | `event_date` | 30 days | Data engineering |
@@ -1414,7 +1414,7 @@ flowchart TD
 
 | Operation | Key | Behaviour on re-run |
 |---|---|---|
-| Bronze social partition | `(source, ingest_date, hour)` | Overwrite the partition, write a new manifest |
+| Bronze social batch | `batch_id` + `checksum` | Identical replay returns `skipped_identical`; no duplicate rows |
 | Bronze market micro-batch | `(source, event_date, hour, batch_start)` | A deterministic part name per batch; a replay overwrites the same batch object |
 | Silver OHLC minute | `(symbol, window_start)` | Partition overwrite of the affected minute |
 | Silver features minute | `(symbol, window_start)` | Partition overwrite |

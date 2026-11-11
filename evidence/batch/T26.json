@@ -1,7 +1,7 @@
 {
   "id": "T-26",
-  "timestamp": "2026-11-11T04:56:58Z",
-  "commit": "03338fa",
+  "timestamp": "2026-11-11T13:30:00Z",
+  "commit": "aff010a",
   "command": "python scripts/cp3_evidence.py",
   "result": "PASS",
   "owner": "dhea",
@@ -31,5 +31,5 @@
       "bronze.social_post_raw": 2
     }
   },
-  "replay_log": "evidence/ingestion/replay_20261111T0456.txt"
+  "replay_log": "evidence/ingestion/replay_20261111T1330.txt"
 }

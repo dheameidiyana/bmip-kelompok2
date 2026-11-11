@@ -10,8 +10,10 @@ Proyek kelompok TBP Advanced Data Platform Engineering. Arsitektur lengkap ada d
 
 ## Status
 
-CP1 W1-A selesai: enam service dev berjalan, bucket dan namespace tersedia,
-`make doctor` hijau. Berikutnya Tahap 2 (kontrak, producer, harvester, bronze).
+W1-A selesai dan gate CP1-CP3 lulus: enam service dev berjalan, kontrak dan replay
+ingestion menulis ke bronze, serta replay identik idempoten (`T-26`). Bronze social
+menyimpan `event_date` dan `ingest_ts`; harvester Bluesky memakai retry/backoff dan
+bisa berjalan per jam. Berikutnya W1-B (stream processing) dan W1-D (API).
 
 ## Stack
 
@@ -84,9 +86,17 @@ Port host dev:
 Perintah operasional:
 
 ```powershell
-.\scripts\make.ps1 dev-down    # stop stack, data tetap
-.\scripts\make.ps1 reset       # hapus volume lalu dev-up bersih
-.\scripts\make.ps1 ci          # compose config + lint + test
+.\scripts\make.ps1 dev-down     # stop stack, data tetap
+.\scripts\make.ps1 reset        # hapus volume lalu dev-up bersih
+.\scripts\make.ps1 ingest-once  # replay market + social, refresh evidence CP2
+.\scripts\make.ps1 evidence-cp3 # replay dua kali, cek idempotensi T-26
+.\scripts\make.ps1 ci           # compose config + lint + test
+```
+
+Harvester sosial per jam (Ctrl+C berhenti bersih):
+
+```powershell
+.venv\Scripts\python.exe -m bmip.ingestion.cli social --live --interval 3600
 ```
 
 `make secrets` tidak menimpa `.env` yang sudah ada. Hapus `.env` manual jika
