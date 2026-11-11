@@ -90,7 +90,6 @@ def prepare_social(
             rejected.append(_rejected(raw, result.errors))
             continue
         record = result.model.model_dump(mode="python")
-        record["ingest_date"] = record["created_at"].astimezone(UTC).date()
         valid.append((record, canonical_json(raw)))
     return valid, rejected
 

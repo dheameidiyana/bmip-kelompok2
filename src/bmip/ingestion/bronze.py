@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -68,7 +68,8 @@ def _iceberg_social_schema() -> Schema:
         NestedField(16, "payload_hash", StringType(), required=True),
         NestedField(17, "batch_id", StringType(), required=True),
         NestedField(18, "raw_payload", StringType(), required=True),
-        NestedField(19, "ingest_date", DateType(), required=True),
+        NestedField(19, "event_date", DateType(), required=True),
+        NestedField(20, "ingest_ts", TimestamptzType(), required=True),
     )
 
 
@@ -113,7 +114,8 @@ SOCIAL_ARROW_SCHEMA = pa.schema(
         _field("payload_hash", pa.large_string()),
         _field("batch_id", pa.large_string()),
         _field("raw_payload", pa.large_string()),
-        _field("ingest_date", pa.date32()),
+        _field("event_date", pa.date32()),
+        _field("ingest_ts", pa.timestamp("us", tz="UTC")),
     ]
 )
 
@@ -167,7 +169,7 @@ class BronzeWriter:
                     source_id=19,
                     field_id=1000,
                     transform=IdentityTransform(),
-                    name="ingest_date",
+                    name="event_date",
                 )
             ),
         )
@@ -242,7 +244,6 @@ def build_market_row(record: dict[str, Any], batch_id: str, raw_payload: str) ->
 
 def build_social_row(record: dict[str, Any], batch_id: str, raw_payload: str) -> dict[str, Any]:
     created_at: datetime = record["created_at"]
-    ingest_date: date = record.get("ingest_date") or created_at.date()
     return {
         "post_uri": record["post_uri"],
         "author_did": record["author_did"],
@@ -261,5 +262,6 @@ def build_social_row(record: dict[str, Any], batch_id: str, raw_payload: str) ->
         "payload_hash": record["payload_hash"],
         "batch_id": batch_id,
         "raw_payload": raw_payload,
-        "ingest_date": ingest_date,
+        "event_date": created_at.astimezone(UTC).date(),
+        "ingest_ts": record["ingest_ts"],
     }

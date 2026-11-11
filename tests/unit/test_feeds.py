@@ -3,6 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import httpx
+
+from bmip.ingestion import feeds
 from bmip.ingestion.feeds import (
     iter_static_market,
     iter_static_social,
@@ -47,7 +50,34 @@ def test_map_bluesky_post_extracts_hashtags() -> None:
     record = map_bluesky_post(posts[0])
     assert record["post_uri"].startswith("at://")
     assert record["hashtags"] == ["bitcoin"]
-    assert record["raw_ref"].startswith("iceberg://lakehouse/bronze.social_post_raw")
+    assert record["ingest_ts"].endswith("Z")
+    assert record["raw_ref"].endswith("event_date=2026-11-10")
+
+
+def test_bluesky_search_retries_429(monkeypatch) -> None:
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request.url)
+        if len(calls) == 1:
+            return httpx.Response(429, headers={"Retry-After": "0"})
+        return httpx.Response(200, json={"posts": []})
+
+    transport = httpx.MockTransport(handler)
+    real_client = httpx.Client
+
+    def client_factory(**kwargs):
+        return real_client(transport=transport, **kwargs)
+
+    sleeps: list[float] = []
+    monkeypatch.setattr(feeds.httpx, "Client", client_factory)
+    monkeypatch.setattr(feeds.time, "sleep", sleeps.append)
+
+    posts = list(feeds.iter_bluesky_search("bitcoin", max_pages=1))
+
+    assert posts == []
+    assert len(calls) == 2
+    assert sleeps == [0.0]
 
 
 def test_static_replays_are_readable() -> None:

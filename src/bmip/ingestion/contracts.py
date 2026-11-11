@@ -113,6 +113,7 @@ class SocialPostV1(BaseModel):
     author_did: str = Field(min_length=3)
     author_handle: str | None = None
     created_at: AwareDatetime
+    ingest_ts: AwareDatetime
     lang: str | None = None
     text: str = Field(min_length=1, max_length=2000)
     hashtags: list[str] = Field(default_factory=list, max_length=20)
@@ -134,6 +135,12 @@ class SocialPostV1(BaseModel):
         if value < now - SOCIAL_MAX_AGE:
             raise ValueError("created_at is older than 30 days")
         return value
+
+    @model_validator(mode="after")
+    def _ingest_not_before_created(self) -> SocialPostV1:
+        if self.ingest_ts < self.created_at - timedelta(seconds=1):
+            raise ValueError("ingest_ts is more than 1 second before created_at")
+        return self
 
 
 def validate_market_trade(payload: dict[str, Any]) -> ValidationResult:

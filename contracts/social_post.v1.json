@@ -8,6 +8,7 @@
     "post_uri",
     "author_did",
     "created_at",
+    "ingest_ts",
     "text",
     "like_count",
     "repost_count",
@@ -33,6 +34,10 @@
       "type": ["string", "null"]
     },
     "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ingest_ts": {
       "type": "string",
       "format": "date-time"
     },

@@ -30,6 +30,9 @@ log = get_logger(__name__)
 BINANCE_VISION_BASE = "https://data.binance.vision"
 BLUESKY_BASE = "https://api.bsky.app"
 SOCIAL_REPLAY_TABLE = "iceberg://lakehouse/bronze.social_post_raw"
+BLUESKY_RETRY_STATUS = {429, 500, 502, 503, 504}
+BLUESKY_MAX_ATTEMPTS = 5
+BLUESKY_MAX_BACKOFF = 60.0
 
 
 def now_utc() -> datetime:
@@ -129,6 +132,7 @@ def map_bluesky_post(raw: dict[str, Any], ingest_ts: datetime | None = None) -> 
     created = datetime.fromisoformat(str(created_at).replace("Z", "+00:00"))
     if created.tzinfo is None:
         created = created.replace(tzinfo=UTC)
+    ingest = ingest_ts or now_utc()
     langs = record.get("langs") or []
     event_date = created.astimezone(UTC).date().isoformat()
     return {
@@ -136,6 +140,7 @@ def map_bluesky_post(raw: dict[str, Any], ingest_ts: datetime | None = None) -> 
         "author_did": author.get("did") or "",
         "author_handle": author.get("handle"),
         "created_at": iso_z(created),
+        "ingest_ts": iso_z(ingest),
         "lang": langs[0] if langs else None,
         "text": record.get("text") or "",
         "hashtags": _bluesky_hashtags(record),
@@ -295,6 +300,68 @@ def _cache_page(cache_dir: Path, query: str, page: int, payload: dict[str, Any])
     target.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
 
+def _retry_delay(response: httpx.Response | None, attempt: int) -> float:
+    if response is not None:
+        retry_after = response.headers.get("Retry-After")
+        if retry_after:
+            try:
+                return min(max(float(retry_after), 0.0), BLUESKY_MAX_BACKOFF)
+            except ValueError:
+                pass
+    return min(2.0 ** (attempt - 1), BLUESKY_MAX_BACKOFF)
+
+
+def _bluesky_get(
+    client: httpx.Client,
+    base_url: str,
+    params: dict[str, Any],
+) -> httpx.Response:
+    last_response: httpx.Response | None = None
+    last_error: Exception | None = None
+    for attempt in range(1, BLUESKY_MAX_ATTEMPTS + 1):
+        try:
+            response = client.get(
+                f"{base_url}/xrpc/app.bsky.feed.searchPosts",
+                params=params,
+            )
+        except httpx.TransportError as exc:
+            last_error = exc
+            if attempt == BLUESKY_MAX_ATTEMPTS:
+                break
+            delay = _retry_delay(None, attempt)
+            log.warning(
+                "bluesky request transport error",
+                extra={"ctx_attempt": attempt, "ctx_backoff": delay, "ctx_error": str(exc)},
+            )
+            time.sleep(delay)
+            continue
+
+        last_response = response
+        if response.status_code in BLUESKY_RETRY_STATUS:
+            if attempt == BLUESKY_MAX_ATTEMPTS:
+                response.raise_for_status()
+            delay = _retry_delay(response, attempt)
+            log.warning(
+                "bluesky request retry",
+                extra={
+                    "ctx_attempt": attempt,
+                    "ctx_status": response.status_code,
+                    "ctx_backoff": delay,
+                },
+            )
+            time.sleep(delay)
+            continue
+
+        response.raise_for_status()
+        return response
+
+    if last_error is not None:
+        raise last_error
+    if last_response is not None:
+        last_response.raise_for_status()
+    raise RuntimeError("Bluesky request failed without a response")
+
+
 def iter_bluesky_search(
     query: str,
     limit: int = 100,
@@ -315,8 +382,7 @@ def iter_bluesky_search(
                 params["since"] = iso_z(since)
             if until:
                 params["until"] = iso_z(until)
-            response = client.get(f"{base_url}/xrpc/app.bsky.feed.searchPosts", params=params)
-            response.raise_for_status()
+            response = _bluesky_get(client, base_url, params)
             body = response.json()
             if cache_dir is not None:
                 _cache_page(cache_dir, query, page, body)

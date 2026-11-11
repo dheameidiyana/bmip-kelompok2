@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -105,6 +106,12 @@ def build_parser() -> argparse.ArgumentParser:
     social.add_argument("--replay", type=Path, help="read a Bluesky JSON fixture")
     social.add_argument("--max-pages", type=int, default=None)
     social.add_argument("--limit", type=int, default=100)
+    social.add_argument(
+        "--interval",
+        type=int,
+        default=0,
+        help="repeat the harvest every N seconds (0 = run once)",
+    )
 
     return parser
 
@@ -123,9 +130,27 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"market": result.as_dict()}, indent=2))
         else:
             args.max_pages = args.max_pages or settings.social_max_pages
-            items = _social_items(args, settings)
-            result = run_social_batch(settings, items)
-            print(json.dumps({"social": result.as_dict()}, indent=2))
+            while True:
+                try:
+                    items = _social_items(args, settings)
+                    result = run_social_batch(settings, items)
+                    print(json.dumps({"social": result.as_dict()}, indent=2))
+                except Exception as exc:
+                    log.exception("ingestion failed")
+                    print(
+                        json.dumps({"status": "failed", "error": str(exc)}),
+                        file=sys.stderr,
+                    )
+                    if not args.interval:
+                        return 1
+                if not args.interval:
+                    return 0
+                try:
+                    time.sleep(args.interval)
+                except KeyboardInterrupt:
+                    return 0
+    except KeyboardInterrupt:
+        return 0
     except Exception as exc:
         log.exception("ingestion failed")
         print(json.dumps({"status": "failed", "error": str(exc)}), file=sys.stderr)

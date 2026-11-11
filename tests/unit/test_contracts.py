@@ -40,6 +40,14 @@ def test_market_contract_rejects_future_event() -> None:
     assert any(issue.path == "$.event_ts" for issue in result.errors)
 
 
+def test_social_contract_requires_ingest_ts() -> None:
+    payload = load_fixture("social_post_valid.json")
+    del payload["ingest_ts"]
+    result = validate_social_post(payload)
+    assert result.ok is False
+    assert any("ingest_ts" in issue.message for issue in result.errors)
+
+
 def test_social_contract_rejects_non_at_uri() -> None:
     result = validate_social_post(load_fixture("social_post_invalid_uri.json"))
     assert result.ok is False
