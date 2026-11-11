@@ -12,7 +12,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once transform quality e2e-smoke smoke test-cov benchmark backup restore evidence
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 transform quality e2e-smoke smoke test-cov benchmark backup restore evidence
 
 help:
 	@echo "BMIP targets:"
@@ -29,7 +29,10 @@ help:
 	@echo "  lint         Run ruff and sqlfluff"
 	@echo "  test         Run unit and contract tests"
 	@echo "  ci           Local mirror of the CI gate"
-	@echo "  ingest-once  Run one harvest and one producer replay (W1-A Tahap 2)"
+	@echo "  ingest-once  Replay one trade batch and one post batch, then write CP2 evidence"
+	@echo "  ingest-live  Read a few trades and posts from the live sources"
+	@echo "  replay       Run the same replay without writing evidence"
+	@echo "  evidence-cp2 Refresh CP2 evidence from existing bronze and ledger rows"
 	@echo "  transform    Run dbt silver and gold (W1-B)"
 	@echo "  quality      Run GX checkpoint (W1-C)"
 	@echo "  e2e-smoke    End-to-end smoke test (W1-A Tahap 3)"
@@ -91,9 +94,21 @@ test: $(PYTHON)
 
 ci: compose-config two-node-config lint test
 
-ingest-once:
-	@echo "[stub] ingest-once: implemented in W1-A Tahap 2"
-	@exit 1
+ingest-once: $(PYTHON)
+	$(PYTHON) -m bmip.ingestion.cli market --replay tests/fixtures/binance_agg_trades.jsonl
+	$(PYTHON) -m bmip.ingestion.cli social --replay tests/fixtures/bluesky_posts.json
+	$(PYTHON) scripts/cp2_evidence.py
+
+ingest-live: $(PYTHON)
+	$(PYTHON) -m bmip.ingestion.cli market --live --max-records 5
+	$(PYTHON) -m bmip.ingestion.cli social --live --max-pages 1
+
+replay: $(PYTHON)
+	$(PYTHON) -m bmip.ingestion.cli market --replay tests/fixtures/binance_agg_trades.jsonl
+	$(PYTHON) -m bmip.ingestion.cli social --replay tests/fixtures/bluesky_posts.json
+
+evidence-cp2: $(PYTHON)
+	$(PYTHON) scripts/cp2_evidence.py
 
 transform:
 	@echo "[stub] transform: implemented in W1-B"

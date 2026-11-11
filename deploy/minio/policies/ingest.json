@@ -9,7 +9,11 @@
     {
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload"],
-      "Resource": ["arn:aws:s3:::lakehouse/bronze/*", "arn:aws:s3:::quarantine/*"]
+      "Resource": [
+        "arn:aws:s3:::lakehouse/bronze/*",
+        "arn:aws:s3:::lakehouse/warehouse/bronze.db/*",
+        "arn:aws:s3:::quarantine/*"
+      ]
     }
   ]
 }

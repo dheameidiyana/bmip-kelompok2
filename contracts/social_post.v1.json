@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bmip.local/contracts/social_post.v1.json",
+  "title": "SocialPostV1",
+  "description": "One validated Bluesky post captured at the bronze boundary. Version 1.0.",
+  "type": "object",
+  "required": [
+    "post_uri",
+    "author_did",
+    "created_at",
+    "text",
+    "like_count",
+    "repost_count",
+    "reply_count",
+    "quote_count",
+    "source",
+    "schema_version",
+    "raw_ref",
+    "payload_hash"
+  ],
+  "properties": {
+    "post_uri": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 512,
+      "pattern": "^at://"
+    },
+    "author_did": {
+      "type": "string",
+      "minLength": 3
+    },
+    "author_handle": {
+      "type": ["string", "null"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lang": {
+      "type": ["string", "null"]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "maxItems": 20
+    },
+    "like_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "repost_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reply_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "quote_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": {
+      "const": "bluesky"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "raw_ref": {
+      "type": "string",
+      "minLength": 3
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

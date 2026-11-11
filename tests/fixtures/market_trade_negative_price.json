@@ -1,0 +1,12 @@
+{
+  "symbol": "BTCUSDT",
+  "trade_id": 900000002,
+  "event_ts": "2026-11-10T14:00:02.456Z",
+  "price": -1,
+  "qty": 0.01,
+  "is_buyer_maker": true,
+  "ingest_ts": "2026-11-10T14:00:02.556Z",
+  "source": "binance_vision",
+  "schema_version": "1.0",
+  "payload_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bmip.local/contracts/market_trade.v1.json",
+  "title": "MarketTradeV1",
+  "description": "One validated Binance aggregate trade. Version 1.0.",
+  "type": "object",
+  "required": [
+    "symbol",
+    "trade_id",
+    "event_ts",
+    "price",
+    "qty",
+    "is_buyer_maker",
+    "ingest_ts",
+    "source",
+    "schema_version",
+    "payload_hash"
+  ],
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "enum": ["BTCUSDT"]
+    },
+    "trade_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "price": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "qty": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "is_buyer_maker": {
+      "type": "boolean"
+    },
+    "ingest_ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["binance_ws", "binance_vision", "binance_rest"]
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "uri": "at://did:plc:example123/app.bsky.feed.post/3kexample101",
+    "cid": "bafyexample101",
+    "author": {
+      "did": "did:plc:example123",
+      "handle": "alice.bsky.social"
+    },
+    "record": {
+      "createdAt": "2026-11-10T14:05:00.000Z",
+      "text": "BTC looks strong today #bitcoin",
+      "langs": ["en"],
+      "facets": [
+        {
+          "features": [
+            {
+              "$type": "app.bsky.richtext.facet#tag",
+              "tag": "bitcoin"
+            }
+          ]
+        }
+      ]
+    },
+    "likeCount": 10,
+    "repostCount": 2,
+    "replyCount": 1,
+    "quoteCount": 0
+  },
+  {
+    "uri": "at://did:plc:example456/app.bsky.feed.post/3kexample102",
+    "cid": "bafyexample102",
+    "author": {
+      "did": "did:plc:example456",
+      "handle": "bob.bsky.social"
+    },
+    "record": {
+      "createdAt": "2026-11-10T14:06:30.000Z",
+      "text": "Watching BTC volatility into the close",
+      "langs": ["en"],
+      "facets": []
+    },
+    "likeCount": 4,
+    "repostCount": 1,
+    "replyCount": 0,
+    "quoteCount": 0
+  }
+]

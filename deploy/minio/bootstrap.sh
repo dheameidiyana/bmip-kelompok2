@@ -28,11 +28,10 @@ create_user() {
     $MC admin user add local "$user_key" "$user_secret" >/dev/null 2>&1 || true
     $MC admin user enable local "$user_key" >/dev/null 2>&1 || true
 
-    if ! $MC admin policy info local "$policy_name" >/dev/null 2>&1; then
-        $MC admin policy create local "$policy_name" "$policy_file" >/dev/null
-    fi
-
-    $MC admin policy attach local "$policy_name" --user "$user_key" >/dev/null 2>&1 || true
+    $MC admin policy detach local "$policy_name" --user "$user_key" >/dev/null 2>&1 || true
+    $MC admin policy remove local "$policy_name" >/dev/null 2>&1 || true
+    $MC admin policy create local "$policy_name" "$policy_file" >/dev/null
+    $MC admin policy attach local "$policy_name" --user "$user_key" >/dev/null
     echo "  user ${user_key} -> ${policy_name}"
 }
 

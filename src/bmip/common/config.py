@@ -46,9 +46,14 @@ class Settings:
     market_topic: str
     market_symbol: str
     market_feed: str
+    market_ws_url: str
+    market_replay_file: str
     social_feed: str
     social_query: str
     social_max_pages: int
+    social_replay_file: str
+    bluesky_base_url: str
+    binance_vision_base_url: str
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -81,9 +86,24 @@ class Settings:
             market_topic=os.getenv("MARKET_TOPIC", "market.trades"),
             market_symbol=os.getenv("MARKET_SYMBOL", "BTCUSDT"),
             market_feed=os.getenv("MARKET_FEED", "binance_ws"),
+            market_ws_url=os.getenv(
+                "MARKET_WS_URL", "wss://stream.binance.com:9443/ws"
+            ),
+            market_replay_file=os.getenv(
+                "MARKET_REPLAY_FILE", "tests/fixtures/binance_agg_trades.jsonl"
+            ),
             social_feed=os.getenv("SOCIAL_FEED", "bluesky"),
             social_query=os.getenv("SOCIAL_QUERY", "bitcoin OR btc OR crypto"),
             social_max_pages=int(os.getenv("SOCIAL_MAX_PAGES", "50")),
+            social_replay_file=os.getenv(
+                "SOCIAL_REPLAY_FILE", "tests/fixtures/bluesky_posts.json"
+            ),
+            bluesky_base_url=os.getenv(
+                "BLUESKY_BASE_URL", "https://api.bsky.app"
+            ),
+            binance_vision_base_url=os.getenv(
+                "BINANCE_VISION_BASE_URL", "https://data.binance.vision"
+            ),
         )
 
     def minio_credentials(self, service: str) -> tuple[str, str]:
