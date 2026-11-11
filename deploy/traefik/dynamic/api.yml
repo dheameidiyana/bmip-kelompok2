@@ -1,0 +1,13 @@
+http:
+  routers:
+    api:
+      rule: "PathPrefix(`/api`) || PathPrefix(`/health`)"
+      entryPoints:
+        - web
+      service: api
+
+  services:
+    api:
+      loadBalancer:
+        servers:
+          - url: "http://api:8000"

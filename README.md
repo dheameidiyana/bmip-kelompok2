@@ -10,7 +10,8 @@ Proyek kelompok TBP Advanced Data Platform Engineering. Arsitektur lengkap ada d
 
 ## Status
 
-Implementasi W1-A (Foundation dan bronze) sedang berjalan.
+CP1 W1-A selesai: enam service dev berjalan, bucket dan namespace tersedia,
+`make doctor` hijau. Berikutnya Tahap 2 (kontrak, producer, harvester, bronze).
 
 ## Stack
 
@@ -48,12 +49,50 @@ scripts/          utilitas operasional
 
 - Windows 11 + WSL2 + Docker Desktop (nyalakan sebelum menjalankan target)
 - Python 3.11
-- GNU Make, dijalankan dari Git Bash
-- Git
+- GNU Make (`winget install ezwinports.make`) dan Git untuk Windows
+- Linux/macOS: `make`, `sh`, Docker Compose v2
+
+Di Windows, jalankan target lewat `.\scripts\make.ps1` agar GNU Make memakai
+`sh` dari Git for Windows. Di Linux/macOS, `make` bisa dipakai langsung.
 
 ## Quick start
 
-Belum tersedia. Akan diisi pada Tahap 1 (CP1 W1-A) setelah compose dev dibuat.
+```powershell
+.\scripts\make.ps1 setup       # buat .venv dan install dependensi
+.\scripts\make.ps1 secrets     # buat .env dengan secret acak (sekali)
+.\scripts\make.ps1 dev-up      # nyalakan 6 service + bootstrap storage
+.\scripts\make.ps1 doctor      # cek health dan tulis evidence CP1
+```
+
+Setara di Linux/macOS:
+
+```bash
+make setup && make secrets && make dev-up && make doctor
+```
+
+Port host dev:
+
+| Service | Port |
+| --- | --- |
+| Traefik | 8080 (HTTP), 8082 (ping) |
+| API placeholder | 8000 |
+| MinIO | 9000 (S3), 9001 (console) |
+| Lakekeeper | 8181 |
+| PostgreSQL core | 5433 |
+| Redpanda | 19092 (Kafka), 9644 (admin) |
+
+Perintah operasional:
+
+```powershell
+.\scripts\make.ps1 dev-down    # stop stack, data tetap
+.\scripts\make.ps1 reset       # hapus volume lalu dev-up bersih
+.\scripts\make.ps1 ci          # compose config + lint + test
+```
+
+`make secrets` tidak menimpa `.env` yang sudah ada. Hapus `.env` manual jika
+ingin merotasi seluruh secret lokal. Detail keputusan dan deviasi ada di
+`docs/adr/0001-w1-a-foundation.md`, status serah terima ada di
+`docs/handoff/w1-a.md`.
 
 ## Model branch
 
