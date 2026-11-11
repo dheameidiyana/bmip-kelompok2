@@ -61,11 +61,39 @@ The local laptop already runs PostgreSQL on `5432`, so the dev overlay publishes
 container `5432` as host `5433`. The container-internal DSN still uses `5432`.
 `POSTGRES_CORE_DSN` in `.env.example` points at `localhost:5433`.
 
-### D6. Secrets
+### D6. Bronze table locations and host-side IO
+
+Bronze tables are created with explicit locations under
+`s3://lakehouse/warehouse/bronze.db/<table>`. Lakekeeper would otherwise assign
+a per-table UUID path, requiring every service policy to allow
+`lakehouse/warehouse/*`; explicit locations keep policies scoped to the bronze
+prefix.
+
+Lakekeeper enables S3 remote signing and advertises the warehouse endpoint as
+`http://host.docker.internal:9000`, which is not reachable from the Windows
+host. The ingestion writer therefore replaces the loaded table's `FileIO` with
+one built from the host endpoint (`http://localhost:9000`) and normal static
+credentials. Iceberg metadata commits still go through Lakekeeper; only data
+file IO is local. Containerized services do not need this workaround.
+
+### D7. MinIO policies are refreshed on bootstrap
+
+`deploy/minio/bootstrap.sh` detaches, removes, recreates, and reattaches each
+managed policy on every `make bootstrap` run. The earlier create-if-missing
+logic silently kept stale policies after resource changes.
+
+### D8. Secrets
 
 `make secrets` generates `.env` from `.env.example` with random
 `token_urlsafe` values and never overwrites an existing file. `.env` is
 gitignored. CI uses `deploy/env/ci.env.example` with dummy values only.
+
+### D9. Compose evidence uses no interpolation
+
+`make compose-config` runs `docker compose config --no-interpolate`. Plain
+`config` renders real `.env` values, including passwords, into the evidence
+file. `--no-interpolate` keeps `${VAR}` placeholders while still validating the
+Compose model, so the evidence is safe to commit.
 
 ## Consequences
 

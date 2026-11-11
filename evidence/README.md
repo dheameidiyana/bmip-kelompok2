@@ -25,7 +25,7 @@ owner     : dhea
 
 Isi saat evidence freeze:
 
-- Commit SHA: `a08b0fb` (commit CP1)
+- Commit SHA: `115b767` (commit CP2)
 - Profil compose: `dev` (`deploy/compose.base.yml` + `deploy/compose.dev.yml`)
 - OS / Docker / Compose: Windows 11 Home 10.0.26200 / Docker 29.7.2 / Compose 5.5.0
 - Python: 3.11.9
@@ -37,6 +37,8 @@ Isi saat evidence freeze:
 | --- | --- | --- | --- | --- |
 | CP1 | deploy | `deploy/health_20261111T0353_a08b0fb.md` | PASS | 6 service hijau, bucket + namespace + ops tables |
 | CP1 | deploy | `deploy/compose-config_20261111T0353_a08b0fb.yml` | PASS | `docker compose config --no-interpolate` profil dev |
-| T-01 | tests | - | pending | Tahap 2 |
-| T-02 | tests | - | pending | Tahap 2 |
+| CP2 | tests | `tests/T01.json` | PASS | social post valid lolos kontrak |
+| CP2 | tests | `tests/T02.json` | PASS | harga negatif ditolak di `$.price` |
+| CP2 | ingestion | `ingestion/counts_20261111T0450.csv` | PASS | bronze market 3 row, social 2 row |
+| CP2 | batch | `batch/ledger_20261111T0450.csv` | PASS | market idempoten (`skipped_identical`), social `succeeded`, checksum tercatat |
 | T-26 | batch | - | pending | Tahap 3 |

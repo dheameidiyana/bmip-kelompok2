@@ -1,0 +1,10 @@
+{
+  "id": "T-01",
+  "timestamp": "2026-11-11T04:50:55Z",
+  "commit": "115b767",
+  "command": "python scripts/cp2_evidence.py",
+  "result": "PASS",
+  "owner": "dhea",
+  "fixture": "tests/fixtures/social_post_valid.json",
+  "errors": []
+}

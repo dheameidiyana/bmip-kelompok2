@@ -2,7 +2,7 @@
 
 - Owner: Dhea
 - Branch: `slot/w1-a-dhea`
-- Status: CP1 complete, Tahap 2 next
+- Status: CP1 and CP2 complete, Tahap 3 next
 - Last update: 2026-11-11
 
 ## What works now
@@ -27,6 +27,20 @@ Bootstrap creates:
 - PostgreSQL schema `ops` with `ops.batch_runs` and `ops.social_watermark`
 - PostgreSQL database `lakekeeper` owned by role `lakekeeper`
 
+Ingestion (CP2) now works end to end:
+
+- Versioned contracts `contracts/market_trade.v1.json` and
+  `contracts/social_post.v1.json`, enforced by pydantic validators. Invalid
+  records go to the `quarantine` bucket as JSONL.
+- Binance `aggTrade` producer over WebSocket plus a Binance Vision/download
+  replay path. The replay fixture produces the same `market.trades` messages.
+- Bluesky search harvester with a replay fixture and a persisted watermark.
+- Append-only PyIceberg tables `bronze.market_trade_raw` (partitioned by
+  `event_date`) and `bronze.social_post_raw` (partitioned by `ingest_date`).
+- `ops.batch_runs` records deterministic batch ids, checksums, row counts, and
+  terminal status. Replaying identical data returns `skipped_identical` without
+  appending duplicate bronze rows.
+
 ## Commands
 
 Windows (recommended, handles Git's `sh` path for GNU Make):
@@ -36,8 +50,16 @@ Windows (recommended, handles Git's `sh` path for GNU Make):
 .\scripts\make.ps1 secrets
 .\scripts\make.ps1 dev-up
 .\scripts\make.ps1 doctor
+.\scripts\make.ps1 ingest-once
+.\scripts\make.ps1 replay
+.\scripts\make.ps1 evidence-cp2
 .\scripts\make.ps1 dev-down
 ```
+
+`make ingest-once` replays one market batch and one social batch and refreshes
+the CP2 evidence. `make replay` skips evidence generation. `make ingest-live`
+reads a small number of live records; it needs outbound access to Binance and
+Bluesky.
 
 Linux/macOS or a shell where `make` and `/bin/sh` are native:
 
@@ -52,13 +74,23 @@ make dev-down
 `make reset` removes named volumes and rebuilds from scratch. It keeps `.env`, so
 local passwords survive the reset.
 
-## CP1 evidence
+## Evidence
+
+CP1:
 
 - `evidence/deploy/health_<ts>_<sha>.md`
 - `evidence/deploy/compose-config_<ts>_<sha>.yml`
 
+CP2:
+
+- `evidence/tests/T01.json` — valid social post passes the contract
+- `evidence/tests/T02.json` — negative price is rejected at `$.price`
+- `evidence/ingestion/counts_<ts>.csv` — bronze row counts and timestamp range
+- `evidence/batch/ledger_<ts>.csv` — `ops.batch_runs` rows with checksums
+
 `make doctor` refreshes the health file. `make compose-config` refreshes the
-compose file. Both are generated, not hand-written.
+compose file. `make evidence-cp2` refreshes the CP2 files. All are generated,
+not hand-written.
 
 ## Decisions and deviations
 
@@ -73,16 +105,22 @@ Key points:
   remains internal.
 - PostgreSQL is published on host `5433` because `5432` is already in use.
 - Lakekeeper uses `allowall` authorization in dev and is bootstrapped explicitly.
+- Bronze tables have explicit locations under
+  `s3://lakehouse/warehouse/bronze.db/`. Without an explicit location Lakekeeper
+  uses a per-table UUID path, which makes the MinIO policy needlessly broad.
+- Host-side PyIceberg bypasses Lakekeeper remote signing. The warehouse endpoint
+  (`host.docker.internal:9000`) is only reachable from containers, so the bronze
+  writer replaces the table IO with the host endpoint (`localhost:9000`) while
+  metadata commits still go through Lakekeeper.
+- `make bootstrap` recreates MinIO policies on every run so policy changes are
+  not silently skipped.
 
-## Next for W1-A (Tahap 2)
+## Next for W1-A (Tahap 3)
 
-1. Write `contracts/market_trade.v1.json`, `contracts/social_post.v1.json`, and
-   the pydantic validators.
-2. Implement the Binance producer, replay feed, Bluesky harvester, and PyIceberg
-   bronze writer.
-3. Write one ledger row to `ops.batch_runs` with a deterministic checksum.
-4. Produce `evidence/tests/T01.json`, `T02.json`,
-   `evidence/ingestion/counts_<ts>.csv`, and `evidence/batch/ledger_<ts>.csv`.
+1. Re-run the replay from empty-ish state, verify `T-26`, and confirm the ledger
+   shows the expected terminal status.
+2. Run `make ci` and an end-to-end smoke test from the documented commands.
+3. Freeze evidence, update the index, and hand off to W1-B.
 
 ## Notes for other slots
 
@@ -91,6 +129,11 @@ Key points:
 - W1-B/C/D can use the `lakehouse` warehouse. Resolve its UUID from
   `GET http://localhost:8181/management/v1/warehouse` before calling catalog
   paths.
+- Bronze tables live under `s3://lakehouse/warehouse/bronze.db/`; read with the
+  `svc-process` credentials. Iceberg metadata is committed through Lakekeeper.
+- Use `host.docker.internal:9000` inside containers and `localhost:9000` from
+  the host. Server-side remote signing is enabled by Lakekeeper, so a host
+  client must override the table IO (see `BronzeWriter._table`).
 - W1-D owns the real API. Replace `deploy/api/server.py` without changing the
   compose service name or health paths.
 - Do not commit `.env`. Run `make secrets` on a fresh clone.
