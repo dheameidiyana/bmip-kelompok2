@@ -1,0 +1,41 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+deploy/env/*.env
+!deploy/env/*.env.example
+deploy/**/certs/
+*.pem
+*.key
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.json
+htmlcov/
+
+# Local data and runtime
+data/
+logs/
+backups/
+*.duckdb
+*.duckdb.wal
+*.log
+
+# OS and editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Build artifacts
+dist/
+build/
