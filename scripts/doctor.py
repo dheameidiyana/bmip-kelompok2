@@ -288,7 +288,7 @@ def write_evidence(checks: list[Check]) -> Path:
     target.parent.mkdir(parents=True, exist_ok=True)
 
     lines = [
-        f"# CP1 health - {stamp} UTC",
+        f"# Deploy health - {stamp} UTC",
         "",
         f"- commit: `{sha}`",
         f"- env: `{os.getenv('BMIP_ENV', 'dev')}`",
