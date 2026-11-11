@@ -1,11 +1,21 @@
-# W1-A Handoff
+# Handoff W1-A - Dhea
 
 - Owner: Dhea
 - Branch: `slot/w1-a-dhea`
-- Status: CP1 and CP2 complete, Tahap 3 next
+- Handoff to: Lois (W1-B)
 - Last update: 2026-11-11
 
-## What works now
+## Status
+
+- CP1: PASS
+- CP2: PASS
+- CP3: PASS
+- Tag: `w1-a-ok` (created after this commit)
+
+Gate: trade and post are in bronze in replay mode; `T-26` shows a second
+identical replay is skipped and bronze counts stay unchanged.
+
+## Yang sudah jalan
 
 `make dev-up` starts six long-running services, bootstraps storage, and exits 0:
 
@@ -41,7 +51,18 @@ Ingestion (CP2) now works end to end:
   terminal status. Replaying identical data returns `skipped_identical` without
   appending duplicate bronze rows.
 
-## Commands
+## Yang belum jalan / stub
+
+- `make e2e-smoke` is still a stub. The end-to-end bronze to API gate belongs to
+  W1-D; W1-A only proves bronze, contracts, and the ledger.
+- Live Binance and Bluesky modes are implemented but not part of the CP evidence.
+  Replay is the reproducible path; live needs outbound network access.
+- The API is a placeholder for W1-D. Four-node profiles and the observability
+  stack are deferred to Cycle 3.
+- `make transform`, `make quality`, `make test-cov`, and `make benchmark` remain
+  stubs owned by later slots.
+
+## Cara menjalankan
 
 Windows (recommended, handles Git's `sh` path for GNU Make):
 
@@ -53,6 +74,7 @@ Windows (recommended, handles Git's `sh` path for GNU Make):
 .\scripts\make.ps1 ingest-once
 .\scripts\make.ps1 replay
 .\scripts\make.ps1 evidence-cp2
+.\scripts\make.ps1 evidence-cp3
 .\scripts\make.ps1 dev-down
 ```
 
@@ -68,6 +90,8 @@ make setup
 make secrets
 make dev-up
 make doctor
+make ingest-once
+make evidence-cp3
 make dev-down
 ```
 
@@ -88,9 +112,18 @@ CP2:
 - `evidence/ingestion/counts_<ts>.csv` — bronze row counts and timestamp range
 - `evidence/batch/ledger_<ts>.csv` — `ops.batch_runs` rows with checksums
 
+CP3:
+
+- `evidence/batch/T26.json` — both replays return `skipped_identical`; counts
+  are equal before and after
+- `evidence/ingestion/replay_<ts>.txt` — full output of two replay runs
+
 `make doctor` refreshes the health file. `make compose-config` refreshes the
-compose file. `make evidence-cp2` refreshes the CP2 files. All are generated,
-not hand-written.
+compose file. `make evidence-cp2` and `make evidence-cp3` refresh the CP2/CP3
+files. All are generated, not hand-written.
+
+Secret check: `.env` is not tracked, `.env.example` contains every key used by
+`.env`, and no `.env` password value appears in tracked files.
 
 ## Decisions and deviations
 
@@ -115,12 +148,14 @@ Key points:
 - `make bootstrap` recreates MinIO policies on every run so policy changes are
   not silently skipped.
 
-## Next for W1-A (Tahap 3)
+## Handoff to W1-B
 
-1. Re-run the replay from empty-ish state, verify `T-26`, and confirm the ledger
-   shows the expected terminal status.
-2. Run `make ci` and an end-to-end smoke test from the documented commands.
-3. Freeze evidence, update the index, and hand off to W1-B.
+1. Start from tag `w1-a-ok` or the merged `dev` branch.
+2. Read `evidence/batch/T26.json` and the ledger to see the batch id and
+   checksum conventions W1-B must preserve.
+3. Consume `market.trades` from Redpanda; bronze rows already carry `batch_id`,
+   `payload_hash`, `event_ts`, and `ingest_ts`.
+4. Keep `make ci` green before opening the W1-B PR.
 
 ## Notes for other slots
 

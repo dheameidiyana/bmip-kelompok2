@@ -1,0 +1,35 @@
+{
+  "id": "T-26",
+  "timestamp": "2026-11-11T04:56:58Z",
+  "commit": "03338fa",
+  "command": "python scripts/cp3_evidence.py",
+  "result": "PASS",
+  "owner": "dhea",
+  "runs": [
+    {
+      "source": "market",
+      "first_status": "skipped_identical",
+      "second_status": "skipped_identical",
+      "batch_id": "market-binance_vision-20261110T140001-900000003",
+      "checksum": "fca553007fd161c60f64169d7626123bc7ff7aca12667f76b4ecba25d389ba07"
+    },
+    {
+      "source": "social",
+      "first_status": "skipped_identical",
+      "second_status": "skipped_identical",
+      "batch_id": "social-bluesky-20261110T140500-d2383bf8",
+      "checksum": "d2383bf82cfdeb21ecb709ceb8249ab29aa0a98ee93a6dfd236f7e83dd3947ca"
+    }
+  ],
+  "bronze_counts": {
+    "before": {
+      "bronze.market_trade_raw": 3,
+      "bronze.social_post_raw": 2
+    },
+    "after": {
+      "bronze.market_trade_raw": 3,
+      "bronze.social_post_raw": 2
+    }
+  },
+  "replay_log": "evidence/ingestion/replay_20261111T0456.txt"
+}
