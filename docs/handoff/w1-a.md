@@ -56,11 +56,13 @@ Ingestion (CP2) now works end to end:
 - `ops.batch_runs` records deterministic batch ids, checksums, row counts, and
   terminal status. Replaying identical data returns `skipped_identical` without
   appending duplicate bronze rows.
+- `make e2e-smoke` runs the W1-A scope: health endpoints, market/social replay,
+  bronze counts, ledger rows, and replay idempotence.
 
 ## Yang belum jalan / stub
 
-- `make e2e-smoke` is still a stub. The end-to-end bronze to API gate belongs to
-  W1-D; W1-A only proves bronze, contracts, and the ledger.
+- The full bronze to silver to gold to API to dashboard gate is M1/W1-D work.
+  W1-A's `make e2e-smoke` stops at bronze and the ledger.
 - Live Binance and Bluesky modes are implemented but not part of the CP evidence.
   Replay is the reproducible path; live needs outbound network access.
 - The API is a placeholder for W1-D. Four-node profiles and the observability
@@ -81,6 +83,7 @@ Windows (recommended, handles Git's `sh` path for GNU Make):
 .\scripts\make.ps1 replay
 .\scripts\make.ps1 evidence-cp2
 .\scripts\make.ps1 evidence-cp3
+.\scripts\make.ps1 e2e-smoke
 .\scripts\make.ps1 dev-down
 ```
 

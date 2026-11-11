@@ -90,6 +90,7 @@ Perintah operasional:
 .\scripts\make.ps1 reset        # hapus volume lalu dev-up bersih
 .\scripts\make.ps1 ingest-once  # replay market + social, refresh evidence CP2
 .\scripts\make.ps1 evidence-cp3 # replay dua kali, cek idempotensi T-26
+.\scripts\make.ps1 e2e-smoke    # health + replay + bronze + ledger W1-A
 .\scripts\make.ps1 ci           # compose config + lint + test
 ```
 

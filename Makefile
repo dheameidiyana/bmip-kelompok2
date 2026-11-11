@@ -36,7 +36,7 @@ help:
 	@echo "  evidence-cp3 Replay twice and write T-26 idempotence evidence"
 	@echo "  transform    Run dbt silver and gold (W1-B)"
 	@echo "  quality      Run GX checkpoint (W1-C)"
-	@echo "  e2e-smoke    End-to-end smoke test (W1-A Tahap 3)"
+	@echo "  e2e-smoke    W1-A smoke: health + replay + bronze + ledger"
 	@echo "  evidence     Collect the health evidence file"
 
 $(PYTHON):
@@ -122,9 +122,8 @@ quality:
 	@echo "[stub] quality: implemented in W1-C"
 	@exit 1
 
-e2e-smoke:
-	@echo "[stub] e2e-smoke: implemented in W1-A Tahap 3 and expanded later"
-	@exit 1
+e2e-smoke: $(PYTHON)
+	$(PYTHON) scripts/e2e_smoke.py
 
 smoke: e2e-smoke
 

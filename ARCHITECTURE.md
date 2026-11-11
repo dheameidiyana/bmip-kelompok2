@@ -876,6 +876,7 @@ Contracts live in `contracts/` as JSON Schema and Pydantic models. Producers val
 | `author_did` | string | yes | Hashed before silver |
 | `author_handle` | string | no | Dropped at silver |
 | `created_at` | timestamp | yes | Not in the future, not older than 30 days at ingest |
+| `ingest_ts` | timestamp | yes | Greater than or equal to `created_at` minus 1 second |
 | `lang` | string | no | BCP-47 or null |
 | `text` | string | yes | 1-2,000 characters |
 | `hashtags` | array of string | no | Normalized, max 20 |
@@ -886,6 +887,7 @@ Contracts live in `contracts/` as JSON Schema and Pydantic models. Producers val
 | `source` | string | yes | `bluesky` |
 | `schema_version` | string | yes | `1.0` |
 | `raw_ref` | string | yes | Bronze object path |
+| `payload_hash` | string | yes | SHA-256 of the canonical raw payload |
 
 **Market trade, contract `market_trade.v1`:**
 
