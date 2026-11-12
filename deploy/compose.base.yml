@@ -1,0 +1,260 @@
+name: bmip
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-healthcheck: &default-healthcheck
+  interval: 10s
+  timeout: 5s
+  retries: 12
+  start_period: 30s
+
+services:
+  traefik:
+    image: traefik:v3.7.18
+    restart: unless-stopped
+    user: "1000:1000"
+    command:
+      - --configFile=/etc/traefik/traefik.yml
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/dynamic:/etc/traefik/dynamic:ro
+    networks:
+      - edge
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    logging: *default-logging
+
+  redpanda:
+    image: redpandadata/redpanda:v26.2.6
+    restart: unless-stopped
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp=1
+      - --memory=1G
+      - --reserve-memory=0M
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
+      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092,EXTERNAL://localhost:19092
+      - --rpc-addr=0.0.0.0:33145
+      - --advertise-rpc-addr=redpanda:33145
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health --exit-when-healthy"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 45s
+    logging: *default-logging
+
+  postgres-core:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+      LAKEKEEPER_DB_NAME: ${LAKEKEEPER_DB_NAME:-lakekeeper}
+      LAKEKEEPER_DB_USER: ${LAKEKEEPER_DB_USER:-lakekeeper}
+      LAKEKEEPER_DB_PASSWORD: ${LAKEKEEPER_DB_PASSWORD:?set LAKEKEEPER_DB_PASSWORD in .env}
+    volumes:
+      - postgres-core-data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    logging: *default-logging
+
+  minio-perms:
+    image: elestio/minio@sha256:25348a257f1ece1b192f25f6cd9854618fa86422ac87b494b5d4e629c556d4bd
+    restart: "no"
+    user: "0:0"
+    entrypoint: ["/bin/sh", "-c", "chown -R 1000:1000 /data"]
+    volumes:
+      - minio-data:/data
+    networks:
+      - data
+    logging: *default-logging
+
+  minio:
+    image: elestio/minio@sha256:25348a257f1ece1b192f25f6cd9854618fa86422ac87b494b5d4e629c556d4bd
+    restart: unless-stopped
+    user: "1000:1000"
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+      MINIO_BROWSER: "on"
+    volumes:
+      - minio-data:/data
+    networks:
+      - data
+    depends_on:
+      minio-perms:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    logging: *default-logging
+
+  minio-init:
+    image: elestio/minio@sha256:25348a257f1ece1b192f25f6cd9854618fa86422ac87b494b5d4e629c556d4bd
+    profiles: ["bootstrap"]
+    restart: "no"
+    user: "1000:1000"
+    entrypoint: ["/bin/sh", "/scripts/bootstrap.sh"]
+    environment:
+      MC_CONFIG_DIR: /tmp/mc
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+      MINIO_SVC_INGEST_ACCESS_KEY: ${MINIO_SVC_INGEST_ACCESS_KEY:-svc-ingest}
+      MINIO_SVC_INGEST_SECRET_KEY: ${MINIO_SVC_INGEST_SECRET_KEY:?set MINIO_SVC_INGEST_SECRET_KEY in .env}
+      MINIO_SVC_PROCESS_ACCESS_KEY: ${MINIO_SVC_PROCESS_ACCESS_KEY:-svc-process}
+      MINIO_SVC_PROCESS_SECRET_KEY: ${MINIO_SVC_PROCESS_SECRET_KEY:?set MINIO_SVC_PROCESS_SECRET_KEY in .env}
+      MINIO_SVC_DBT_ACCESS_KEY: ${MINIO_SVC_DBT_ACCESS_KEY:-svc-dbt}
+      MINIO_SVC_DBT_SECRET_KEY: ${MINIO_SVC_DBT_SECRET_KEY:?set MINIO_SVC_DBT_SECRET_KEY in .env}
+      MINIO_SVC_ML_ACCESS_KEY: ${MINIO_SVC_ML_ACCESS_KEY:-svc-ml}
+      MINIO_SVC_ML_SECRET_KEY: ${MINIO_SVC_ML_SECRET_KEY:?set MINIO_SVC_ML_SECRET_KEY in .env}
+      MINIO_SVC_API_ACCESS_KEY: ${MINIO_SVC_API_ACCESS_KEY:-svc-api}
+      MINIO_SVC_API_SECRET_KEY: ${MINIO_SVC_API_SECRET_KEY:?set MINIO_SVC_API_SECRET_KEY in .env}
+      MINIO_SVC_BACKUP_ACCESS_KEY: ${MINIO_SVC_BACKUP_ACCESS_KEY:-svc-backup}
+      MINIO_SVC_BACKUP_SECRET_KEY: ${MINIO_SVC_BACKUP_SECRET_KEY:?set MINIO_SVC_BACKUP_SECRET_KEY in .env}
+      MINIO_SVC_DOCS_ACCESS_KEY: ${MINIO_SVC_DOCS_ACCESS_KEY:-svc-docs}
+      MINIO_SVC_DOCS_SECRET_KEY: ${MINIO_SVC_DOCS_SECRET_KEY:?set MINIO_SVC_DOCS_SECRET_KEY in .env}
+    volumes:
+      - ./minio/bootstrap.sh:/scripts/bootstrap.sh:ro
+      - ./minio/policies:/policies:ro
+    networks:
+      - data
+    depends_on:
+      minio:
+        condition: service_healthy
+    logging: *default-logging
+
+  lakekeeper-migrate:
+    image: quay.io/lakekeeper/catalog@sha256:b02a882df48042020c473a79b980a643fcc883a6f9c21b74c5b7cc8eabeec9fe
+    restart: "no"
+    command: ["migrate"]
+    environment:
+      RUST_LOG: info
+      LAKEKEEPER__ENABLE_DEFAULT_PROJECT: "true"
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_PG_ENCRYPTION_KEY:?set LAKEKEEPER_PG_ENCRYPTION_KEY in .env}
+      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://${LAKEKEEPER_DB_USER:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:?set LAKEKEEPER_DB_PASSWORD in .env}@postgres-core:5432/${LAKEKEEPER_DB_NAME:-lakekeeper}
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://${LAKEKEEPER_DB_USER:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:?set LAKEKEEPER_DB_PASSWORD in .env}@postgres-core:5432/${LAKEKEEPER_DB_NAME:-lakekeeper}
+    networks:
+      - data
+    depends_on:
+      postgres-core:
+        condition: service_healthy
+    logging: *default-logging
+
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog@sha256:b02a882df48042020c473a79b980a643fcc883a6f9c21b74c5b7cc8eabeec9fe
+    restart: unless-stopped
+    command: ["serve"]
+    environment:
+      RUST_LOG: info
+      LAKEKEEPER__ENABLE_DEFAULT_PROJECT: "true"
+      LAKEKEEPER__AUTHZ_BACKEND: allowall
+      LAKEKEEPER__BASE_URI: http://localhost:8181
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_PG_ENCRYPTION_KEY:?set LAKEKEEPER_PG_ENCRYPTION_KEY in .env}
+      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://${LAKEKEEPER_DB_USER:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:?set LAKEKEEPER_DB_PASSWORD in .env}@postgres-core:5432/${LAKEKEEPER_DB_NAME:-lakekeeper}
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://${LAKEKEEPER_DB_USER:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:?set LAKEKEEPER_DB_PASSWORD in .env}@postgres-core:5432/${LAKEKEEPER_DB_NAME:-lakekeeper}
+    networks:
+      - data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      lakekeeper-migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    logging: *default-logging
+
+  lakekeeper-bootstrap:
+    image: python:3.11-alpine@sha256:bb1d70c1df30d8ee1e05214dbe82d6cdfd29833c1f47ce917f20991aca93acaa
+    profiles: ["bootstrap"]
+    restart: "no"
+    user: "1000:1000"
+    entrypoint: ["python", "/scripts/bootstrap.py"]
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+      MINIO_ENDPOINT_INTERNAL: ${MINIO_ENDPOINT_INTERNAL:-http://minio:9000}
+      MINIO_ENDPOINT_LAKEKEEPER: ${MINIO_ENDPOINT_LAKEKEEPER:-http://host.docker.internal:9000}
+      MINIO_S3_REGION: ${MINIO_S3_REGION:-local}
+      LAKEKEEPER_URL_INTERNAL: ${LAKEKEEPER_URL_INTERNAL:-http://lakekeeper:8181}
+      LAKEKEEPER_WAREHOUSE: ${LAKEKEEPER_WAREHOUSE:-lakehouse}
+    volumes:
+      - ./lakekeeper/bootstrap.py:/scripts/bootstrap.py:ro
+    networks:
+      - data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      lakekeeper:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    logging: *default-logging
+
+  api:
+    build:
+      context: ./api
+    image: bmip/api:dev
+    restart: unless-stopped
+    user: "10001:10001"
+    networks:
+      - edge
+      - data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    logging: *default-logging
+
+networks:
+  edge:
+    driver: bridge
+  data:
+    driver: bridge
+    internal: true
+
+volumes:
+  redpanda-data:
+  postgres-core-data:
+  minio-data:

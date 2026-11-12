@@ -25,6 +25,7 @@ htmlcov/
 data/
 logs/
 backups/
+tools/
 *.duckdb
 *.duckdb.wal
 *.log

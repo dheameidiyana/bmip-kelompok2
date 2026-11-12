@@ -1,0 +1,13 @@
+name: "bmip"
+version: "1.0.0"
+config-version: 2
+
+profile: "bmip"
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  bmip:
+    +materialized: table

@@ -1,0 +1,15 @@
+{
+  "id": "T-02",
+  "timestamp": "2026-11-11T14:05:24Z",
+  "commit": "937a0ef",
+  "command": "python scripts/cp2_evidence.py",
+  "result": "PASS",
+  "owner": "dhea",
+  "fixture": "tests/fixtures/market_trade_negative_price.json",
+  "errors": [
+    {
+      "path": "$.price",
+      "message": "-1 is less than or equal to the minimum of 0"
+    }
+  ]
+}

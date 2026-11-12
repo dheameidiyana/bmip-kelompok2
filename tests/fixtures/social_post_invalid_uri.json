@@ -1,0 +1,18 @@
+{
+  "post_uri": "https://bsky.app/profile/alice.bsky.social/post/3kexample002",
+  "author_did": "did:plc:example123",
+  "author_handle": "alice.bsky.social",
+  "created_at": "2026-11-10T14:06:00Z",
+  "ingest_ts": "2026-11-10T14:06:02Z",
+  "lang": "en",
+  "text": "The URI must start with at://",
+  "hashtags": [],
+  "like_count": 0,
+  "repost_count": 0,
+  "reply_count": 0,
+  "quote_count": 0,
+  "source": "bluesky",
+  "schema_version": "1.0",
+  "raw_ref": "iceberg://lakehouse/bronze.social_post_raw/event_date=2026-11-10",
+  "payload_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+}

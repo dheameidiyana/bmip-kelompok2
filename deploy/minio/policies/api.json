@@ -1,0 +1,19 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetBucketLocation", "s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::lakehouse", "arn:aws:s3:::artifacts"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": [
+        "arn:aws:s3:::lakehouse/gold/*",
+        "arn:aws:s3:::lakehouse/warehouse/gold.db/*",
+        "arn:aws:s3:::artifacts/*"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+services:
+  traefik:
+    ports:
+      - "8080:8000"
+      - "8082:8082"
+    mem_limit: 256m
+    cpus: 0.50
+
+  redpanda:
+    ports:
+      - "19092:19092"
+      - "9644:9644"
+    networks:
+      - edge
+      - data
+    mem_limit: 1536m
+    cpus: 1.50
+
+  postgres-core:
+    ports:
+      - "5433:5432"
+    networks:
+      - edge
+      - data
+    mem_limit: 512m
+    cpus: 1.00
+
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - edge
+      - data
+    mem_limit: 768m
+    cpus: 1.00
+
+  minio-perms:
+    mem_limit: 64m
+    cpus: 0.25
+
+  minio-init:
+    mem_limit: 128m
+    cpus: 0.25
+
+  lakekeeper-migrate:
+    mem_limit: 256m
+    cpus: 0.50
+
+  lakekeeper:
+    ports:
+      - "8181:8181"
+    networks:
+      - edge
+      - data
+    mem_limit: 512m
+    cpus: 1.00
+
+  lakekeeper-bootstrap:
+    mem_limit: 128m
+    cpus: 0.25
+
+  api:
+    ports:
+      - "8000:8000"
+    mem_limit: 256m
+    cpus: 0.50

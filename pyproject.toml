@@ -18,6 +18,11 @@ dependencies = [
     "websockets>=12",
     "httpx>=0.27",
     "pyyaml>=6",
+    "jsonschema>=4",
+    "psycopg[binary]>=3.2",
+    "boto3==1.43.117",
+    "botocore==1.43.117",
+    "python-dotenv>=1.0",
 ]
 
 [project.optional-dependencies]

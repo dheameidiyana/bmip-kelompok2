@@ -10,8 +10,12 @@ Proyek kelompok TBP Advanced Data Platform Engineering. Arsitektur lengkap ada d
 
 ## Status
 
-Tahap 0 (repo skeleton). Implementasi W1-A sedang berjalan; belum ada layanan yang
-bisa dijalankan sampai compose dev tersedia.
+W1-A selesai dan gate CP1-CP3 lulus: enam service dev berjalan, kontrak dan replay
+ingestion menulis ke bronze, serta replay identik idempoten (`T-26`). Bronze social
+menyimpan `event_date` dan `ingest_ts`; harvester Bluesky memakai retry/backoff dan
+bisa berjalan per jam. `make e2e-smoke` memeriksa health, replay, bronze counts,
+ledger, dan idempotensi dalam satu gate. Berikutnya W1-B (stream processing) dan
+W1-D (API).
 
 ## Stack
 
@@ -31,10 +35,14 @@ bisa dijalankan sampai compose dev tersedia.
 ```text
 contracts/        JSON Schema kontrak data
 deploy/           compose, env, policy MinIO, init PostgreSQL, Traefik
+dbt/              dbt project (silver + gold)
 src/bmip/         kode aplikasi
-  common/         config, logging, validator kontrak
-  ingest/         producer Binance, harvester Bluesky, adapter
-  process/        stream processor dan penulis bronze/silver
+  common/         config, logging, kontrak, ledger
+  ingestion/      producer Binance, harvester Bluesky, adapter, bronze writer
+  transform/      transformasi silver dan gold
+  quality/        Great Expectations
+  serving/        loader serving dan API
+  ml/             fitur, training, inference, drift
 tests/            unit, contract, integration
 docs/             ADR, runbook, handoff
 evidence/         bukti test, deploy, ingestion
@@ -45,12 +53,59 @@ scripts/          utilitas operasional
 
 - Windows 11 + WSL2 + Docker Desktop (nyalakan sebelum menjalankan target)
 - Python 3.11
-- GNU Make, dijalankan dari Git Bash
-- Git
+- GNU Make (`winget install ezwinports.make`) dan Git untuk Windows
+- Linux/macOS: `make`, `sh`, Docker Compose v2
+
+Di Windows, jalankan target lewat `.\scripts\make.ps1` agar GNU Make memakai
+`sh` dari Git for Windows. Di Linux/macOS, `make` bisa dipakai langsung.
 
 ## Quick start
 
-Belum tersedia. Akan diisi pada Tahap 1 (CP1 W1-A) setelah compose dev dibuat.
+```powershell
+.\scripts\make.ps1 setup       # buat .venv dan install dependensi
+.\scripts\make.ps1 secrets     # buat .env dengan secret acak (sekali)
+.\scripts\make.ps1 dev-up      # nyalakan 6 service + bootstrap storage
+.\scripts\make.ps1 doctor      # cek health dan tulis evidence CP1
+```
+
+Setara di Linux/macOS:
+
+```bash
+make setup && make secrets && make dev-up && make doctor
+```
+
+Port host dev:
+
+| Service | Port |
+| --- | --- |
+| Traefik | 8080 (HTTP), 8082 (ping) |
+| API placeholder | 8000 |
+| MinIO | 9000 (S3), 9001 (console) |
+| Lakekeeper | 8181 |
+| PostgreSQL core | 5433 |
+| Redpanda | 19092 (Kafka), 9644 (admin) |
+
+Perintah operasional:
+
+```powershell
+.\scripts\make.ps1 dev-down     # stop stack, data tetap
+.\scripts\make.ps1 reset        # hapus volume lalu dev-up bersih
+.\scripts\make.ps1 ingest-once  # replay market + social, refresh evidence CP2
+.\scripts\make.ps1 evidence-cp3 # replay dua kali, cek idempotensi T-26
+.\scripts\make.ps1 e2e-smoke    # health + replay + bronze + ledger W1-A
+.\scripts\make.ps1 ci           # compose config + lint + test
+```
+
+Harvester sosial per jam (Ctrl+C berhenti bersih):
+
+```powershell
+.venv\Scripts\python.exe -m bmip.ingestion.cli social --live --interval 3600
+```
+
+`make secrets` tidak menimpa `.env` yang sudah ada. Hapus `.env` manual jika
+ingin merotasi seluruh secret lokal. Detail keputusan dan deviasi ada di
+`docs/adr/0001-w1-a-foundation.md`, status serah terima ada di
+`docs/handoff/w1-a.md`.
 
 ## Model branch
 
