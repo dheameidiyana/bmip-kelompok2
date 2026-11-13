@@ -1,0 +1,39 @@
+suite: gold_market
+dataset: gold.mart_market
+rules:
+  - id: gold-market-hour-unique
+    kind: expectation
+    expectation: ExpectCompoundColumnsToBeUnique
+    column_list: ["symbol", "window_start"]
+    severity: critical
+    description: One hourly bar per symbol.
+
+  - id: gold-market-ohlc-bounds
+    kind: expression
+    expression: "low <= open and open <= high and low <= close and close <= high and volume >= 0 and trade_count > 0"
+    severity: critical
+    description: Gold inherits the silver OHLC invariants.
+
+  - id: gold-market-lag
+    kind: lag
+    column: window_start
+    reference_dataset: silver.market_ohlcv_1m
+    reference_column: window_start
+    threshold_minutes: 90
+    severity: critical
+    description: mart_market must be within 90 minutes of silver (ARCHITECTURE §13.3).
+
+  - id: gold-market-duplicate-rate
+    kind: duplicate_rate
+    columns: ["symbol", "window_start"]
+    max_rate: 0.02
+    severity: warning
+    description: Duplicate hourly bars are a warning, not a blocker (T-12).
+
+  - id: gold-market-hourly-gap
+    kind: gap
+    column: window_start
+    max_gap_hours: 1
+    lookback_hours: 24
+    severity: critical
+    description: No gap in the hourly series for the last 24 hours.

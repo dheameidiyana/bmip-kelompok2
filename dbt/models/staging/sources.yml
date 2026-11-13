@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: silver_social
+    database: "{{ env_var('DBT_ICEBERG_DATABASE', 'iceberg') }}"
+    schema: silver
+    description: Pseudonymized social posts and per-post sentiment written by W1-C.
+    tables:
+      - name: social_post
+        description: One row per post_key with no raw URI, handle, or DID.
+        columns:
+          - name: post_key
+            tests:
+              - not_null
+          - name: author_key
+            tests:
+              - not_null
+          - name: event_ts
+            tests:
+              - not_null
+
+      - name: social_sentiment
+        description: VADER sentiment per post_key.
+        columns:
+          - name: post_key
+            tests:
+              - not_null
+              - unique
+          - name: sentiment_score
+            tests:
+              - not_null
+
+  - name: silver_market_trades
+    database: "{{ env_var('DBT_ICEBERG_DATABASE', 'iceberg') }}"
+    schema: silver
+    description: Deduplicated market trades written by W1-B.
+    tables:
+      - name: market_trades
+        description: One row per (symbol, trade_id).
+        columns:
+          - name: trade_id
+            tests:
+              - not_null

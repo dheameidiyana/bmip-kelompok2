@@ -1,0 +1,374 @@
+{
+  "generated_at": "2026-11-13T20:38:17.083848Z",
+  "commit": "fdaf360",
+  "owner": "vio",
+  "warning_only": false,
+  "status": "pass",
+  "critical_failures": 0,
+  "warning_failures": 0,
+  "suites": [
+    {
+      "suite": "gold_market",
+      "dataset": "gold.mart_market",
+      "rows": 3,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "gold-market-hour-unique",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectCompoundColumnsToBeUnique",
+          "detail": ""
+        },
+        {
+          "id": "gold-market-ohlc-bounds",
+          "kind": "expression",
+          "severity": "critical",
+          "status": "pass",
+          "observed": {
+            "failing_rows": 0,
+            "rows": 3
+          },
+          "expected": "low <= open and open <= high and low <= close and close <= high and volume >= 0 and trade_count > 0",
+          "detail": ""
+        },
+        {
+          "id": "gold-market-lag",
+          "kind": "lag",
+          "severity": "critical",
+          "status": "pass",
+          "observed": {
+            "gold_latest": "2026-11-10T16:00:00+00:00",
+            "silver_latest": "2026-11-10T16:45:00+00:00",
+            "lag_minutes": 45.0
+          },
+          "expected": "<= 90.0 minutes behind silver.market_ohlcv_1m",
+          "detail": ""
+        },
+        {
+          "id": "gold-market-duplicate-rate",
+          "kind": "duplicate_rate",
+          "severity": "warning",
+          "status": "pass",
+          "observed": {
+            "duplicate_rate": 0.0,
+            "duplicate_rows": 0,
+            "rows": 3
+          },
+          "expected": "<= 0.02",
+          "detail": ""
+        },
+        {
+          "id": "gold-market-hourly-gap",
+          "kind": "gap",
+          "severity": "critical",
+          "status": "pass",
+          "observed": {
+            "largest_gap_hours": 1.0,
+            "hours_checked": 3
+          },
+          "expected": "<= 1.0 hours",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "suite": "gold_ml",
+      "dataset": "gold.mart_ml",
+      "rows": 3,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "gold-ml-snapshot-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        },
+        {
+          "id": "gold-ml-dq-status",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeInSet",
+          "detail": ""
+        },
+        {
+          "id": "gold-ml-no-leakage",
+          "kind": "leakage",
+          "severity": "critical",
+          "status": "pass",
+          "observed": {
+            "bad_label_start": 0,
+            "bad_label_end": 0,
+            "labelled_rows": 2,
+            "rows": 3
+          },
+          "expected": "label_start == window_start and label_end == window_start + 1h",
+          "detail": ""
+        },
+        {
+          "id": "gold-ml-label-coverage",
+          "kind": "expectation",
+          "severity": "warning",
+          "status": "pass",
+          "observed": 0.6666666666666666,
+          "expected": "ExpectColumnProportionOfNonNullValuesToBeBetween",
+          "detail": ""
+        },
+        {
+          "id": "gold-ml-rows-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 3,
+          "expected": "ExpectTableRowCountToBeBetween",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "suite": "gold_sentiment",
+      "dataset": "gold.mart_sentiment",
+      "rows": 1,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "gold-sentiment-hour-unique",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeUnique",
+          "detail": ""
+        },
+        {
+          "id": "gold-sentiment-count-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        },
+        {
+          "id": "gold-sentiment-count-non-negative",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeBetween",
+          "detail": ""
+        },
+        {
+          "id": "gold-sentiment-mean-range",
+          "kind": "expectation",
+          "severity": "warning",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeBetween",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "suite": "silver_market",
+      "dataset": "silver.market_ohlcv_1m",
+      "rows": 166,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "market-minute-unique",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectCompoundColumnsToBeUnique",
+          "detail": ""
+        },
+        {
+          "id": "market-ohlc-bounds",
+          "kind": "expression",
+          "severity": "critical",
+          "status": "pass",
+          "observed": {
+            "failing_rows": 0,
+            "rows": 166
+          },
+          "expected": "low <= open and open <= high and low <= close and close <= high and high >= low",
+          "detail": ""
+        },
+        {
+          "id": "market-volume-non-negative",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeBetween",
+          "detail": ""
+        },
+        {
+          "id": "market-trade-count-positive",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeBetween",
+          "detail": ""
+        },
+        {
+          "id": "market-rows-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 166,
+          "expected": "ExpectTableRowCountToBeBetween",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "suite": "silver_market_trades",
+      "dataset": "silver.market_trades",
+      "rows": 282000,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "market-trade-id-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "suite": "silver_social_post",
+      "dataset": "silver.social_post",
+      "rows": 2,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "social-post-key-unique",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeUnique",
+          "detail": ""
+        },
+        {
+          "id": "social-text-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        },
+        {
+          "id": "social-author-key-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        },
+        {
+          "id": "social-no-raw-pii",
+          "kind": "no_pii_columns",
+          "severity": "critical",
+          "status": "pass",
+          "observed": {
+            "present": [],
+            "columns": [
+              "post_key",
+              "author_key",
+              "event_ts",
+              "ingest_ts",
+              "lang",
+              "text",
+              "hashtags",
+              "like_count",
+              "repost_count",
+              "reply_count",
+              "quote_count",
+              "source",
+              "payload_hash",
+              "event_date",
+              "updated_at"
+            ]
+          },
+          "expected": "none of ['post_uri', 'author_did', 'author_handle', 'display_name', 'avatar', 'did', 'handle']",
+          "detail": ""
+        },
+        {
+          "id": "social-rows-present",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 2,
+          "expected": "ExpectTableRowCountToBeBetween",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "suite": "silver_social_sentiment",
+      "dataset": "silver.social_sentiment",
+      "rows": 2,
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "rules": [
+        {
+          "id": "sentiment-post-key-unique",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeUnique",
+          "detail": ""
+        },
+        {
+          "id": "sentiment-score-range",
+          "kind": "expectation",
+          "severity": "critical",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToBeBetween",
+          "detail": ""
+        },
+        {
+          "id": "sentiment-model-version",
+          "kind": "expectation",
+          "severity": "warning",
+          "status": "pass",
+          "observed": 0,
+          "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        }
+      ]
+    }
+  ]
+}

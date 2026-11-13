@@ -14,7 +14,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality e2e-smoke smoke test-cov benchmark backup restore evidence
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence
 
 help:
 	@echo "BMIP targets:"
@@ -44,7 +44,9 @@ help:
 	@echo "  transform    Run dbt silver and gold (W1-B)"
 	@echo "  prefect-deploy  Create work pool and deploy Prefect flows"
 	@echo "  prefect-worker  Start the local Prefect worker (foreground)"
-	@echo "  quality      Run GX checkpoint (W1-C)"
+	@echo "  quality      Run GX checkpoint and write evidence/dq/dq_report.json (W1-C)"
+	@echo "  gold         Build gold marts, enforce gates, publish to Iceberg (W1-C)"
+	@echo "  evidence-w1c Write T03/T09/T10/T11/T12/T31/T32/T33 evidence (W1-C)"
 	@echo "  e2e-smoke    W1-A smoke: health + replay + bronze + ledger"
 	@echo "  evidence     Collect the health evidence file"
 
@@ -147,9 +149,14 @@ prefect-deploy: $(PYTHON)
 prefect-worker: $(PYTHON)
 	$(PYTHON) -m prefect worker start -p $(PREFECT_WORK_POOL)
 
-quality:
-	@echo "[stub] quality: implemented in W1-C"
-	@exit 1
+quality: $(PYTHON)
+	$(PYTHON) scripts/quality.py
+
+gold: $(PYTHON)
+	$(PYTHON) scripts/build_gold.py
+
+evidence-w1c: $(PYTHON)
+	$(PYTHON) scripts/w1c_evidence.py
 
 e2e-smoke: $(PYTHON)
 	$(PYTHON) scripts/e2e_smoke.py

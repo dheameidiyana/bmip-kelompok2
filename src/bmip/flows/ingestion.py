@@ -86,3 +86,91 @@ def harvest_social_flow(max_pages: int | None = None) -> dict[str, Any]:
 def transform_silver_flow(select: str | None = None) -> dict[str, Any]:
     configure_logging()
     return transform_silver_task(select=select)
+
+
+@task(name="build-silver-social", retries=1, retry_delay_seconds=30)
+def build_silver_social_task() -> dict[str, Any]:
+    from bmip.transform.social_pipeline import build_silver_social
+
+    return build_silver_social(get_settings())
+
+
+@task(name="quality-silver", retries=0)
+def quality_silver_task() -> dict[str, Any]:
+    from bmip.quality.checkpoint import run_scope
+
+    report = run_scope(get_settings(), scope="silver", warning_only=False)
+    return {
+        "status": report.status,
+        "critical_failures": len(report.critical_failures),
+        "suites": len(report.suites),
+    }
+
+
+@task(name="quality-gold", retries=0)
+def quality_gold_task(duckdb_path: str | None = None) -> dict[str, Any]:
+    from bmip.quality.checkpoint import run_scope
+
+    path = Path(duckdb_path) if duckdb_path else ROOT / "dbt" / "target" / "bmip.duckdb"
+    report = run_scope(
+        get_settings(), scope="gold", warning_only=False, duckdb_path=path
+    )
+    return {
+        "status": report.status,
+        "critical_failures": len(report.critical_failures),
+        "suites": len(report.suites),
+    }
+
+
+@task(name="publish-gold", retries=1, retry_delay_seconds=30)
+def publish_gold_task(duckdb_path: str | None = None) -> dict[str, Any]:
+    from bmip.transform.gold import GoldWriter
+
+    settings = get_settings()
+    path = Path(duckdb_path) if duckdb_path else ROOT / "dbt" / "target" / "bmip.duckdb"
+    writer = GoldWriter(settings)
+    writer.ensure_tables()
+    results = writer.publish_from_duckdb(path)
+    return {
+        "published": [result.as_dict() for result in results],
+        "counts": writer.counts(),
+    }
+
+
+@flow(name="transform-gold", log_prints=True)
+def transform_gold_flow(duckdb_path: str | None = None) -> dict[str, Any]:
+    """Silver gate -> gold build -> gold gate -> Iceberg publish.
+
+    A critical silver failure raises before the gold models are built, so bad
+    data never reaches ``gold.mart_*`` in the lakehouse.
+    """
+    configure_logging()
+    social_silver = build_silver_social_task()
+    silver_build = transform_silver_task(select="staging intermediate silver")
+    silver_quality = quality_silver_task()
+    gold_build = transform_silver_task(select="marts")
+    gold_quality = quality_gold_task(duckdb_path=duckdb_path)
+    published = publish_gold_task(duckdb_path=duckdb_path)
+    return {
+        "social_silver": social_silver,
+        "silver_build": silver_build,
+        "silver_quality": silver_quality,
+        "gold_build": gold_build,
+        "gold_quality": gold_quality,
+        "published": published,
+    }
+
+
+@flow(name="backfill-gold", log_prints=True)
+def backfill_gold_flow(start: str, end: str, duckdb_path: str | None = None) -> dict[str, Any]:
+    """Rebuild gold for a range.
+
+    dbt recomputes the affected hours from silver and the publisher overwrites
+    exactly those ``event_date`` partitions, so replaying a range is idempotent.
+    """
+    configure_logging()
+    if start >= end:
+        raise ValueError("backfill start must be before end")
+    result = transform_gold_flow(duckdb_path=duckdb_path)
+    return {"range": {"start": start, "end": end}, **result}
+

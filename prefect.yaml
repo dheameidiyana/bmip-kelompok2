@@ -41,3 +41,38 @@ deployments:
       - cron: "40 * * * *"
         timezone: UTC
         active: true
+
+  - name: transform-gold
+    version: "1"
+    description: Silver quality gate, gold marts, gold gate, and Iceberg publish.
+    tags:
+      - bmip
+      - w1-c
+      - transform
+      - quality
+    entrypoint: src/bmip/flows/ingestion.py:transform_gold_flow
+    parameters: {}
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1
+    schedules:
+      - cron: "50 * * * *"
+        timezone: UTC
+        active: true
+
+  - name: backfill-gold
+    version: "1"
+    description: Rebuild and republish gold for an explicit hour range.
+    tags:
+      - bmip
+      - w1-c
+      - backfill
+    entrypoint: src/bmip/flows/ingestion.py:backfill_gold_flow
+    parameters:
+      start: "2026-11-10T00:00:00+00:00"
+      end: "2026-11-11T00:00:00+00:00"
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1

@@ -1,0 +1,16 @@
+suite: silver_market_trades
+dataset: silver.market_trades
+rules:
+  - id: market-trade-id-present
+    kind: expectation
+    expectation: ExpectColumnValuesToNotBeNull
+    column: trade_id
+    severity: critical
+    description: T-11, a null trade_id blocks gold promotion.
+
+  - id: market-trade-duplicate-rate
+    kind: duplicate_rate
+    columns: ["symbol", "trade_id"]
+    max_rate: 0.02
+    severity: warning
+    description: T-12, an incoming duplicate rate above 2% is recorded but does not block.

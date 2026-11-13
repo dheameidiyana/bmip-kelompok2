@@ -1,0 +1,33 @@
+suite: gold_sentiment
+dataset: gold.mart_sentiment
+rules:
+  - id: gold-sentiment-hour-unique
+    kind: expectation
+    expectation: ExpectColumnValuesToBeUnique
+    column: window_start
+    severity: critical
+    description: One row per hour, including empty hours.
+
+  - id: gold-sentiment-count-present
+    kind: expectation
+    expectation: ExpectColumnValuesToNotBeNull
+    column: post_count
+    severity: critical
+    description: An empty hour is 0, never null.
+
+  - id: gold-sentiment-count-non-negative
+    kind: expectation
+    expectation: ExpectColumnValuesToBeBetween
+    column: post_count
+    min_value: 0
+    severity: critical
+    description: Post counts cannot be negative.
+
+  - id: gold-sentiment-mean-range
+    kind: expectation
+    expectation: ExpectColumnValuesToBeBetween
+    column: mean_sentiment
+    min_value: -1
+    max_value: 1
+    severity: warning
+    description: Mean sentiment must stay in [-1, 1] when posts exist.

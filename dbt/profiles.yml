@@ -24,3 +24,10 @@ bmip:
             endpoint: "{{ env_var('LAKEKEEPER_URL', 'http://localhost:8181') }}/catalog"
             authorization_type: none
             access_delegation_mode: none
+    ci:
+      type: duckdb
+      path: "{{ env_var('DBT_CI_DUCKDB_PATH', 'target/ci.duckdb') }}"
+      threads: 1
+      attach:
+        - path: "{{ env_var('DBT_CI_ICEBERG_PATH', 'target/ci_iceberg.duckdb') }}"
+          alias: iceberg

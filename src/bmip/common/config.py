@@ -65,6 +65,10 @@ class Settings:
     social_replay_file: str
     bluesky_base_url: str
     binance_vision_base_url: str
+    pii_hash_salt: str
+    sentiment_model_version: str
+    gold_max_gap_hours: int
+    gold_freshness_threshold_minutes: int
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -131,6 +135,14 @@ class Settings:
             ),
             binance_vision_base_url=os.getenv(
                 "BINANCE_VISION_BASE_URL", "https://data.binance.vision"
+            ),
+            pii_hash_salt=_env("PII_HASH_SALT"),
+            sentiment_model_version=os.getenv(
+                "SENTIMENT_MODEL_VERSION", "vaderSentiment-3.3.2"
+            ),
+            gold_max_gap_hours=int(os.getenv("GOLD_MAX_GAP_HOURS", "24")),
+            gold_freshness_threshold_minutes=int(
+                os.getenv("GOLD_FRESHNESS_THRESHOLD_MINUTES", "90")
             ),
         )
 

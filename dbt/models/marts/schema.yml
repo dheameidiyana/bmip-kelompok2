@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: mart_market
+    description: Hourly OHLC, realized volatility, and EWMA volatility per symbol.
+    columns:
+      - name: symbol
+        tests:
+          - not_null
+      - name: window_start
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: volume
+        tests:
+          - not_null
+      - name: trade_count
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+
+  - name: mart_sentiment
+    description: Hourly social sentiment aggregate; empty hours stay visible.
+    columns:
+      - name: window_start
+        tests:
+          - not_null
+          - unique
+      - name: post_count
+        tests:
+          - not_null
+      - name: sentiment_model_version
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+
+  - name: mart_ml
+    description: Point-in-time features plus the next-hour realized volatility label.
+    columns:
+      - name: symbol
+        tests:
+          - not_null
+      - name: window_start
+        tests:
+          - not_null
+      - name: feature_snapshot_id
+        tests:
+          - not_null
+      - name: dq_status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["pass", "warn"]
+      - name: event_date
+        tests:
+          - not_null
