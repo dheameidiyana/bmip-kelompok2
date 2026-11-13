@@ -1,0 +1,24 @@
+id        : T-22-draft
+timestamp : 2026-11-13T21:07:48.673615Z
+commit    : bba1611
+command   : scripts/w1c_evidence.py (pii_columns)
+result    : PASS
+owner     : vio
+run       : 20261113T2105
+
+
+Columns and sample values in the silver social tables (ADR-011).
+
+table   : silver.social_post
+columns : ['post_key', 'author_key', 'event_ts', 'ingest_ts', 'lang', 'text', 'hashtags', 'like_count', 'repost_count', 'reply_count', 'quote_count', 'source', 'payload_hash', 'event_date', 'updated_at']
+forbidden columns present : []
+raw identifiers in sample : []
+sample  : [{"post_key": "8c36669f7cecf9f186d0da4cddab0884899906c1b9a25ce7de0ed56d6d52aaf6", "author_key": "a23d486237a6e8737f7104a9efa305969c27095329c9038c13f7f3d2c673f2fe", "event_ts": "2026-11-10 14:05:00+00:00", "ingest_ts": "2026-11-13 21:07:21.668437+00:00", "lang": "en", "text": "BTC looks strong today #bitcoin", "hashtags": ["bitcoin"], "like_count": 10, "repost_count": 2, "reply_count": 1, "quote_co
+
+table   : silver.social_sentiment
+columns : ['post_key', 'event_ts', 'window_start', 'ingest_ts', 'sentiment_score', 'sentiment_pos', 'sentiment_neu', 'sentiment_neg', 'sentiment_label', 'sentiment_model_version', 'event_date', 'updated_at']
+forbidden columns present : []
+raw identifiers in sample : []
+sample  : [{"post_key": "8c36669f7cecf9f186d0da4cddab0884899906c1b9a25ce7de0ed56d6d52aaf6", "event_ts": "2026-11-10 14:05:00+00:00", "window_start": "2026-11-10 14:00:00+00:00", "ingest_ts": "2026-11-13 21:07:21.668437+00:00", "sentiment_score": 0.5106, "sentiment_pos": 0.452, "sentiment_neu": 0.548, "sentiment_neg": 0.0, "sentiment_label": "positive", "sentiment_model_version": "vaderSentiment-3.3.2", "eve
+
+no raw PII in silver : True

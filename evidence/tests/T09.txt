@@ -1,0 +1,17 @@
+id        : T-09
+timestamp : 2026-11-13T21:05:56.027897Z
+commit    : bba1611
+command   : scripts/w1c_evidence.py (t09_no_leakage)
+result    : PASS
+owner     : vio
+run       : 20261113T2105
+
+
+Two synthetic hours, built twice: the second build triples every price from
+2026-11-10T02:00:00+00:00 onward. Features at or before that hour must be identical.
+
+feature hours compared : 2
+feature mismatches     : 0
+label window correct   : True
+
+Checked columns: ret_5m, ret_15m, ret_60m, rv_5m, rv_15m, rv_60m, volume_z_60m, trade_count_60m, hl_range_1m, vwap_dev

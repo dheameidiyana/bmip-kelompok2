@@ -1,0 +1,20 @@
+id        : T-12
+timestamp : 2026-11-13T21:06:44.229161Z
+commit    : bba1611
+command   : scripts/w1c_evidence.py (t12_warning_path)
+result    : PASS
+owner     : vio
+run       : 20261113T2105
+
+
+30 duplicate rows are appended to a 1,000-row sample before deduplication.
+
+injected duplicate rate : 0.0291
+checkpoint status       : pass
+critical failures       : 0
+warning failures        : 1
+
+warning: silver_market_trades:market-trade-duplicate-rate observed={'duplicate_rate': 0.029126, 'duplicate_rows': 30, 'rows': 1030}
+
+The pipeline continues: the warning is recorded in dq_report.json and the
+gold build is not blocked.

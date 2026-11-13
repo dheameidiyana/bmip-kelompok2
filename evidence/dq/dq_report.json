@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-13T20:38:17.083848Z",
-  "commit": "fdaf360",
+  "generated_at": "2026-11-13T21:08:23.596441Z",
+  "commit": "bba1611",
   "owner": "vio",
   "warning_only": false,
   "status": "pass",
@@ -255,6 +255,19 @@
           "status": "pass",
           "observed": 0,
           "expected": "ExpectColumnValuesToNotBeNull",
+          "detail": ""
+        },
+        {
+          "id": "market-trade-duplicate-rate",
+          "kind": "duplicate_rate",
+          "severity": "warning",
+          "status": "pass",
+          "observed": {
+            "duplicate_rate": 0.0,
+            "duplicate_rows": 0,
+            "rows": 282000
+          },
+          "expected": "<= 0.02",
           "detail": ""
         }
       ]

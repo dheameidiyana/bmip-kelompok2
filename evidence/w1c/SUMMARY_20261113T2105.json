@@ -1,0 +1,74 @@
+{
+  "id": "W1-C",
+  "timestamp": "2026-11-13T21:07:49.057358Z",
+  "commit": "bba1611",
+  "owner": "vio",
+  "results": {
+    "T-03": {
+      "pass": true,
+      "before": {
+        "silver.social_post": 2,
+        "silver.social_sentiment": 2
+      },
+      "after": {
+        "silver.social_post": 2,
+        "silver.social_sentiment": 2
+      }
+    },
+    "T-10": {
+      "pass": true,
+      "scores": [
+        0.0,
+        -0.5719,
+        0.0,
+        0.0,
+        -0.7717
+      ]
+    },
+    "T-09": {
+      "pass": true,
+      "checked": 2,
+      "mismatches": 0
+    },
+    "T-11": {
+      "pass": true,
+      "blocked": true,
+      "message": "critical data-quality failures: silver_market_trades:market-trade-id-present"
+    },
+    "T-12": {
+      "pass": true,
+      "rate": 0.02912621359223301,
+      "warnings": 1
+    },
+    "T-31": {
+      "pass": true,
+      "snapshot": 7702219770954866542
+    },
+    "T-32": {
+      "pass": true,
+      "changed": {
+        "2026-11-10 14:00:00+00:00": {
+          "before": 0.2553,
+          "after": -0.42955
+        }
+      }
+    },
+    "T-33": {
+      "pass": true,
+      "first": {
+        "gold.mart_market": 3,
+        "gold.mart_sentiment": 1,
+        "gold.mart_ml": 3
+      }
+    },
+    "pii": {
+      "pass": true
+    },
+    "counts": {
+      "gold.mart_market": 3,
+      "gold.mart_sentiment": 1,
+      "gold.mart_ml": 3
+    }
+  },
+  "status": "PASS"
+}

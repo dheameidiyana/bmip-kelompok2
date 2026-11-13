@@ -1,0 +1,19 @@
+id        : T-10
+timestamp : 2026-11-13T21:05:36.817802Z
+commit    : bba1611
+command   : scripts/w1c_evidence.py (t10_sentiment_range)
+result    : PASS
+owner     : vio
+run       : 20261113T2105
+
+
+model_version : vaderSentiment-3.3.2
+
+  compound    pos   neu   neg  label     text
+    0.0000   0.00  1.00  0.00  neutral   BTC to the moon!!!
+   -0.5719   0.00  0.57  0.42  negative  I hate this market so much
+    0.0000   0.00  1.00  0.00  neutral   Bitcoin traded sideways today
+    0.0000   0.00  1.00  0.00  neutral   #bitcoin #btc volatility rising
+   -0.7717   0.00  0.43  0.57  negative  This dump is brutal, everything is red
+
+all scores in [-1, 1] : True

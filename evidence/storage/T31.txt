@@ -1,0 +1,18 @@
+id        : T-31
+timestamp : 2026-11-13T21:06:45.418369Z
+commit    : bba1611
+command   : scripts/w1c_evidence.py (t31_schema_evolution)
+result    : PASS
+owner     : vio
+run       : 20261113T2105
+
+
+table          : silver.schema_evolution_probe_20261113T2105
+snapshot v1    : 7702219770954866542
+current schema : ['post_key', 'event_ts', 'score', 'confidence']
+v1 columns     : ['post_key', 'event_ts', 'score']
+
+current rows   : [{'post_key': 'probe-2', 'event_ts': datetime.datetime(2026, 11, 13, 21, 6, 44, 683994, tzinfo=zoneinfo.ZoneInfo(key='UTC')), 'score': -0.5, 'confidence': 0.9}, {'post_key': 'probe-1', 'event_ts': datetime.datetime(2026, 11, 13, 21, 6, 44, 683994, tzinfo=zoneinfo.ZoneInfo(key='UTC')), 'score': 0.5, 'confidence': None}]
+v1 rows        : [{'post_key': 'probe-1', 'event_ts': datetime.datetime(2026, 11, 13, 21, 6, 44, 683994, tzinfo=zoneinfo.ZoneInfo(key='UTC')), 'score': 0.5}]
+
+old snapshot readable and new nullable column absent : True
