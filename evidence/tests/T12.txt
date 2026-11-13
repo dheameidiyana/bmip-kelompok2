@@ -1,10 +1,10 @@
 id        : T-12
-timestamp : 2026-11-13T21:06:44.229161Z
-commit    : bba1611
+timestamp : 2026-11-13T22:25:11.018667Z
+commit    : 3742fe9
 command   : scripts/w1c_evidence.py (t12_warning_path)
 result    : PASS
 owner     : vio
-run       : 20261113T2105
+run       : 20261113T2223
 
 
 30 duplicate rows are appended to a 1,000-row sample before deduplication.

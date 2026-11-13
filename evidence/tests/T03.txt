@@ -1,10 +1,10 @@
 id        : T-03
-timestamp : 2026-11-13T21:05:36.817802Z
-commit    : bba1611
+timestamp : 2026-11-13T22:23:57.752686Z
+commit    : 3742fe9
 command   : scripts/w1c_evidence.py (t03_social_dedup)
 result    : PASS
 owner     : vio
-run       : 20261113T2105
+run       : 20261113T2223
 
 
 Silver social deduplication: the same post_key is written twice.

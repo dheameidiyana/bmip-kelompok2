@@ -34,9 +34,10 @@ Isi saat evidence freeze:
 
 W1-C menambahkan:
 
-- Commit SHA: lihat header `commit` di tiap file W1-C (base kode `2f6d411`).
+- Commit SHA: lihat header `commit` di tiap file W1-C (kode diuji: `3742fe9`).
 - Base branch: `feat/silver-lois` (`fdaf360`), karena W1-B belum di-merge ke `dev`.
 - Python: 3.11.9, Great Expectations 1.25.0, VADER 3.3.2.
+- Lint: `ruff` + `sqlfluff` (config `.sqlfluff`) bersih; `e2e-smoke` PASS.
 - Data: replay nyata Binance Vision `BTCUSDT-aggTrades-2026-11-10` pukul
   14:00-17:00 UTC, plus dua post fixture W1-A.
 - Tag `w1-c-ok` menunjuk commit final W1-C setelah evidence di-commit.
@@ -68,7 +69,10 @@ W1-C menambahkan:
 | T-32 | storage | `storage/T32.json` | PASS | koreksi sumber mengubah jam yang benar |
 | T-33 | storage | `storage/T33.json` | PASS | dua rerun menghasilkan hash logis identik |
 | DQ | dq | `dq/dq_report.json` | PASS | checkpoint GX lengkap, 7 suite |
-| DQ | dq | `dq/mart-counts_<ts>.csv` | PASS | jumlah baris per mart |
-| PII | security | `security/pii-columns_<ts>.txt` | PASS | tidak ada URI, DID, atau handle mentah di silver |
-| DBT | dbt | `dbt/docs_<ts>.txt` | PASS | katalog model dan kolom hasil `dbt docs generate` |
-| W1-C | w1c | `w1c/SUMMARY_<ts>.json` | PASS | ringkasan satu baris per test |
+| DQ | dq | `dq/mart-counts_20261113T2223.csv` | PASS | jumlah baris per mart |
+| PII | security | `security/pii-columns_20261113T2223.txt` | PASS | tidak ada URI, DID, atau handle mentah di silver |
+| DBT | dbt | `dbt/docs.png` | PASS | halaman dbt docs `mart_ml` dengan kolom dan deskripsi |
+| DBT | dbt | `dbt/docs_20261113T2230.txt` | PASS | katalog model dan kolom hasil `dbt docs generate` |
+| E2E | e2e | `e2e/SMOKE-W1A_20261113T2226_3742fe9.txt` | PASS | health + replay + bronze counts + ledger + idempotensi, dengan warm-up |
+| Prefect | deploy | `deploy/prefect-gold_20261113T2229_3742fe9.json` | PASS | flow `transform-gold` berstatus Completed lewat worker |
+| W1-C | w1c | `w1c/SUMMARY_20261113T2223.json` | PASS | ringkasan satu baris per test |

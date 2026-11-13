@@ -1,6 +1,6 @@
 id        : W1-C-DBT
-timestamp : 2026-11-13T20:58:02.647402Z
-commit    : 2f6d411
+timestamp : 2026-11-13T22:30:43.937336Z
+commit    : 3742fe9
 command   : dbt docs generate --project-dir dbt --profiles-dir dbt
 result    : PASS
 owner     : vio
@@ -75,7 +75,7 @@ gold.mart_market  (16 columns)
     - updated_at: Materialization timestamp; excluded from idempotence hashes.
     - event_date: Iceberg partition column, derived from window_start.
 
-gold.mart_ml  (23 columns)
+gold.mart_ml  (25 columns)
     - symbol: Trading pair.
     - window_start: Feature window boundary and label window start (UTC).
     - ret_5m: Log return over the trailing 5 minutes.
@@ -99,6 +99,8 @@ gold.mart_ml  (23 columns)
     - feature_snapshot_id: Iceberg snapshot or build id the features came from.
     - dq_status: pass when every feature and the label are present, else warn.
     - event_date: Iceberg partition column, derived from window_start.
+    - event_hour: Workplan alias for window_start; same value, kept for the W1-C contract.
+    - snapshot_id: Workplan alias for feature_snapshot_id; same value.
 
 gold.mart_sentiment  (15 columns)
     - window_start: Start of the hourly window in UTC.

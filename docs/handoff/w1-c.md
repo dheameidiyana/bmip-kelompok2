@@ -14,8 +14,9 @@
 - Tag: `w1-c-ok`
 
 Gate: silver social is pseudonymized and scored, the three gold marts are
-published to Iceberg with partition overwrite, and the Great Expectations
-checkpoint blocks gold on a critical failure and records a warning otherwise.
+published to Iceberg with partition overwrite, the Great Expectations checkpoint
+blocks gold on a critical failure and records a warning otherwise, and
+`make e2e-smoke` plus `make lint` are green.
 
 ## Yang sudah jalan
 
@@ -40,7 +41,9 @@ checkpoint blocks gold on a critical failure and records a warning otherwise.
   boundary), `int_social_sentiment_1h` (hourly aggregate with explicit empty
   hours).
 - `dbt/models/marts`: `mart_market`, `mart_sentiment`, `mart_ml`, documented in
-  `dbt/models/marts/schema.yml`.
+  `dbt/models/marts/schema.yml`. `mart_ml` exposes both naming conventions:
+  `window_start`/`event_hour` and `feature_snapshot_id`/`snapshot_id` hold the
+  same values, because ARCHITECTURE §9.4 and workplan W1-C item 6 disagree.
 - `mart_ml` keeps the point-in-time invariant: every feature comes from bars
   strictly before `window_start`; `label_start = window_start` and
   `label_end = window_start + 1 hour`. `dq_status` is `pass` only when
@@ -106,19 +109,18 @@ which has two posts at 14:05 and 14:06.
 - **One sentiment hour.** The fixture only has posts at 14:05 and 14:06, so
   `mart_sentiment` has one row. Do not synthesise posts. For a richer demo,
   harvest live Bluesky (`SOCIAL_FEED=bluesky`) or add a real replay window.
-- **dbt docs screenshot.** `dbt docs generate` runs and the catalog is summarised
-  in `evidence/dbt/docs_<ts>.txt`; a PNG screenshot is not captured on this
-  machine.
 - **Alert delivery for T-11.** The blocking gate is proven; Telegram delivery
   and the runbook are W2-B scope.
 - **Prefect worker.** Not permanent, same as W1-B: the pool is `NOT_READY` when
   the worker stops. Run `python -m prefect worker start -p local-process`
-  before relying on the schedule.
+  before relying on the schedule. `transform-gold` itself was executed once
+  through the worker and is evidenced.
 - **Serving, API, dashboard** are W1-D.
 - **PR dan review.** `slot/w1-c-vio` belum dibuka sebagai PR ke `dev`; butuh satu
   reviewer (Lois atau Anin) sebelum W1-D mulai. W1-B juga belum di-merge ke `dev`
   dan belum punya tag `w1-b-ok`; W1-C karena itu dimulai dari
   `feat/silver-lois`, bukan dari tag.
+- **Issue W1-C** belum dibuat di GitHub; tidak ada kredensial GitHub di mesin ini.
 
 ## Cara menjalankan
 
@@ -141,6 +143,21 @@ python scripts/build_gold.py
 
 # 5. verify the published tables and refresh the report
 python scripts/quality.py
+
+# 6. gates required by the workplan
+python -m pytest
+python scripts/e2e_smoke.py
+
+# 7. a range backfill (recomputes marts, republishes only these hours)
+python scripts/build_gold.py --start 2026-11-10T15:00:00Z --end 2026-11-10T16:00:00Z
+```
+
+Prefect path (same flow, scheduled at :50 every hour):
+
+```powershell
+python scripts/prefect_bootstrap.py
+python -m prefect deployment run "transform-gold/transform-gold"
+python -m prefect worker start -p local-process --run-once
 ```
 
 ## Kegagalan yang diketahui
@@ -153,6 +170,8 @@ python scripts/quality.py
 | `Access Denied` writing `warehouse/gold.db` | `svc-process` had no gold write | Gold publish uses `svc-dbt`; `svc-process` got read-only gold for the gate |
 | `InvalidLocation ... tabular locations have to be empty` | A previous T-31 run left files | The probe table name and location include the run timestamp |
 | GX pretty-print crashes on Windows | `rich` writes an emoji to cp1252 | Set `PYTHONIOENCODING=utf-8` |
+| A range backfill deleted the rest of the day | Marts are partitioned by day; overwriting with only the requested hours drops the rest | `publish_arrow(start=..., end=...)` keeps rows outside the range before the overwrite |
+| `e2e-smoke` failed on a clean stack | The first fixture replay inserts rows, so before/after counts differ | The gate now warms up both fixtures before measuring |
 
 ## Langkah berikutnya untuk Anin (W1-D)
 
@@ -160,8 +179,9 @@ python scripts/quality.py
    `gold.mart_sentiment`, `gold.mart_ml`. The `api` policy already allows
    `GetObject` on `warehouse/gold.db/*`.
 2. Use `dbt/models/marts/schema.yml` as the column contract. `mart_ml` columns
-   are the model input; `feature_snapshot_id` defaults to `dev`, override it
-   with `--vars '{feature_snapshot_id: <id>}'` when training.
+   are the model input; `feature_snapshot_id` (alias `snapshot_id`) defaults to
+   `dev`, override it with `--vars '{feature_snapshot_id: <id>}'` when training.
+   `window_start` and `event_hour` are the same column.
 3. Empty sentiment hours are explicit: `post_count = 0` and null shares. Do not
    treat null as missing data.
 4. Freshness: `gold.mart_market` must stay within 90 minutes of
@@ -185,10 +205,13 @@ python scripts/quality.py
 | T-32 | `evidence/storage/T32.json` | Corrected source changes the right hour |
 | T-33 | `evidence/storage/T33.json` | Two reruns produce the same logical hashes |
 | DQ | `evidence/dq/dq_report.json` | Full checkpoint result |
-| DQ | `evidence/dq/mart-counts_<ts>.csv` | Rows per mart |
-| PII | `evidence/security/pii-columns_<ts>.txt` | No raw URI, DID, or handle in silver |
-| dbt | `evidence/dbt/docs_<ts>.txt` | Documented models and columns |
-| Sum | `evidence/w1c/SUMMARY_<ts>.json` | One-line result per test |
+| DQ | `evidence/dq/mart-counts_20261113T2223.csv` | Rows per mart |
+| PII | `evidence/security/pii-columns_20261113T2223.txt` | No raw URI, DID, or handle in silver |
+| dbt | `evidence/dbt/docs.png` | dbt docs page for `mart_ml`, with columns and descriptions |
+| dbt | `evidence/dbt/docs_20261113T2230.txt` | Catalog summary generated from `catalog.json` |
+| E2E | `evidence/e2e/SMOKE-W1A_20261113T2226_3742fe9.txt` | W1-A smoke gate: health, replay, bronze counts, ledger, idempotence |
+| Prefect | `evidence/deploy/prefect-gold_20261113T2229_3742fe9.json` | `transform-gold` flow run `Completed` through the worker |
+| Sum | `evidence/w1c/SUMMARY_20261113T2223.json` | One-line result per test |
 
 All files are generated by `python scripts/w1c_evidence.py` and
 `python scripts/quality.py`; none are hand-written.

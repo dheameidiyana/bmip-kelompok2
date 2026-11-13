@@ -1,10 +1,10 @@
 id        : T-10
-timestamp : 2026-11-13T21:05:36.817802Z
-commit    : bba1611
+timestamp : 2026-11-13T22:23:57.752686Z
+commit    : 3742fe9
 command   : scripts/w1c_evidence.py (t10_sentiment_range)
 result    : PASS
 owner     : vio
-run       : 20261113T2105
+run       : 20261113T2223
 
 
 model_version : vaderSentiment-3.3.2

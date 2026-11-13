@@ -1,10 +1,10 @@
 id        : T-09
-timestamp : 2026-11-13T21:05:56.027897Z
-commit    : bba1611
+timestamp : 2026-11-13T22:24:19.319061Z
+commit    : 3742fe9
 command   : scripts/w1c_evidence.py (t09_no_leakage)
 result    : PASS
 owner     : vio
-run       : 20261113T2105
+run       : 20261113T2223
 
 
 Two synthetic hours, built twice: the second build triples every price from

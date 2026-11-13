@@ -25,8 +25,9 @@ W1-C selesai di branch `slot/w1-c-vio` (base `feat/silver-lois`): silver social
 dengan pseudonimisasi HMAC dan VADER, tiga gold mart (`mart_market`,
 `mart_sentiment`, `mart_ml`) dengan partition overwrite per `event_date`, dan
 checkpoint Great Expectations yang memblokir gold saat critical gagal serta
-mencatat warning. Detail serah terima ada di
-[docs/handoff/w1-c.md](docs/handoff/w1-c.md). Berikutnya W1-D (serving, API,
+mencatat warning. `make lint`, `make test`, dan `make e2e-smoke` hijau, dan flow
+Prefect `transform-gold` sudah dijalankan lewat worker. Detail serah terima ada
+di [docs/handoff/w1-c.md](docs/handoff/w1-c.md). Berikutnya W1-D (serving, API,
 dashboard).
 
 ## Stack
