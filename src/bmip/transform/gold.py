@@ -9,7 +9,7 @@ the same input therefore replaces the partition instead of appending rows.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -123,6 +123,8 @@ def _iceberg_ml_schema() -> Schema:
         NestedField(21, "feature_snapshot_id", StringType(), required=True),
         NestedField(22, "dq_status", StringType(), required=True),
         NestedField(23, "event_date", DateType(), required=True),
+        NestedField(24, "event_hour", TimestamptzType(), required=False),
+        NestedField(25, "snapshot_id", StringType(), required=False),
     )
 
 
@@ -197,6 +199,8 @@ ML_ARROW_SCHEMA = pa.schema(
         _field("feature_snapshot_id", pa.large_string()),
         _field("dq_status", pa.large_string()),
         _field("event_date", pa.date32()),
+        _field("event_hour", TS),
+        _field("snapshot_id", pa.large_string()),
     ]
 )
 
@@ -259,11 +263,45 @@ class GoldWriter:
                     )
                 ),
             )
+            self._evolve_schema(identifier, schema_obj)
+
+    def _evolve_schema(self, identifier: str, schema_obj: Schema) -> None:
+        """Add columns introduced after the table was created (nullable only)."""
+        table = self._table(identifier)
+        existing = {field.name for field in table.schema().fields}
+        missing = [field for field in schema_obj.fields if field.name not in existing]
+        if not missing:
+            return
+        update = table.update_schema()
+        for field in missing:
+            update.add_column(
+                field.name,
+                field.field_type,
+                required=False,
+                doc=field.doc,
+            )
+        update.commit()
+        log.info(
+            "gold schema evolved",
+            extra={
+                "ctx_table": identifier,
+                "ctx_added": [field.name for field in missing],
+            },
+        )
 
     def _table(self, identifier: str):
         return table_with_host_io(self.catalog, self.settings, identifier, self.service)
 
-    def publish_arrow(self, identifier: str, arrow: pa.Table) -> GoldPublishResult:
+    def publish_arrow(
+        self,
+        identifier: str,
+        arrow: pa.Table,
+        *,
+        start: datetime | None = None,
+        end: datetime | None = None,
+    ) -> GoldPublishResult:
+        import pyarrow.compute as pc
+
         _, arrow_schema = SCHEMAS[identifier]
         prepared = coerce(arrow, arrow_schema)
         table = self._table(identifier)
@@ -276,10 +314,14 @@ class GoldWriter:
         if not dates:
             return GoldPublishResult(identifier, 0, 0)
         for event_date in dates:
-            mask = pa.compute.equal(
+            mask = pc.equal(
                 prepared.column("event_date"), pa.scalar(event_date, pa.date32())
             )
             partition = prepared.filter(mask)
+            if start is not None or end is not None:
+                partition = self._merge_outside_range(
+                    table, identifier, event_date, partition, start, end
+                )
             table.overwrite(partition, overwrite_filter=EqualTo("event_date", event_date))
         log.info(
             "gold partition overwrite",
@@ -291,9 +333,51 @@ class GoldWriter:
         )
         return GoldPublishResult(identifier, prepared.num_rows, len(dates))
 
-    def publish_from_duckdb(self, duckdb_path: str | Path) -> list[GoldPublishResult]:
-        """Read the dbt marts from DuckDB and commit them to Iceberg."""
+    def _merge_outside_range(
+        self,
+        table,
+        identifier: str,
+        event_date: date,
+        partition: pa.Table,
+        start: datetime | None,
+        end: datetime | None,
+    ) -> pa.Table:
+        """Keep rows outside [start, end) when a backfill overwrites a day."""
+        import pyarrow.compute as pc
+
+        _, arrow_schema = SCHEMAS[identifier]
+        existing = coerce(
+            table.scan(row_filter=EqualTo("event_date", event_date)).to_arrow(),
+            arrow_schema,
+        )
+        if existing.num_rows:
+            window = existing.column("window_start")
+            keep = None
+            if start is not None:
+                keep = pc.less(window, pa.scalar(start, TS))
+            if end is not None:
+                after = pc.greater_equal(window, pa.scalar(end, TS))
+                keep = after if keep is None else pc.or_(keep, after)
+            if keep is not None:
+                existing = existing.filter(keep)
+        if existing.num_rows == 0:
+            return partition
+        return pa.concat_tables([existing, partition]).combine_chunks()
+
+    def publish_from_duckdb(
+        self,
+        duckdb_path: str | Path,
+        *,
+        start: datetime | None = None,
+        end: datetime | None = None,
+    ) -> list[GoldPublishResult]:
+        """Read the dbt marts from DuckDB and commit them to Iceberg.
+
+        ``start``/``end`` scope a backfill: the marts are recomputed, but only
+        partitions whose rows fall inside the range are overwritten.
+        """
         import duckdb
+        import pyarrow.compute as pc
 
         path = Path(duckdb_path)
         if not path.exists():
@@ -304,8 +388,18 @@ class GoldWriter:
                 schema, table_name = identifier.split(".")
                 arrow = connection.execute(
                     f'select * from "{schema}"."{table_name}"'
-                ).fetch_arrow_table()
-                results.append(self.publish_arrow(identifier, arrow))
+                ).to_arrow_table()
+                if start is not None:
+                    arrow = arrow.filter(
+                        pc.greater_equal(arrow["window_start"], pa.scalar(start, TS))
+                    )
+                if end is not None:
+                    arrow = arrow.filter(
+                        pc.less(arrow["window_start"], pa.scalar(end, TS))
+                    )
+                results.append(
+                    self.publish_arrow(identifier, arrow, start=start, end=end)
+                )
         return results
 
     def counts(self) -> dict[str, int]:

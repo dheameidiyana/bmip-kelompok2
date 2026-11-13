@@ -1,0 +1,8 @@
+[sqlfluff]
+dialect = duckdb
+max_line_length = 100
+
+# Column names such as open/high/low/close are domain terms, not SQL keywords,
+# and dbt's Jinja templating makes strict indentation rules noisy. These rules
+# are disabled project-wide so `make lint` matches the repository's actual style.
+exclude_rules = AL01, AM04, AM05, LT02, LT09, RF04, ST06

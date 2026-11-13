@@ -58,7 +58,7 @@ ewma as (
 
     ),
 
-    calc(symbol, window_start, rn, rv_ewma_24h) as (
+    calc (symbol, window_start, rn, rv_ewma_24h) as (
 
         select symbol, window_start, rn, realized_vol_1h
         from base

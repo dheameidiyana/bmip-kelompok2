@@ -40,7 +40,7 @@ jobs:
 
       - name: SQLFluff
         run: |
-          files=$(find dbt -name '*.sql')
+          files=$(find dbt -name '*.sql' -not -path 'dbt/target/*')
           if [ -n "$files" ]; then
             sqlfluff lint $files --dialect duckdb
           else

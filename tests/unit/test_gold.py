@@ -41,12 +41,13 @@ def _market_row():
     }
 
 
-def test_schemas_are_partitioned_by_event_date_last():
+def test_schemas_are_partitioned_by_event_date():
     for identifier, (_, arrow_schema) in SCHEMAS.items():
-        assert arrow_schema.names[-1] == "event_date", identifier
+        assert "event_date" in arrow_schema.names, identifier
     assert MARKET_ARROW_SCHEMA.names[0] == "symbol"
     assert SENTIMENT_ARROW_SCHEMA.names[0] == "window_start"
     assert ML_ARROW_SCHEMA.names[0] == "symbol"
+    assert {"event_hour", "snapshot_id"} <= set(ML_ARROW_SCHEMA.names)
 
 
 def test_coerce_reorders_and_casts_columns():

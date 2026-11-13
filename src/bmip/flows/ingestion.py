@@ -123,26 +123,48 @@ def quality_gold_task(duckdb_path: str | None = None) -> dict[str, Any]:
 
 
 @task(name="publish-gold", retries=1, retry_delay_seconds=30)
-def publish_gold_task(duckdb_path: str | None = None) -> dict[str, Any]:
+def publish_gold_task(
+    duckdb_path: str | None = None,
+    start: str | None = None,
+    end: str | None = None,
+) -> dict[str, Any]:
     from bmip.transform.gold import GoldWriter
 
     settings = get_settings()
     path = Path(duckdb_path) if duckdb_path else ROOT / "dbt" / "target" / "bmip.duckdb"
     writer = GoldWriter(settings)
     writer.ensure_tables()
-    results = writer.publish_from_duckdb(path)
+    results = writer.publish_from_duckdb(
+        path,
+        start=_ts(start),
+        end=_ts(end),
+    )
     return {
         "published": [result.as_dict() for result in results],
         "counts": writer.counts(),
     }
 
 
+def _ts(value: str | None):
+    if not value:
+        return None
+    from datetime import UTC, datetime
+
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+
 @flow(name="transform-gold", log_prints=True)
-def transform_gold_flow(duckdb_path: str | None = None) -> dict[str, Any]:
+def transform_gold_flow(
+    duckdb_path: str | None = None,
+    start: str | None = None,
+    end: str | None = None,
+) -> dict[str, Any]:
     """Silver gate -> gold build -> gold gate -> Iceberg publish.
 
     A critical silver failure raises before the gold models are built, so bad
-    data never reaches ``gold.mart_*`` in the lakehouse.
+    data never reaches ``gold.mart_*`` in the lakehouse. ``start``/``end`` scope
+    a backfill to the partitions inside the range.
     """
     configure_logging()
     social_silver = build_silver_social_task()
@@ -150,7 +172,11 @@ def transform_gold_flow(duckdb_path: str | None = None) -> dict[str, Any]:
     silver_quality = quality_silver_task()
     gold_build = transform_silver_task(select="marts")
     gold_quality = quality_gold_task(duckdb_path=duckdb_path)
-    published = publish_gold_task(duckdb_path=duckdb_path)
+    published = publish_gold_task(
+        duckdb_path=duckdb_path,
+        start=start,
+        end=end,
+    )
     return {
         "social_silver": social_silver,
         "silver_build": silver_build,
@@ -162,15 +188,20 @@ def transform_gold_flow(duckdb_path: str | None = None) -> dict[str, Any]:
 
 
 @flow(name="backfill-gold", log_prints=True)
-def backfill_gold_flow(start: str, end: str, duckdb_path: str | None = None) -> dict[str, Any]:
-    """Rebuild gold for a range.
+def backfill_gold_flow(
+    start: str,
+    end: str,
+    duckdb_path: str | None = None,
+) -> dict[str, Any]:
+    """Rebuild gold and republish only the partitions inside [start, end).
 
-    dbt recomputes the affected hours from silver and the publisher overwrites
-    exactly those ``event_date`` partitions, so replaying a range is idempotent.
+    dbt recomputes the marts from silver; the publisher filters rows by
+    ``window_start`` and overwrites only the affected ``event_date`` partitions,
+    so replaying a range is idempotent and does not touch other days.
     """
     configure_logging()
     if start >= end:
         raise ValueError("backfill start must be before end")
-    result = transform_gold_flow(duckdb_path=duckdb_path)
+    result = transform_gold_flow(duckdb_path=duckdb_path, start=start, end=end)
     return {"range": {"start": start, "end": end}, **result}
 

@@ -73,7 +73,9 @@ select
         then 'pass'
         else 'warn'
     end as dq_status,
-    cast(f.window_start as date) as event_date
+    cast(f.window_start as date) as event_date,
+    f.window_start as event_hour,
+    '{{ var("feature_snapshot_id", "dev") }}' as snapshot_id
 from features f
 left join sentiment_previous_hour s
     on f.window_start = s.window_start

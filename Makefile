@@ -94,7 +94,7 @@ two-node-config: secrets
 
 lint: $(PYTHON)
 	$(PYTHON) -m ruff check src scripts tests deploy
-	@files=$$(find dbt -name '*.sql' 2>/dev/null); \
+	@files=$$(find dbt -name '*.sql' -not -path 'dbt/target/*' 2>/dev/null); \
 	if [ -n "$$files" ]; then \
 		$(PYTHON) -m sqlfluff lint $$files --dialect duckdb; \
 	else \

@@ -3,13 +3,22 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
+
+
+def _parse_ts(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
 
 
 def _dbt(select: str) -> int:
@@ -20,6 +29,13 @@ def _dbt(select: str) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Build and publish the gold marts")
+    parser.add_argument("--start", help="ISO-8601 window_start lower bound (backfill)")
+    parser.add_argument("--end", help="ISO-8601 window_start upper bound (backfill)")
+    args = parser.parse_args(argv)
+    start = _parse_ts(args.start)
+    end = _parse_ts(args.end)
+
     from bmip.common.config import get_settings
     from bmip.quality.checkpoint import run_scope
     from bmip.transform.gold import GoldWriter
@@ -50,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
 
     writer = GoldWriter(get_settings())
     writer.ensure_tables()
-    for result in writer.publish_from_duckdb(duckdb_path):
+    for result in writer.publish_from_duckdb(duckdb_path, start=start, end=end):
         print(f"published {result.table}: rows={result.rows} partitions={result.partitions}")
     return 0
 

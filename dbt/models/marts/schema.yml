@@ -162,3 +162,7 @@ models:
         description: Iceberg partition column, derived from window_start.
         tests:
           - not_null
+      - name: event_hour
+        description: Workplan alias for window_start; same value, kept for the W1-C contract.
+      - name: snapshot_id
+        description: Workplan alias for feature_snapshot_id; same value.

@@ -26,9 +26,15 @@ hourly as (
         cast(count(*) as bigint) as post_count,
         cast(count(distinct author_key) as bigint) as unique_authors,
         cast(avg(sentiment_score) as double) as mean_sentiment,
-        cast(avg(case when sentiment_label = 'positive' then 1.0 else 0.0 end) as double) as positive_share,
-        cast(avg(case when sentiment_label = 'negative' then 1.0 else 0.0 end) as double) as negative_share,
-        cast(avg(case when sentiment_label = 'neutral' then 1.0 else 0.0 end) as double) as neutral_share,
+        cast(
+            avg(case when sentiment_label = 'positive' then 1.0 else 0.0 end) as double
+        ) as positive_share,
+        cast(
+            avg(case when sentiment_label = 'negative' then 1.0 else 0.0 end) as double
+        ) as negative_share,
+        cast(
+            avg(case when sentiment_label = 'neutral' then 1.0 else 0.0 end) as double
+        ) as neutral_share,
         cast(sum(like_count) as bigint) as total_likes,
         cast(sum(repost_count) as bigint) as total_reposts,
         cast(sum(reply_count) as bigint) as total_replies,
@@ -61,7 +67,7 @@ top_hashtags as (
 
     select
         window_start,
-        list(tag order by n desc, tag)[1:5] as top_hashtags
+        list(tag order by n desc, tag)[1:5] as top_hashtags  -- noqa: AM03
     from hashtags
     group by 1
 

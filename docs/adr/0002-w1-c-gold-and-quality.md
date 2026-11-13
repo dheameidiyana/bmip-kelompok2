@@ -88,6 +88,42 @@ Why: testing schema evolution on `silver.social_post` would mutate the demo
 data. A disposable probe proves the same Iceberg property without touching the
 pipeline.
 
+### 8. `mart_ml` exposes both naming conventions
+
+`mart_ml` carries `window_start` and `feature_snapshot_id` (ARCHITECTURE §9.4)
+and `event_hour` and `snapshot_id` (workplan W1-C item 6). The pairs hold the
+same value.
+
+Why: the two documents disagree. Renaming would break one of them, and W1-D
+plus W2-A both read this table. Two documented aliases cost two columns and
+remove the ambiguity. `GoldWriter.ensure_tables` evolves an existing Iceberg
+table by adding missing nullable columns, so the upgrade is in place.
+
+### 9. A range backfill never deletes rows outside the range
+
+`GoldWriter.publish_arrow` accepts `start`/`end`. When they are set, it reads
+the existing `event_date` partition, keeps rows whose `window_start` is outside
+the range, and appends the new rows before the overwrite.
+
+Why: marts are partitioned by day, but a backfill is usually requested for a
+few hours. Overwriting the whole day with only the requested hours would delete
+the rest of that day, which is exactly what happened in the first version of
+this code. `scripts/build_gold.py --start/--end` and the `backfill-gold` flow
+use this path.
+
+### 10. Lint policy and the smoke warm-up
+
+- A root `.sqlfluff` sets `max_line_length = 100` and disables rules that fight
+  dbt Jinja or domain column names (`AL01`, `AM04`, `AM05`, `LT02`, `LT09`,
+  `RF04`, `ST06`). `make lint` and CI now exclude `dbt/target/**` from the file
+  list; linting generated SQL was a pre-existing flaw.
+- `scripts/e2e_smoke.py` replays both fixtures once before it captures the
+  "before" counts. Without the warm-up the gate could never pass on a clean
+  stack, because the first replay legitimately inserts rows.
+
+Why: §3.1 requires a green `make e2e-smoke` and a green lint gate. Both were
+red for structural reasons, not because the pipeline was broken.
+
 ## Consequences
 
 - A gold publish is idempotent per `event_date`; reruns replace partitions.
