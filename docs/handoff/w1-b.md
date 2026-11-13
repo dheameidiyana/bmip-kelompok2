@@ -12,6 +12,7 @@
 - CP2: PASS
 - CP3: PASS
 - Tag: `w1-b-ok`
+- CP1/CP2 evidence was captured on the W1-B working tree before commit; their `commit` field records base `328e0b2`. Final W1-B evidence (CP3/T27/Prefect/dbt/health) records `5be34b3`.
 
 Gate: stream processor, silver market, replay idempotence, retry after bronze,
 DLQ replay, freshness, dbt tests, and Prefect schedule/retry/concurrency are
