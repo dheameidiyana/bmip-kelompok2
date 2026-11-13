@@ -1,0 +1,52 @@
+09:33:47  Running with dbt=1.12.7
+09:33:47  Registered adapter: duckdb=1.11.1
+09:33:49  Found 19 data tests, 1 model, 1 source, 511 macros
+09:33:49  
+09:33:49  Concurrency: 1 threads (target='dev')
+09:33:49  
+09:33:51  1 of 20 START test source_not_null_silver_market_market_ohlcv_1m_symbol ........ [RUN]
+09:33:51  1 of 20 PASS source_not_null_silver_market_market_ohlcv_1m_symbol .............. [PASS in 0.20s]
+09:33:51  2 of 20 START test source_not_null_silver_market_market_ohlcv_1m_window_start .. [RUN]
+09:33:51  2 of 20 PASS source_not_null_silver_market_market_ohlcv_1m_window_start ........ [PASS in 0.09s]
+09:33:51  3 of 20 START sql view model main_silver.stg_market_ohlcv_1m ................... [RUN]
+09:33:52  3 of 20 OK created sql view model main_silver.stg_market_ohlcv_1m .............. [OK in 0.22s]
+09:33:52  4 of 20 START test accepted_values_stg_market_ohlcv_1m_ohlc_state__valid ....... [RUN]
+09:33:52  4 of 20 PASS accepted_values_stg_market_ohlcv_1m_ohlc_state__valid ............. [PASS in 0.11s]
+09:33:52  5 of 20 START test not_null_stg_market_ohlcv_1m_close .......................... [RUN]
+09:33:52  5 of 20 PASS not_null_stg_market_ohlcv_1m_close ................................ [PASS in 0.09s]
+09:33:52  6 of 20 START test not_null_stg_market_ohlcv_1m_event_date ..................... [RUN]
+09:33:52  6 of 20 PASS not_null_stg_market_ohlcv_1m_event_date ........................... [PASS in 0.08s]
+09:33:52  7 of 20 START test not_null_stg_market_ohlcv_1m_high ........................... [RUN]
+09:33:52  7 of 20 PASS not_null_stg_market_ohlcv_1m_high ................................. [PASS in 0.08s]
+09:33:52  8 of 20 START test not_null_stg_market_ohlcv_1m_low ............................ [RUN]
+09:33:52  8 of 20 PASS not_null_stg_market_ohlcv_1m_low .................................. [PASS in 0.08s]
+09:33:52  9 of 20 START test not_null_stg_market_ohlcv_1m_market_bar_key ................. [RUN]
+09:33:52  9 of 20 PASS not_null_stg_market_ohlcv_1m_market_bar_key ....................... [PASS in 0.09s]
+09:33:52  10 of 20 START test not_null_stg_market_ohlcv_1m_open .......................... [RUN]
+09:33:52  10 of 20 PASS not_null_stg_market_ohlcv_1m_open ................................ [PASS in 0.08s]
+09:33:52  11 of 20 START test not_null_stg_market_ohlcv_1m_symbol ........................ [RUN]
+09:33:52  11 of 20 PASS not_null_stg_market_ohlcv_1m_symbol .............................. [PASS in 0.08s]
+09:33:52  12 of 20 START test not_null_stg_market_ohlcv_1m_trade_count ................... [RUN]
+09:33:52  12 of 20 PASS not_null_stg_market_ohlcv_1m_trade_count ......................... [PASS in 0.10s]
+09:33:52  13 of 20 START test not_null_stg_market_ohlcv_1m_volume ........................ [RUN]
+09:33:53  13 of 20 PASS not_null_stg_market_ohlcv_1m_volume .............................. [PASS in 0.09s]
+09:33:53  14 of 20 START test not_null_stg_market_ohlcv_1m_vwap .......................... [RUN]
+09:33:53  14 of 20 PASS not_null_stg_market_ohlcv_1m_vwap ................................ [PASS in 0.09s]
+09:33:53  15 of 20 START test not_null_stg_market_ohlcv_1m_window_end .................... [RUN]
+09:33:53  15 of 20 PASS not_null_stg_market_ohlcv_1m_window_end .......................... [PASS in 0.13s]
+09:33:53  16 of 20 START test not_null_stg_market_ohlcv_1m_window_start .................. [RUN]
+09:33:53  16 of 20 PASS not_null_stg_market_ohlcv_1m_window_start ........................ [PASS in 0.11s]
+09:33:53  17 of 20 START test ohlc_bounds ................................................ [RUN]
+09:33:53  17 of 20 PASS ohlc_bounds ...................................................... [PASS in 0.08s]
+09:33:53  18 of 20 START test ohlcv_positive_volume ...................................... [RUN]
+09:33:53  18 of 20 PASS ohlcv_positive_volume ............................................ [PASS in 0.08s]
+09:33:53  19 of 20 START test ohlcv_unique_minute ........................................ [RUN]
+09:33:53  19 of 20 PASS ohlcv_unique_minute .............................................. [PASS in 0.09s]
+09:33:53  20 of 20 START test unique_stg_market_ohlcv_1m_market_bar_key .................. [RUN]
+09:33:53  20 of 20 PASS unique_stg_market_ohlcv_1m_market_bar_key ........................ [PASS in 0.10s]
+09:33:53  
+09:33:53  Finished running 19 data tests, 1 view model in 0 hours 0 minutes and 4.57 seconds (4.57s).
+09:33:53  
+09:33:53  Completed successfully
+09:33:53  
+09:33:53  Done. PASS=20 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=20

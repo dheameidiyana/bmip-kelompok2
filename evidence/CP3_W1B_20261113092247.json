@@ -1,23 +1,23 @@
 {
   "id": "CP3-W1B",
-  "timestamp": "2026-11-13T08:47:32.274704Z",
-  "commit": "328e0b2",
+  "timestamp": "2026-11-13T09:22:47.241185Z",
+  "commit": "5be34b3",
   "owner": "lois",
   "result": "PASS",
   "tests": {
     "T24": {
       "result": "PASS",
-      "topic": "market.t24-20261113084732",
+      "topic": "market.t24-20261113092247",
       "freshness": {
-        "observed_at": "2026-11-13T08:47:47.139522Z",
-        "latest_event_ts": "2026-11-13T08:47:12.274704Z",
-        "latest_window_end": "2026-11-13T08:48:00Z",
+        "observed_at": "2026-11-13T09:23:07.920292Z",
+        "latest_event_ts": "2026-11-13T09:22:27.241185Z",
+        "latest_window_end": "2026-11-13T09:23:00Z",
         "ingest_lag_seconds": 15.0,
-        "bar_age_seconds": 0.0
+        "bar_age_seconds": 7.920292
       },
       "stream": {
-        "group": "t24-20261113084732",
-        "topic": "market.t24-20261113084732",
+        "group": "t24-20261113092247",
+        "topic": "market.t24-20261113092247",
         "processed": 1,
         "events_total": 1,
         "duplicates": 0,
@@ -26,8 +26,8 @@
         "ohlcv_rows": 1,
         "commits": 1,
         "lag": 0,
-        "watermark": "2026-11-13T08:45:12.274704Z",
-        "last_event_ts": "2026-11-13T08:47:12.274704Z",
+        "watermark": "2026-11-13T09:20:27.241185Z",
+        "last_event_ts": "2026-11-13T09:22:27.241185Z",
         "metrics": {
           "bmip_ingest_events_total": 1.0,
           "bmip_duplicate_total": 0.0,
@@ -39,21 +39,21 @@
           "bmip_ohlcv_rows_total": 1.0,
           "bmip_stream_poll_total": 2.0,
           "bmip_freshness_seconds": 15.0,
-          "bmip_silver_bar_age_seconds": 0.0,
-          "bmip_last_event_timestamp_seconds": 1794559632.274704
+          "bmip_silver_bar_age_seconds": 1.146736,
+          "bmip_last_event_timestamp_seconds": 1794561747.241185
         }
       }
     },
     "T28": {
       "result": "PASS",
-      "topic": "market.t28-20261113084732",
-      "group": "t28-20261113084732",
+      "topic": "market.t28-20261113092247",
+      "group": "t28-20261113092247",
       "published": 10,
       "processed": 10,
       "silver_rows": 10,
       "first": {
-        "group": "t28-20261113084732",
-        "topic": "market.t28-20261113084732",
+        "group": "t28-20261113092247",
+        "topic": "market.t28-20261113092247",
         "processed": 4,
         "events_total": 4,
         "duplicates": 0,
@@ -62,8 +62,8 @@
         "ohlcv_rows": 1,
         "commits": 1,
         "lag": 6,
-        "watermark": "2026-11-13T08:35:03Z",
-        "last_event_ts": "2026-11-13T08:37:03Z",
+        "watermark": "2026-11-13T09:10:09Z",
+        "last_event_ts": "2026-11-13T09:12:09Z",
         "metrics": {
           "bmip_ingest_events_total": 4.0,
           "bmip_duplicate_total": 0.0,
@@ -75,43 +75,43 @@
           "bmip_ohlcv_rows_total": 1.0,
           "bmip_stream_poll_total": 1.0,
           "bmip_freshness_seconds": 15.0,
-          "bmip_silver_bar_age_seconds": 0.0,
-          "bmip_last_event_timestamp_seconds": 1794559023.0
+          "bmip_silver_bar_age_seconds": 17.642042,
+          "bmip_last_event_timestamp_seconds": 1794561129.0
         }
       },
       "second": {
-        "group": "t28-20261113084732",
-        "topic": "market.t28-20261113084732",
+        "group": "t28-20261113092247",
+        "topic": "market.t28-20261113092247",
         "processed": 6,
         "events_total": 6,
         "duplicates": 0,
         "quarantined": 0,
         "late_events": 0,
-        "ohlcv_rows": 2,
-        "commits": 2,
-        "lag": 0,
-        "watermark": "2026-11-13T08:35:09Z",
-        "last_event_ts": "2026-11-13T08:37:09Z",
+        "ohlcv_rows": 1,
+        "commits": 1,
+        "lag": 4,
+        "watermark": "2026-11-13T09:10:06Z",
+        "last_event_ts": "2026-11-13T09:12:06Z",
         "metrics": {
           "bmip_ingest_events_total": 6.0,
           "bmip_duplicate_total": 0.0,
           "bmip_quarantine_total": 0.0,
           "bmip_late_events_total": 0.0,
-          "bmip_consumer_lag": 0.0,
+          "bmip_consumer_lag": 4.0,
           "bmip_batch_size": 0.0,
-          "bmip_commit_total": 2.0,
-          "bmip_ohlcv_rows_total": 2.0,
-          "bmip_stream_poll_total": 4.0,
+          "bmip_commit_total": 1.0,
+          "bmip_ohlcv_rows_total": 1.0,
+          "bmip_stream_poll_total": 3.0,
           "bmip_freshness_seconds": 15.0,
-          "bmip_silver_bar_age_seconds": 13.82502,
-          "bmip_last_event_timestamp_seconds": 1794559029.0
+          "bmip_silver_bar_age_seconds": 30.859723,
+          "bmip_last_event_timestamp_seconds": 1794561126.0
         }
       }
     },
     "T29": {
       "result": "PASS",
-      "topic": "market.t29-20261113084732",
-      "dlq_topic": "market.t29-dlq-20261113084732",
+      "topic": "market.t29-20261113092247",
+      "dlq_topic": "market.t29-dlq-20261113092247",
       "captured": 1,
       "reason": "schema_violation",
       "replayed": 1,
@@ -119,15 +119,15 @@
     },
     "T05": {
       "result": "PASS",
-      "topic": "market.t05-20261113084732",
+      "topic": "market.t05-20261113092247",
       "published": 120,
       "bars_first": 60,
       "bars_second": 60,
       "identical": true,
       "complete": true,
       "first": {
-        "group": "t05-a-20261113084732",
-        "topic": "market.t05-20261113084732",
+        "group": "t05-a-20261113092247",
+        "topic": "market.t05-20261113092247",
         "processed": 120,
         "skipped": 0,
         "flushes": 60,
@@ -137,14 +137,14 @@
         "late_events": 0,
         "ohlcv_rows": 60,
         "commits": 0,
-        "watermark": "2025-09-15T13:32:25Z",
-        "last_event_ts": "2025-09-15T13:34:25Z",
-        "start": "2025-09-15T12:35:00Z",
-        "end": "2025-09-15T13:35:00Z"
+        "watermark": "2025-09-10T08:52:25Z",
+        "last_event_ts": "2025-09-10T08:54:25Z",
+        "start": "2025-09-10T07:55:00Z",
+        "end": "2025-09-10T08:55:00Z"
       },
       "second": {
-        "group": "t05-b-20261113084732",
-        "topic": "market.t05-20261113084732",
+        "group": "t05-b-20261113092247",
+        "topic": "market.t05-20261113092247",
         "processed": 120,
         "skipped": 0,
         "flushes": 60,
@@ -154,10 +154,10 @@
         "late_events": 0,
         "ohlcv_rows": 0,
         "commits": 0,
-        "watermark": "2025-09-15T13:32:25Z",
-        "last_event_ts": "2025-09-15T13:34:25Z",
-        "start": "2025-09-15T12:35:00Z",
-        "end": "2025-09-15T13:35:00Z"
+        "watermark": "2025-09-10T08:52:25Z",
+        "last_event_ts": "2025-09-10T08:54:25Z",
+        "start": "2025-09-10T07:55:00Z",
+        "end": "2025-09-10T08:55:00Z"
       }
     }
   },

@@ -4,14 +4,14 @@
 - Branch: `feat/silver-lois`
 - Handoff to: Vio (W1-C)
 - Last update: 2026-11-13
-- Commit at evidence time: `328e0b2`
+- Commit at evidence time: `5be34b3`
 
 ## Status
 
 - CP1: PASS
 - CP2: PASS
 - CP3: PASS
-- Tag: `w1-b-ok` pending approval
+- Tag: `w1-b-ok`
 
 Gate: stream processor, silver market, replay idempotence, retry after bronze,
 DLQ replay, freshness, dbt tests, and Prefect schedule/retry/concurrency are
@@ -67,7 +67,7 @@ implemented and evidenced.
 
 - Model `stg_market_ohlcv_1m` di atas source `silver.market_ohlcv_1m`.
 - `dbt build` hijau: 19 data tests + 1 model, total 20 PASS.
-- Evidence: `evidence/dbt/build_20261113T0857_328e0b2.txt`.
+- Evidence: `evidence/dbt/build_20261113T0933_5be34b3.txt`.
 
 ### Prefect
 
@@ -81,7 +81,7 @@ implemented and evidenced.
   - harvest task: 3 retries, delay 60/300/900 detik;
   - dbt task: 2 retries, delay 30/120 detik.
 - Kedua flow sudah pernah berstatus `Completed` lewat worker.
-- Evidence: `evidence/deploy/prefect_20261113T085943_328e0b2.json`.
+- Evidence: `evidence/deploy/prefect_20261113T093324_5be34b3.json`.
 
 ## Yang belum jalan / stub
 
@@ -148,11 +148,11 @@ acuan yang sudah diverifikasi.
   - `evidence/stream/T28.txt`
   - `evidence/stream/T29.json`
   - `evidence/batch/T27.json`
-  - `evidence/CP3_W1B_20261113084732.json`
-  - `evidence/deploy/prefect_20261113T085943_328e0b2.json`
-  - `evidence/dbt/build_20261113T0857_328e0b2.txt`
+  - `evidence/CP3_W1B_20261113092247.json`
+  - `evidence/deploy/prefect_20261113T093324_5be34b3.json`
+  - `evidence/dbt/build_20261113T0933_5be34b3.txt`
 - Deploy health:
-  - `evidence/deploy/health_20261113T0004_328e0b2.md`
+  - `evidence/deploy/health_20261113T0934_5be34b3.md`
 
 ## Catatan untuk Vio
 
