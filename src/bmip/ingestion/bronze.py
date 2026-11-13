@@ -8,6 +8,7 @@ from typing import Any
 
 import pyarrow as pa
 from pyiceberg.catalog import Catalog, load_catalog
+from pyiceberg.expressions import EqualTo
 from pyiceberg.io import load_file_io
 from pyiceberg.partitioning import PartitionField, PartitionSpec
 from pyiceberg.schema import Schema
@@ -179,17 +180,44 @@ class BronzeWriter:
         table.io = load_file_io(_s3_properties(self.settings), table.location())
         return table
 
-    def append_market(self, rows: list[dict[str, Any]]) -> None:
+    def _batch_exists(self, identifier: str, batch_id: str) -> bool:
+        table = self._table(identifier)
+        rows = table.scan(row_filter=EqualTo("batch_id", batch_id)).to_arrow()
+        return rows.num_rows > 0
+
+    def append_market(self, rows: list[dict[str, Any]]) -> int:
         if not rows:
-            return
+            return 0
+        batch_ids = {str(row["batch_id"]) for row in rows}
+        if len(batch_ids) != 1:
+            raise ValueError("append_market requires exactly one batch_id")
+        batch_id = batch_ids.pop()
+        if self._batch_exists(MARKET_TABLE, batch_id):
+            return 0
         arrow = pa.Table.from_pylist(rows, schema=MARKET_ARROW_SCHEMA)
         self._table(MARKET_TABLE).append(arrow)
+        return len(rows)
 
-    def append_social(self, rows: list[dict[str, Any]]) -> None:
+    def append_social(self, rows: list[dict[str, Any]]) -> int:
         if not rows:
-            return
+            return 0
+        batch_ids = {str(row["batch_id"]) for row in rows}
+        if len(batch_ids) != 1:
+            raise ValueError("append_social requires exactly one batch_id")
+        batch_id = batch_ids.pop()
+        if self._batch_exists(SOCIAL_TABLE, batch_id):
+            return 0
         arrow = pa.Table.from_pylist(rows, schema=SOCIAL_ARROW_SCHEMA)
         self._table(SOCIAL_TABLE).append(arrow)
+        return len(rows)
+
+    def fetch_market_batch(self, batch_id: str) -> list[dict[str, Any]]:
+        return (
+            self._table(MARKET_TABLE)
+            .scan(row_filter=EqualTo("batch_id", batch_id))
+            .to_arrow()
+            .to_pylist()
+        )
 
     def counts(self) -> list[dict[str, Any]]:
         results = []

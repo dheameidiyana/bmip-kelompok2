@@ -5,6 +5,7 @@ config-version: 2
 profile: "bmip"
 
 model-paths: ["models"]
+test-paths: ["tests"]
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 

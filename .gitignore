@@ -22,6 +22,10 @@ coverage.json
 htmlcov/
 
 # Local data and runtime
+.prefect/
+dbt/target/
+dbt/logs/
+dbt/.user.yml
 data/
 logs/
 backups/

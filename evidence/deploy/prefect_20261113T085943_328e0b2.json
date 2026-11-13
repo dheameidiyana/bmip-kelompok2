@@ -1,0 +1,52 @@
+{
+  "id": "PREFECT-W1B",
+  "timestamp": "2026-11-13T08:59:43.498628Z",
+  "commit": "328e0b2",
+  "owner": "lois",
+  "command": "python scripts/prefect_evidence.py",
+  "result": "PASS",
+  "api_url": "http://localhost:4200/api",
+  "health": true,
+  "work_pool": {
+    "name": "local-process",
+    "type": "process",
+    "concurrency_limit": 1,
+    "status": "WorkPoolStatus.NOT_READY"
+  },
+  "deployments": [
+    {
+      "name": "harvest-social",
+      "id": "529eb500-32a0-44bc-89a4-b9501cc0da4c",
+      "entrypoint": "src/bmip/flows/ingestion.py:harvest_social_flow",
+      "work_pool": "local-process",
+      "work_queue": "default",
+      "global_concurrency_limit": 1,
+      "schedules": [
+        {
+          "cron": "10 * * * *",
+          "timezone": "UTC",
+          "active": true
+        }
+      ],
+      "completed_runs": 1,
+      "latest_completed": "e201c5df-082a-40a7-8bd0-62c0c59885a2"
+    },
+    {
+      "name": "transform-silver",
+      "id": "ed6d8108-8da5-45fd-8c71-7c7bb7851387",
+      "entrypoint": "src/bmip/flows/ingestion.py:transform_silver_flow",
+      "work_pool": "local-process",
+      "work_queue": "default",
+      "global_concurrency_limit": 1,
+      "schedules": [
+        {
+          "cron": "40 * * * *",
+          "timezone": "UTC",
+          "active": true
+        }
+      ],
+      "completed_runs": 1,
+      "latest_completed": "dc16e102-6103-4746-8157-40440cec3cf9"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: stg_market_ohlcv_1m
+    description: Conformed one-minute OHLCV bars with quality flags.
+    columns:
+      - name: market_bar_key
+        description: Stable key for one symbol and minute.
+        tests:
+          - not_null
+          - unique
+      - name: symbol
+        tests:
+          - not_null
+      - name: window_start
+        tests:
+          - not_null
+      - name: window_end
+        tests:
+          - not_null
+      - name: open
+        tests:
+          - not_null
+      - name: high
+        tests:
+          - not_null
+      - name: low
+        tests:
+          - not_null
+      - name: close
+        tests:
+          - not_null
+      - name: volume
+        tests:
+          - not_null
+      - name: vwap
+        tests:
+          - not_null
+      - name: trade_count
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+      - name: ohlc_state
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["valid"]

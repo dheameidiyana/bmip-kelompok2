@@ -1,0 +1,26 @@
+bmip:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'target/bmip.duckdb') }}"
+      threads: 1
+      extensions:
+        - httpfs
+        - iceberg
+      secrets:
+        - type: s3
+          key_id: "{{ env_var('MINIO_SVC_DBT_ACCESS_KEY') }}"
+          secret: "{{ env_var('MINIO_SVC_DBT_SECRET_KEY') }}"
+          region: "{{ env_var('MINIO_S3_REGION', 'local') }}"
+          endpoint: "{{ env_var('MINIO_ENDPOINT', 'http://localhost:9000').replace('http://', '').replace('https://', '') }}"
+          url_style: path
+          use_ssl: false
+      attach:
+        - path: "{{ env_var('LAKEKEEPER_WAREHOUSE', 'lakehouse') }}"
+          alias: iceberg
+          options:
+            type: iceberg
+            endpoint: "{{ env_var('LAKEKEEPER_URL', 'http://localhost:8181') }}/catalog"
+            authorization_type: none
+            access_delegation_mode: none

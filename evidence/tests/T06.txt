@@ -1,0 +1,51 @@
+id        : T06
+timestamp : 2026-11-13T00:02:20Z
+commit    : 328e0b2
+command   : python scripts/cp2_market_evidence.py
+result    : PASS
+owner     : lois
+
+topic        : market.cp2-20261113000220
+window_start : 2021-11-26T00:02:00+00:00
+late_trade   : {"event_ts": "2021-11-26T00:02:00.500000Z", "ingest_ts": "2021-11-26T00:02:00.500000Z", "is_buyer_maker": false, "price": "68002.00", "qty": "0.003", "source": "evidence", "symbol": "BTCUSDT", "trade_id": 1794528140410870}
+expected     : {"close": "67999.75000000", "high": "68002.00000000", "low": "67999.75000000", "open": "68002.00000000", "quote_volume": "2924.03350000", "trade_count": "4", "volume": "0.04300000", "vwap": "68000.77906977"}
+actual       : {"close": "67999.75000000", "high": "68002.00000000", "low": "67999.75000000", "open": "68002.00000000", "quote_volume": "2924.03350000", "trade_count": "4", "volume": "0.04300000", "vwap": "68000.77906977"}
+late_events  : 0
+
+$ python -m bmip.transform.cli stream --once --group cp2-20261113000220 --topic market.cp2-20261113000220 --idle-timeout 5 --no-metrics
+exit_code: 0
+{"ts": "2026-11-13T00:02:43.433+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T00:02:43.488+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T00:02:43.544+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T00:02:44.056+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T00:02:44.540+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T00:02:44.592+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{
+  "stream": {
+    "group": "cp2-20261113000220",
+    "topic": "market.cp2-20261113000220",
+    "processed": 1,
+    "events_total": 1,
+    "duplicates": 0,
+    "quarantined": 0,
+    "late_events": 0,
+    "ohlcv_rows": 1,
+    "commits": 1,
+    "lag": 3,
+    "watermark": "2021-11-26T00:00:00.500000Z",
+    "last_event_ts": "2021-11-26T00:02:00.500000Z",
+    "metrics": {
+      "bmip_ingest_events_total": 1.0,
+      "bmip_duplicate_total": 0.0,
+      "bmip_quarantine_total": 0.0,
+      "bmip_late_events_total": 0.0,
+      "bmip_consumer_lag": 3.0,
+      "bmip_batch_size": 0.0,
+      "bmip_commit_total": 1.0,
+      "bmip_ohlcv_rows_total": 1.0,
+      "bmip_stream_poll_total": 3.0,
+      "bmip_freshness_seconds": 156643243.549331,
+      "bmip_last_event_timestamp_seconds": 1637884920.5
+    }
+  }
+}

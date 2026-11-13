@@ -1,0 +1,40 @@
+{
+  "id": "T27",
+  "timestamp": "2026-11-13T08:55:37.489032Z",
+  "commit": "328e0b2",
+  "command": "python scripts/t27_evidence.py",
+  "owner": "lois",
+  "result": "PASS",
+  "batch_id": "market-binance_ws-20261113T085337-1794560164489032",
+  "first_error": "injected failure after bronze append",
+  "ledger_first": {
+    "batch_id": "market-binance_ws-20261113T085337-1794560164489032",
+    "source": "binance_ws",
+    "window_start": "2026-11-13 08:53:37.489032+00:00",
+    "window_end": "2026-11-13 08:53:37.489032+00:00",
+    "row_count": 0,
+    "checksum": "7b4a6451fe2685e678f5b03ec9c9e32e18becbddca0cab668ef5c5da7555871e",
+    "status": "failed"
+  },
+  "ledger_retry": {
+    "batch_id": "market-binance_ws-20261113T085337-1794560164489032",
+    "source": "binance_ws",
+    "window_start": "2026-11-13 08:53:37.489032+00:00",
+    "window_end": "2026-11-13 08:53:37.489032+00:00",
+    "row_count": 1,
+    "checksum": "7b4a6451fe2685e678f5b03ec9c9e32e18becbddca0cab668ef5c5da7555871e",
+    "status": "succeeded"
+  },
+  "bronze_rows_before_retry": 1,
+  "bronze_rows_after_retry": 1,
+  "duplicate_count": 0,
+  "retry": {
+    "batch_id": "market-binance_ws-20261113T085337-1794560164489032",
+    "source": "binance_ws",
+    "row_count": 1,
+    "checksum": "7b4a6451fe2685e678f5b03ec9c9e32e18becbddca0cab668ef5c5da7555871e",
+    "status": "succeeded",
+    "bronze_table": "bronze.market_trade_raw",
+    "quarantined": 0
+  }
+}
