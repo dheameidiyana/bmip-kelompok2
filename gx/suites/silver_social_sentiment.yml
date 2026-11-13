@@ -1,0 +1,25 @@
+suite: silver_social_sentiment
+dataset: silver.social_sentiment
+rules:
+  - id: sentiment-post-key-unique
+    kind: expectation
+    expectation: ExpectColumnValuesToBeUnique
+    column: post_key
+    severity: critical
+    description: One sentiment row per post.
+
+  - id: sentiment-score-range
+    kind: expectation
+    expectation: ExpectColumnValuesToBeBetween
+    column: sentiment_score
+    min_value: -1
+    max_value: 1
+    severity: critical
+    description: T-10, every compound score stays in [-1, 1].
+
+  - id: sentiment-model-version
+    kind: expectation
+    expectation: ExpectColumnValuesToNotBeNull
+    column: sentiment_model_version
+    severity: warning
+    description: The scoring model version must be traceable.

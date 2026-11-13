@@ -1,0 +1,552 @@
+id        : T05
+timestamp : 2026-11-13T09:22:47.241185Z
+commit    : 5be34b3
+command   : python scripts/w1b_evidence.py
+result    : PASS
+owner     : lois
+
+topic          : market.t05-20261113092247
+published      : 120
+range          : 2025-09-10T07:55:00Z .. 2025-09-10T08:55:00Z
+bars_first     : 60
+bars_second    : 60
+identical      : True
+complete       : True
+processed_a    : 120
+processed_b    : 120
+duplicates_b   : 120
+flushes_a      : 60
+flushes_b      : 60
+signature_sha  : 8356188539003488913
+
+$ python -m bmip.transform.cli replay --from 2025-09-10T07:55:00Z --to 2025-09-10T08:55:00Z --topic market.t05-20261113092247 --group t05-a-20261113092247 --idle-timeout 3
+exit_code: 0
+{"ts": "2026-11-13T09:24:12.066+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:12.147+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:12.210+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:15.818+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:16.952+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:17.030+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:18.423+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:18.467+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:20.419+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:21.311+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:21.397+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:23.365+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:23.407+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:25.572+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:26.415+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:26.533+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:28.604+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:28.649+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:31.329+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:32.400+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:32.539+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:34.642+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:34.735+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:36.933+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:37.781+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:37.871+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:40.129+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:40.172+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:42.448+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:43.328+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:43.412+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:45.365+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:45.407+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:47.378+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:48.327+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:48.482+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:50.564+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:50.604+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:53.051+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:53.926+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:54.112+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:56.284+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:56.332+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:58.528+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:59.449+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:24:59.544+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:01.678+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:01.722+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:03.865+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:04.785+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:04.902+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:06.928+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:06.973+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:09.159+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:10.217+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:10.383+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:12.748+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:12.810+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:15.860+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:16.960+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:17.106+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:19.398+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:19.448+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:22.179+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:23.203+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:23.377+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:25.506+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:25.629+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:28.037+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:29.066+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:29.220+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:31.430+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:31.493+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:34.083+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:35.056+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:35.275+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:37.305+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:37.352+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:39.837+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:40.833+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:41.011+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:43.264+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:43.311+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:45.668+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:46.678+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:46.839+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:48.897+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:48.937+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:51.247+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:52.209+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:52.433+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:54.474+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:54.533+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:56.648+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:57.657+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:57.836+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:25:59.956+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:00.000+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:02.354+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:03.290+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:03.549+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:05.609+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:05.649+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:07.775+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:08.754+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:08.936+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:10.966+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:11.008+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:13.333+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:14.353+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:14.551+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:16.589+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:16.634+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:18.810+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:19.785+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:19.967+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:22.098+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:22.147+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:24.283+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:25.407+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:25.768+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:28.140+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:28.192+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:30.459+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:31.498+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:31.695+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:33.757+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:33.800+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:35.848+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:36.769+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:36.970+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:38.956+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:39.002+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:41.158+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:42.192+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:42.399+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:44.452+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:44.496+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:46.682+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:47.626+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:47.833+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:49.869+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:49.920+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:52.130+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:53.100+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:53.297+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:55.279+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:55.320+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:57.293+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:58.367+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:26:58.590+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:00.590+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:00.647+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:02.957+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:03.920+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:04.211+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:06.202+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:06.251+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:08.304+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:09.291+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:09.509+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:11.554+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:11.605+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:13.661+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:14.704+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:14.967+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:16.947+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:16.990+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:18.951+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:19.910+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:20.168+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:22.190+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:22.238+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:24.254+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:25.262+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:25.490+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:27.517+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:27.560+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:29.607+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:30.692+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:31.021+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:33.173+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:33.217+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:35.602+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:36.729+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:36.993+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:38.990+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:39.032+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:41.194+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:42.269+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:42.510+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:44.619+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:44.671+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:46.906+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:48.064+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:48.329+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:50.472+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:50.524+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:53.181+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:54.293+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:54.588+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:56.623+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:56.678+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:27:59.002+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:00.103+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:00.476+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:02.582+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:02.624+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:05.109+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:06.204+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:06.608+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:08.961+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:09.012+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:11.668+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:12.994+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:13.568+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:16.009+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:16.066+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:19.405+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:20.650+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:21.126+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:23.184+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:23.246+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:26.268+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:27.473+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:27.774+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:29.519+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:29.565+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:32.137+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:33.232+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:33.505+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:35.464+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:35.507+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:37.757+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:38.843+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:39.233+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:41.103+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:41.145+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:43.643+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:44.951+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:45.341+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:47.642+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:47.690+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:50.202+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:51.457+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:51.854+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:54.010+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:54.089+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:56.725+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:57.879+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:28:58.211+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:00.279+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:00.376+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:02.912+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:04.209+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:04.609+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:06.825+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:06.870+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:09.152+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:10.320+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:10.798+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:12.973+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:13.020+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:15.633+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:16.850+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:17.444+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:19.750+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:19.801+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:22.476+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:23.691+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:24.135+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:26.247+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:26.290+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:28.577+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:29.704+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:30.167+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:32.356+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:32.400+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:34.862+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:36.014+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:36.380+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:38.500+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:38.551+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:41.201+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:42.499+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:42.985+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:45.180+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:45.231+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:47.683+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:48.859+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:49.273+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:51.531+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:51.583+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:54.041+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:55.296+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:55.767+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:57.723+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:29:57.772+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:00.203+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:01.489+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:01.921+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:04.181+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:04.237+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{
+  "replay": {
+    "group": "t05-a-20261113092247",
+    "topic": "market.t05-20261113092247",
+    "processed": 120,
+    "skipped": 0,
+    "flushes": 60,
+    "events_total": 120,
+    "duplicates": 0,
+    "quarantined": 0,
+    "late_events": 0,
+    "ohlcv_rows": 60,
+    "commits": 0,
+    "watermark": "2025-09-10T08:52:25Z",
+    "last_event_ts": "2025-09-10T08:54:25Z",
+    "start": "2025-09-10T07:55:00Z",
+    "end": "2025-09-10T08:55:00Z"
+  }
+}
+E:\SMT 5\Desain Aplikasi Big Data\0.Projek\bmip-kelompok2\.venv\Lib\site-packages\pyiceberg\table\__init__.py:721: UserWarning: Delete operation did not match any records
+  self.delete(
+
+$ python -m bmip.transform.cli replay --from 2025-09-10T07:55:00Z --to 2025-09-10T08:55:00Z --topic market.t05-20261113092247 --group t05-b-20261113092247 --idle-timeout 3
+exit_code: 0
+{"ts": "2026-11-13T09:30:08.069+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:08.168+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:08.232+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:11.865+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:12.572+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:12.695+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:15.932+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:16.566+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:16.622+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:19.784+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:20.383+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:20.436+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:23.115+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:23.572+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:23.624+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:26.378+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:26.860+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:26.986+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:29.355+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:29.860+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:29.902+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:32.465+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:32.946+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:32.991+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:35.367+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:35.771+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:35.836+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:38.194+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:38.762+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:38.805+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:41.256+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:41.765+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:41.819+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:44.321+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:44.857+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:44.902+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:47.583+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:48.054+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:48.185+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:50.723+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:51.369+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:51.432+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:53.974+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:54.443+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:54.497+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:56.928+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:57.496+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:57.548+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:30:59.766+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:00.243+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:00.300+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:02.775+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:03.179+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:03.230+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:05.657+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:06.072+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:06.129+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:08.351+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:08.810+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:08.873+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:11.290+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:11.760+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:11.809+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:14.298+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:14.668+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:14.718+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:17.280+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:17.754+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:17.795+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:20.287+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:20.775+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:20.849+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:23.249+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:23.752+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:23.801+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:26.211+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:26.760+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:26.890+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:29.149+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:29.542+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:29.590+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:31.955+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:32.355+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:32.398+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:34.800+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:35.254+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:35.304+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:37.456+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:37.871+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:37.924+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:40.079+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:40.534+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:40.584+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:42.902+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:43.357+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:43.404+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:45.664+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:46.171+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:46.225+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:48.649+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:49.138+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:49.251+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:51.737+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:52.254+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:52.296+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:54.683+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:55.147+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:55.197+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:57.511+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:58.045+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:31:58.105+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:00.560+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:01.076+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:01.142+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:03.544+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:03.959+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:04.012+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:06.255+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:06.737+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:06.794+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:08.970+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:09.370+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:09.415+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:11.761+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:12.257+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:12.305+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:14.489+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:14.949+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:14.991+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:17.383+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:17.898+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:17.945+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:20.238+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:20.665+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:20.720+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:23.252+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:23.688+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:23.737+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:25.981+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:26.527+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:26.579+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:29.036+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:29.488+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:29.535+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:31.828+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:32.336+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:32.384+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:34.787+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:35.248+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:35.310+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:37.661+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:38.201+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:38.252+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:40.577+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:41.147+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:41.197+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:43.560+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:43.981+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:44.039+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:46.177+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:46.736+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:46.779+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:49.250+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:49.739+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:49.786+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:52.454+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:52.871+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:52.922+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:55.287+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:55.741+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:55.788+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:58.286+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:58.746+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:32:58.850+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:01.409+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:01.836+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:01.887+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:04.439+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:04.862+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:04.926+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:07.276+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:07.770+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{"ts": "2026-11-13T09:33:07.817+00:00", "level": "INFO", "logger": "pyiceberg.io", "message": "Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO"}
+{
+  "replay": {
+    "group": "t05-b-20261113092247",
+    "topic": "market.t05-20261113092247",
+    "processed": 120,
+    "skipped": 0,
+    "flushes": 60,
+    "events_total": 120,
+    "duplicates": 120,
+    "quarantined": 0,
+    "late_events": 0,
+    "ohlcv_rows": 0,
+    "commits": 0,
+    "watermark": "2025-09-10T08:52:25Z",
+    "last_event_ts": "2025-09-10T08:54:25Z",
+    "start": "2025-09-10T07:55:00Z",
+    "end": "2025-09-10T08:55:00Z"
+  }
+}

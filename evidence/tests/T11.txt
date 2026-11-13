@@ -1,0 +1,18 @@
+id        : T-11
+timestamp : 2026-11-13T22:24:43.175788Z
+commit    : 3742fe9
+command   : scripts/w1c_evidence.py (t11_critical_gate)
+result    : PASS
+owner     : vio
+run       : 20261113T2223
+
+
+A null trade_id is injected into one silver row before the gate.
+
+rows inspected        : 282000
+gold build blocked    : True
+gate error            : critical data-quality failures: silver_market_trades:market-trade-id-present
+clean data status     : pass
+
+Alert delivery is W2-B scope; this evidence proves the blocking gate and the
+rule id that fires. The publisher is only called after a passing gold gate.

@@ -1,0 +1,31 @@
+{
+  "id": "T-33",
+  "timestamp": "2026-11-13T22:26:10.293326Z",
+  "commit": "3742fe9",
+  "command": "scripts/w1c_evidence.py (t33_rerun_identical)",
+  "result": "PASS",
+  "owner": "vio",
+  "first": {
+    "counts": {
+      "gold.mart_market": 3,
+      "gold.mart_sentiment": 1,
+      "gold.mart_ml": 3
+    },
+    "market_hash": "f8b93ed3287107361617c8c80dc45a25661ff3cb1cb8f2cf162b366a935a8afb",
+    "sentiment_hash": "642efae1d8fd04f9f122f1e2e985ee8b649b405f92f1c73717addbedbee0ccc1",
+    "market_rows": 3,
+    "sentiment_rows": 1
+  },
+  "second": {
+    "counts": {
+      "gold.mart_market": 3,
+      "gold.mart_sentiment": 1,
+      "gold.mart_ml": 3
+    },
+    "market_hash": "f8b93ed3287107361617c8c80dc45a25661ff3cb1cb8f2cf162b366a935a8afb",
+    "sentiment_hash": "642efae1d8fd04f9f122f1e2e985ee8b649b405f92f1c73717addbedbee0ccc1",
+    "market_rows": 3,
+    "sentiment_rows": 1
+  },
+  "identical": true
+}

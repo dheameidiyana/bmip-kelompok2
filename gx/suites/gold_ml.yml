@@ -1,0 +1,37 @@
+suite: gold_ml
+dataset: gold.mart_ml
+rules:
+  - id: gold-ml-snapshot-present
+    kind: expectation
+    expectation: ExpectColumnValuesToNotBeNull
+    column: feature_snapshot_id
+    severity: critical
+    description: Every row records the Iceberg snapshot it was built from.
+
+  - id: gold-ml-dq-status
+    kind: expectation
+    expectation: ExpectColumnValuesToBeInSet
+    value_set: ["pass", "warn"]
+    column: dq_status
+    severity: critical
+    description: dq_status is a closed vocabulary.
+
+  - id: gold-ml-no-leakage
+    kind: leakage
+    severity: critical
+    description: T-09, label_start == window_start and label_end == window_start + 1h.
+
+  - id: gold-ml-label-coverage
+    kind: expectation
+    expectation: ExpectColumnProportionOfNonNullValuesToBeBetween
+    column: label_rv_next_1h
+    min_value: 0.5
+    severity: warning
+    description: The newest hour has no label yet; the rest must be labelled.
+
+  - id: gold-ml-rows-present
+    kind: expectation
+    expectation: ExpectTableRowCountToBeBetween
+    min_value: 1
+    severity: critical
+    description: mart_ml must not be empty.

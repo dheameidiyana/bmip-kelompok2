@@ -11,7 +11,7 @@ import urllib.request
 
 LK = os.environ["LAKEKEEPER_URL_INTERNAL"].rstrip("/")
 WAREHOUSE = os.environ["LAKEKEEPER_WAREHOUSE"]
-MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT_LAKEKEEPER", "http://host.docker.internal:9000")
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT_LAKEKEEPER", "http://minio:9000")
 REGION = os.getenv("MINIO_S3_REGION", "local")
 ACCESS_KEY = os.environ["MINIO_ROOT_USER"]
 SECRET_KEY = os.environ["MINIO_ROOT_PASSWORD"]
@@ -115,7 +115,7 @@ def ensure_warehouse() -> str:
 
 
 def ensure_namespaces(warehouse_id: str) -> None:
-    for namespace in ("bronze", "silver", "gold"):
+    for namespace in ("bronze", "silver", "gold", "quarantine"):
         code, body = request(
             "POST",
             f"/catalog/v1/{warehouse_id}/namespaces",

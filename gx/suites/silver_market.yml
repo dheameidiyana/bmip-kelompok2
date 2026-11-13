@@ -1,0 +1,38 @@
+suite: silver_market
+dataset: silver.market_ohlcv_1m
+rules:
+  - id: market-minute-unique
+    kind: expectation
+    expectation: ExpectCompoundColumnsToBeUnique
+    column_list: ["symbol", "window_start"]
+    severity: critical
+    description: One bar per symbol and event-time minute.
+
+  - id: market-ohlc-bounds
+    kind: expression
+    expression: "low <= open and open <= high and low <= close and close <= high and high >= low"
+    severity: critical
+    description: Impossible OHLC values block gold promotion.
+
+  - id: market-volume-non-negative
+    kind: expectation
+    expectation: ExpectColumnValuesToBeBetween
+    column: volume
+    min_value: 0
+    severity: critical
+    description: Volume cannot be negative.
+
+  - id: market-trade-count-positive
+    kind: expectation
+    expectation: ExpectColumnValuesToBeBetween
+    column: trade_count
+    min_value: 1
+    severity: critical
+    description: A bar with no trades must not exist.
+
+  - id: market-rows-present
+    kind: expectation
+    expectation: ExpectTableRowCountToBeBetween
+    min_value: 1
+    severity: critical
+    description: Silver market must not be empty.

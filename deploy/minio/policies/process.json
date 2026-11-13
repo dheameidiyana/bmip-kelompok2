@@ -11,7 +11,10 @@
       "Action": ["s3:GetObject"],
       "Resource": [
         "arn:aws:s3:::lakehouse/bronze/*",
-        "arn:aws:s3:::lakehouse/warehouse/bronze.db/*"
+        "arn:aws:s3:::lakehouse/warehouse/bronze.db/*",
+        "arn:aws:s3:::lakehouse/warehouse/quarantine.db/*",
+        "arn:aws:s3:::lakehouse/gold/*",
+        "arn:aws:s3:::lakehouse/warehouse/gold.db/*"
       ]
     },
     {
@@ -19,7 +22,8 @@
       "Action": ["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload"],
       "Resource": [
         "arn:aws:s3:::lakehouse/silver/*",
-        "arn:aws:s3:::lakehouse/warehouse/silver.db/*"
+        "arn:aws:s3:::lakehouse/warehouse/silver.db/*",
+        "arn:aws:s3:::lakehouse/warehouse/quarantine.db/*"
       ]
     }
   ]

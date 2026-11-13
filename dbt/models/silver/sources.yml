@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: silver_market
+    database: "{{ env_var('DBT_ICEBERG_DATABASE', 'iceberg') }}"
+    schema: silver
+    description: Silver market tables written by the streaming processor.
+    tables:
+      - name: market_ohlcv_1m
+        description: One row per symbol and event-time minute.
+        columns:
+          - name: symbol
+            tests:
+              - not_null
+          - name: window_start
+            tests:
+              - not_null

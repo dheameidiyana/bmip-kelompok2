@@ -1,0 +1,168 @@
+version: 2
+
+models:
+  - name: mart_market
+    description: >
+      Hourly OHLC, realized volatility, and EWMA volatility per symbol. One row
+      per symbol and hour, partitioned by event_date in the gold lakehouse.
+    columns:
+      - name: symbol
+        description: Trading pair, for example BTCUSDT.
+        tests:
+          - not_null
+      - name: window_start
+        description: Start of the hourly window in UTC.
+        tests:
+          - not_null
+      - name: open
+        description: First one-minute open in the hour.
+      - name: high
+        description: Highest one-minute high in the hour.
+      - name: low
+        description: Lowest one-minute low in the hour.
+      - name: close
+        description: Last one-minute close in the hour.
+        tests:
+          - not_null
+      - name: volume
+        description: Base-asset volume traded in the hour.
+        tests:
+          - not_null
+      - name: quote_volume
+        description: Quote-asset volume traded in the hour.
+      - name: trade_count
+        description: Number of trades in the hour.
+        tests:
+          - not_null
+      - name: vwap
+        description: Volume-weighted average price for the hour.
+      - name: log_return_1h
+        description: Natural log of close over the previous hour close.
+      - name: realized_vol_1h
+        description: Standard deviation of one-minute log returns inside the hour.
+      - name: rv_ewma_24h
+        description: Exponentially weighted volatility with a 24-hour span.
+      - name: source
+        description: binance_ws, binance_vision, or mixed when the hour has both.
+      - name: updated_at
+        description: Materialization timestamp; excluded from idempotence hashes.
+      - name: event_date
+        description: Iceberg partition column, derived from window_start.
+        tests:
+          - not_null
+
+  - name: mart_sentiment
+    description: >
+      Hourly social sentiment aggregate. Every hour between the first and last
+      observation is present; an hour without posts has post_count 0 and null
+      sentiment values instead of disappearing.
+    columns:
+      - name: window_start
+        description: Start of the hourly window in UTC.
+        tests:
+          - not_null
+          - unique
+      - name: post_count
+        description: Unique posts created in the hour; 0 for an empty hour.
+        tests:
+          - not_null
+      - name: unique_authors
+        description: Distinct pseudonymized authors in the hour.
+      - name: mean_sentiment
+        description: Mean VADER compound score in [-1, 1]; null when empty.
+      - name: positive_share
+        description: Share of posts labelled positive; null when empty.
+      - name: negative_share
+        description: Share of posts labelled negative; null when empty.
+      - name: neutral_share
+        description: Share of posts labelled neutral; null when empty.
+      - name: total_likes
+        description: Sum of likes across the hour's posts.
+      - name: total_reposts
+        description: Sum of reposts across the hour's posts.
+      - name: total_replies
+        description: Sum of replies across the hour's posts.
+      - name: engagement_per_post
+        description: Likes plus reposts plus replies, divided by post_count.
+      - name: top_hashtags
+        description: Up to five hashtags ordered by frequency.
+      - name: sentiment_model_version
+        description: Lexicon or model version that produced the scores.
+        tests:
+          - not_null
+      - name: updated_at
+        description: Materialization timestamp; excluded from idempotence hashes.
+      - name: event_date
+        description: Iceberg partition column, derived from window_start.
+        tests:
+          - not_null
+
+  - name: mart_ml
+    description: >
+      Point-in-time feature row per symbol and hour plus the next-hour realized
+      volatility label. Every feature is computed from bars strictly before
+      window_start; the label window starts at window_start.
+    columns:
+      - name: symbol
+        description: Trading pair.
+        tests:
+          - not_null
+      - name: window_start
+        description: Feature window boundary and label window start (UTC).
+        tests:
+          - not_null
+      - name: ret_5m
+        description: Log return over the trailing 5 minutes.
+      - name: ret_15m
+        description: Log return over the trailing 15 minutes.
+      - name: ret_60m
+        description: Log return over the trailing 60 minutes.
+      - name: rv_5m
+        description: Realized volatility over the trailing 5 minutes.
+      - name: rv_15m
+        description: Realized volatility over the trailing 15 minutes.
+      - name: rv_60m
+        description: Realized volatility over the trailing 60 minutes.
+      - name: volume_z_60m
+        description: Volume z-score against the trailing 60 minutes.
+      - name: trade_count_60m
+        description: Trades in the trailing 60 minutes.
+      - name: hl_range_1m
+        description: High-low range of the last minute, divided by close.
+      - name: vwap_dev
+        description: Close deviation from the trailing 60-minute VWAP.
+      - name: sent_mean_1h
+        description: Mean sentiment of posts in the previous hour.
+      - name: sent_pos_share
+        description: Positive share of posts in the previous hour.
+      - name: sent_neg_share
+        description: Negative share of posts in the previous hour.
+      - name: post_count_1h
+        description: Post volume in the previous hour.
+      - name: engagement_1h
+        description: Engagement per post in the previous hour.
+      - name: label_rv_next_1h
+        description: Realized volatility over (window_start, window_start + 1h].
+      - name: label_start
+        description: Label window start, always equal to window_start.
+      - name: label_end
+        description: Label window end, always window_start + 1 hour.
+      - name: feature_snapshot_id
+        description: Iceberg snapshot or build id the features came from.
+        tests:
+          - not_null
+      - name: dq_status
+        description: pass when every feature and the label are present, else warn.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["pass", "warn"]
+      - name: event_date
+        description: Iceberg partition column, derived from window_start.
+        tests:
+          - not_null
+      - name: event_hour
+        description: Workplan alias for window_start; same value, kept for the W1-C contract.
+      - name: snapshot_id
+        description: Workplan alias for feature_snapshot_id; same value.

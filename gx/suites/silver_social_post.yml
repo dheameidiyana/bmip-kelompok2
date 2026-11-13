@@ -1,0 +1,35 @@
+suite: silver_social_post
+dataset: silver.social_post
+rules:
+  - id: social-post-key-unique
+    kind: expectation
+    expectation: ExpectColumnValuesToBeUnique
+    column: post_key
+    severity: critical
+    description: One row per post_key after deduplication (T-03).
+
+  - id: social-text-present
+    kind: expectation
+    expectation: ExpectColumnValuesToNotBeNull
+    column: text
+    severity: critical
+    description: Empty post text is filtered before silver.
+
+  - id: social-author-key-present
+    kind: expectation
+    expectation: ExpectColumnValuesToNotBeNull
+    column: author_key
+    severity: critical
+    description: Pseudonymized author key must exist.
+
+  - id: social-no-raw-pii
+    kind: no_pii_columns
+    severity: critical
+    description: No raw URI, DID, handle, display name, or avatar column (ADR-011).
+
+  - id: social-rows-present
+    kind: expectation
+    expectation: ExpectTableRowCountToBeBetween
+    min_value: 1
+    severity: critical
+    description: A silver social build must not be empty.

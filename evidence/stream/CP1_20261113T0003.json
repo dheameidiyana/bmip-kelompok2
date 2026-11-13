@@ -1,0 +1,44 @@
+{
+  "id": "CP1",
+  "timestamp": "2026-11-13T00:03:28Z",
+  "commit": "328e0b2",
+  "command": "python scripts/stream_evidence_cp1.py",
+  "result": "PASS",
+  "owner": "lois",
+  "topic": "market.cp1-20261113000328",
+  "group": "cp1-20261113000328",
+  "published": 3,
+  "initial_lag": 3.0,
+  "total_processed": 3,
+  "final_run_processed": 0,
+  "runs": [
+    {
+      "command": "python -m bmip.transform.cli stream --once --group cp1-20261113000328 --topic market.cp1-20261113000328 --idle-timeout 5 --no-sink --max-records 1 --metrics-port 56196 --startup-delay 4.0",
+      "exit_code": 0,
+      "processed": 1,
+      "lag": 2
+    },
+    {
+      "command": "python -m bmip.transform.cli stream --once --group cp1-20261113000328 --topic market.cp1-20261113000328 --idle-timeout 5 --no-sink --max-records 1 --no-metrics",
+      "exit_code": 0,
+      "processed": 1,
+      "lag": 2
+    },
+    {
+      "command": "python -m bmip.transform.cli stream --once --group cp1-20261113000328 --topic market.cp1-20261113000328 --idle-timeout 5 --no-sink --no-metrics",
+      "exit_code": 0,
+      "processed": 1,
+      "lag": 1
+    },
+    {
+      "command": "python -m bmip.transform.cli stream --once --group cp1-20261113000328 --topic market.cp1-20261113000328 --idle-timeout 5 --no-sink --no-metrics",
+      "exit_code": 0,
+      "processed": 0,
+      "lag": 3
+    }
+  ],
+  "evidence": [
+    "evidence/stream/lag_20261113T0003.txt",
+    "evidence/stream/restart_20261113T0003.txt"
+  ]
+}

@@ -14,8 +14,21 @@ W1-A selesai dan gate CP1-CP3 lulus: enam service dev berjalan, kontrak dan repl
 ingestion menulis ke bronze, serta replay identik idempoten (`T-26`). Bronze social
 menyimpan `event_date` dan `ingest_ts`; harvester Bluesky memakai retry/backoff dan
 bisa berjalan per jam. `make e2e-smoke` memeriksa health, replay, bronze counts,
-ledger, dan idempotensi dalam satu gate. Berikutnya W1-B (stream processing) dan
-W1-D (API).
+ledger, dan idempotensi dalam satu gate.
+
+W1-B selesai di branch `feat/silver-lois`: stream processor OHLCV 1 menit dengan
+watermark, dedup, DLQ, quarantine, dan freshness; `silver.market_trades` dan
+`silver.market_ohlcv_1m` terisi; dbt silver dan Prefect schedule hijau. Branch itu
+di-tag `w1-b-ok` pada `fdaf360` dan masuk ke `dev` lewat PR W1-C.
+
+W1-C selesai di branch `slot/w1-c-vio` (base `feat/silver-lois`): silver social
+dengan pseudonimisasi HMAC dan VADER, tiga gold mart (`mart_market`,
+`mart_sentiment`, `mart_ml`) dengan partition overwrite per `event_date`, dan
+checkpoint Great Expectations yang memblokir gold saat critical gagal serta
+mencatat warning. `make lint`, `make test`, dan `make e2e-smoke` hijau, dan flow
+Prefect `transform-gold` sudah dijalankan lewat worker. Detail serah terima ada
+di [docs/handoff/w1-c.md](docs/handoff/w1-c.md). Berikutnya W1-D (serving, API,
+dashboard).
 
 ## Stack
 
@@ -93,6 +106,9 @@ Perintah operasional:
 .\scripts\make.ps1 ingest-once  # replay market + social, refresh evidence CP2
 .\scripts\make.ps1 evidence-cp3 # replay dua kali, cek idempotensi T-26
 .\scripts\make.ps1 e2e-smoke    # health + replay + bronze + ledger W1-A
+.\scripts\make.ps1 gold         # silver social + dbt + quality gate + publish gold
+.\scripts\make.ps1 quality      # GX checkpoint, tulis evidence/dq/dq_report.json
+.\scripts\make.ps1 evidence-w1c # T-03/T-09/T-10/T-11/T-12/T-31/T-32/T-33
 .\scripts\make.ps1 ci           # compose config + lint + test
 ```
 
@@ -114,7 +130,7 @@ ingin merotasi seluruh secret lokal. Detail keputusan dan deviasi ada di
 | `main` | Stabil, hanya menerima merge dari `dev` saat gate |
 | `dev` | Integrasi harian |
 | `slot/w1-a-dhea` | Pekerjaan W1-A |
-| `slot/w1-b-lois` | Pekerjaan W1-B |
+| `slot/w1-b-lois` | Pekerjaan W1-B (aktual: `feat/silver-lois`) |
 | `slot/w1-c-vio` | Pekerjaan W1-C |
 | `slot/w1-d-anin` | Pekerjaan W1-D |
 

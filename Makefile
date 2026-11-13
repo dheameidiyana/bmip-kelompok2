@@ -3,16 +3,18 @@ SHELL := /bin/sh
 
 COMPOSE_DEV := docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml
 COMPOSE_TWO := $(COMPOSE_DEV) -f deploy/compose.two-node.yml
+STREAM_GROUP ?= ohlcv-builder-replay
+PREFECT_WORK_POOL ?= local-process
 
 ifeq ($(OS),Windows_NT)
 PYTHON := .venv/Scripts/python.exe
-PYTHON_BOOT ?= py -3.11
+PYTHON_BOOT ?= python
 else
 PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 transform quality e2e-smoke smoke test-cov benchmark backup restore evidence
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence
 
 help:
 	@echo "BMIP targets:"
@@ -34,8 +36,17 @@ help:
 	@echo "  replay       Run the same replay without writing evidence"
 	@echo "  evidence-cp2 Refresh CP2 evidence from existing bronze and ledger rows"
 	@echo "  evidence-cp3 Replay twice and write T-26 idempotence evidence"
+	@echo "  stream       Run the market stream processor until stopped"
+	@echo "  stream-once  Drain market.trades and exit (W1-B)"
+	@echo "  stream-lag   Print committed offsets and consumer lag"
+	@echo "  evidence-w1b-cp1 Write lag and restart evidence for W1-B"
+	@echo "  evidence-w1b-cp2 Write T04/T06/T07/T08 evidence for W1-B"
 	@echo "  transform    Run dbt silver and gold (W1-B)"
-	@echo "  quality      Run GX checkpoint (W1-C)"
+	@echo "  prefect-deploy  Create work pool and deploy Prefect flows"
+	@echo "  prefect-worker  Start the local Prefect worker (foreground)"
+	@echo "  quality      Run GX checkpoint and write evidence/dq/dq_report.json (W1-C)"
+	@echo "  gold         Build gold marts, enforce gates, publish to Iceberg (W1-C)"
+	@echo "  evidence-w1c Write T03/T09/T10/T11/T12/T31/T32/T33 evidence (W1-C)"
 	@echo "  e2e-smoke    W1-A smoke: health + replay + bronze + ledger"
 	@echo "  evidence     Collect the health evidence file"
 
@@ -83,7 +94,7 @@ two-node-config: secrets
 
 lint: $(PYTHON)
 	$(PYTHON) -m ruff check src scripts tests deploy
-	@files=$$(find dbt -name '*.sql' 2>/dev/null); \
+	@files=$$(find dbt -name '*.sql' -not -path 'dbt/target/*' 2>/dev/null); \
 	if [ -n "$$files" ]; then \
 		$(PYTHON) -m sqlfluff lint $$files --dialect duckdb; \
 	else \
@@ -114,13 +125,38 @@ evidence-cp2: $(PYTHON)
 evidence-cp3: $(PYTHON)
 	$(PYTHON) scripts/cp3_evidence.py
 
-transform:
-	@echo "[stub] transform: implemented in W1-B"
-	@exit 1
+stream: $(PYTHON)
+	$(PYTHON) -m bmip.transform.cli stream --follow
 
-quality:
-	@echo "[stub] quality: implemented in W1-C"
-	@exit 1
+stream-once: $(PYTHON)
+	$(PYTHON) -m bmip.transform.cli stream --once --group $(STREAM_GROUP)
+
+stream-lag: $(PYTHON)
+	$(PYTHON) -m bmip.transform.cli lag --group $(STREAM_GROUP)
+
+evidence-w1b-cp1: $(PYTHON)
+	$(PYTHON) scripts/stream_evidence_cp1.py
+
+evidence-w1b-cp2: $(PYTHON)
+	$(PYTHON) scripts/cp2_market_evidence.py
+
+transform: $(PYTHON)
+	$(PYTHON) scripts/run_dbt.py
+
+prefect-deploy: $(PYTHON)
+	$(PYTHON) scripts/prefect_bootstrap.py
+
+prefect-worker: $(PYTHON)
+	$(PYTHON) -m prefect worker start -p $(PREFECT_WORK_POOL)
+
+quality: $(PYTHON)
+	$(PYTHON) scripts/quality.py
+
+gold: $(PYTHON)
+	$(PYTHON) scripts/build_gold.py
+
+evidence-w1c: $(PYTHON)
+	$(PYTHON) scripts/w1c_evidence.py
 
 e2e-smoke: $(PYTHON)
 	$(PYTHON) scripts/e2e_smoke.py

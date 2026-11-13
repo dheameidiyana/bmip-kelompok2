@@ -134,6 +134,19 @@ def evaluate() -> tuple[list[tuple[str, bool, str]], list[dict[str, Any]]]:
         passed, detail = http_check(url)
         checks.append((name, passed, detail))
 
+    # Warm-up: make sure the fixture batches exist before the measured rounds.
+    # Without this, the first replay legitimately inserts rows and the
+    # before/after comparison can never pass on a clean stack.
+    for source, fixture in (("market", MARKET_FIXTURE), ("social", SOCIAL_FIXTURE)):
+        warmup = run_replay(source, fixture)
+        checks.append(
+            (
+                f"ingest/{source}/warmup",
+                warmup["exit_code"] == 0,
+                f"exit={warmup['exit_code']} status={warmup['result'].get('status')}",
+            )
+        )
+
     try:
         before = bronze_counts()
     except Exception as exc:

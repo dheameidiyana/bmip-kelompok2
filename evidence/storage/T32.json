@@ -1,0 +1,23 @@
+{
+  "id": "T-32",
+  "timestamp": "2026-11-13T22:25:55.990771Z",
+  "commit": "3742fe9",
+  "command": "scripts/w1c_evidence.py (t32_correction)",
+  "result": "PASS",
+  "owner": "vio",
+  "correction_text": "Terrible crash, I hate this market and everything is red",
+  "changed_hours": {
+    "2026-11-10 14:00:00+00:00": {
+      "before": 0.2553,
+      "after": -0.42955
+    }
+  },
+  "restored_hours": {
+    "2026-11-10 14:00:00+00:00": 0.2553
+  },
+  "market_counts": {
+    "gold.mart_market": 3,
+    "gold.mart_sentiment": 1,
+    "gold.mart_ml": 3
+  }
+}
