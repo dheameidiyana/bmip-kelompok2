@@ -313,7 +313,11 @@ class GoldWriter:
         for identifier in MART_TABLES:
             try:
                 result[identifier] = len(self._table(identifier).scan().to_arrow())
-            except Exception:
+            except Exception as exc:
+                log.warning(
+                    "gold count failed",
+                    extra={"ctx_table": identifier, "ctx_error": str(exc)},
+                )
                 result[identifier] = 0
         return result
 

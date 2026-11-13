@@ -328,7 +328,11 @@ class SocialWriter:
         for identifier in (POSTS_TABLE, SENTIMENT_TABLE):
             try:
                 result[identifier] = len(self._table(identifier).scan().to_arrow())
-            except Exception:
+            except Exception as exc:
+                log.warning(
+                    "social count failed",
+                    extra={"ctx_table": identifier, "ctx_error": str(exc)},
+                )
                 result[identifier] = 0
         return result
 

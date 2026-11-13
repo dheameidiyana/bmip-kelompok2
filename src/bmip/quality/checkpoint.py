@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 from typing import Any
 
 from bmip.common.config import Settings
+from bmip.common.logging import get_logger
 from bmip.quality.runner import CheckpointReport, run_checkpoint, to_frame
 from bmip.quality.suites import load_suites
+
+log = get_logger(__name__)
 
 SILVER_DATASETS = (
     "silver.market_ohlcv_1m",
@@ -17,6 +21,14 @@ SILVER_DATASETS = (
 )
 GOLD_DATASETS = ("gold.mart_market", "gold.mart_sentiment", "gold.mart_ml")
 ALL_DATASETS = SILVER_DATASETS + GOLD_DATASETS
+
+# Large tables are projected to the columns their suites actually read.
+PROJECTIONS: dict[str, tuple[str, ...]] = {
+    "silver.market_trades": ("symbol", "trade_id"),
+}
+
+LOAD_ATTEMPTS = 3
+LOAD_RETRY_SECONDS = 2.0
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -37,12 +49,13 @@ def datasets_for(scope: str = "all") -> tuple[str, ...]:
     return ALL_DATASETS
 
 
-def load_dataset(settings: Settings, identifier: str):
+def load_dataset(settings: Settings, identifier: str, columns: tuple[str, ...] | None = None):
     from bmip.transform.iceberg import load_rest_catalog, table_with_host_io
 
     catalog = load_rest_catalog(settings)
     table = table_with_host_io(catalog, settings, identifier)
-    return to_frame(table.scan().to_arrow().to_pylist())
+    scan = table.scan(selected_fields=columns) if columns else table.scan()
+    return to_frame(scan.to_arrow().to_pylist())
 
 
 def load_gold_candidate(duckdb_path: str | Path, identifier: str):
@@ -66,14 +79,28 @@ def load_datasets(
 ) -> dict[str, Any]:
     datasets: dict[str, Any] = {}
     for identifier in datasets_for(scope):
-        try:
-            if duckdb_path is not None and identifier.startswith("gold."):
-                datasets[identifier] = load_gold_candidate(duckdb_path, identifier)
-            else:
-                datasets[identifier] = load_dataset(settings, identifier)
-        except Exception:
-            # A missing table is reported by the suite as a critical failure.
-            continue
+        for attempt in range(1, LOAD_ATTEMPTS + 1):
+            try:
+                if duckdb_path is not None and identifier.startswith("gold."):
+                    datasets[identifier] = load_gold_candidate(duckdb_path, identifier)
+                else:
+                    datasets[identifier] = load_dataset(
+                        settings, identifier, PROJECTIONS.get(identifier)
+                    )
+                break
+            except Exception as exc:
+                log.warning(
+                    "dataset load failed",
+                    extra={
+                        "ctx_dataset": identifier,
+                        "ctx_attempt": attempt,
+                        "ctx_error": f"{type(exc).__name__}: {exc}",
+                    },
+                )
+                if attempt == LOAD_ATTEMPTS:
+                    # A missing table is reported by the suite as a critical failure.
+                    break
+                time.sleep(LOAD_RETRY_SECONDS)
     return datasets
 
 

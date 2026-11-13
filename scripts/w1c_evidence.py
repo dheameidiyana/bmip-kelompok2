@@ -77,8 +77,14 @@ def _json(relative: str, payload: dict[str, Any]) -> Path:
     return _write(relative, json.dumps(payload, indent=2, default=str) + "\n")
 
 
-def _hash_rows(rows: list[dict[str, Any]]) -> str:
-    ordered = sorted(json.dumps(row, sort_keys=True, default=str) for row in rows)
+def _hash_rows(
+    rows: list[dict[str, Any]], ignore: tuple[str, ...] = ("updated_at",)
+) -> str:
+    """Hash the logical content; materialization timestamps are not content."""
+    cleaned = [
+        {key: value for key, value in row.items() if key not in ignore} for row in rows
+    ]
+    ordered = sorted(json.dumps(row, sort_keys=True, default=str) for row in cleaned)
     return hashlib.sha256("\n".join(ordered).encode("utf-8")).hexdigest()
 
 
@@ -87,7 +93,7 @@ def _rebuild_gold(settings) -> dict[str, Any]:
 
     from bmip.transform.gold import GoldWriter
 
-    if run_dbt(["--select", "marts"]) != 0:
+    if run_dbt(["--select", "intermediate marts"]) != 0:
         raise RuntimeError("dbt marts build failed")
     writer = GoldWriter(settings)
     writer.ensure_tables()
@@ -271,7 +277,7 @@ def t11_critical_gate(settings, *, ts: str, sha: str) -> dict[str, Any]:
     from bmip.quality.suites import load_suites
 
     suites = [s for s in load_suites() if s.dataset == "silver.market_trades"]
-    frame = load_dataset(settings, "silver.market_trades")
+    frame = load_dataset(settings, "silver.market_trades", ("symbol", "trade_id"))
     injected = frame.copy()
     injected.loc[injected.index[0], "trade_id"] = None
 
@@ -310,7 +316,7 @@ def t12_warning_path(settings, *, ts: str, sha: str) -> dict[str, Any]:
     from bmip.quality.suites import load_suites
 
     suites = [s for s in load_suites() if s.dataset == "silver.market_trades"]
-    frame = load_dataset(settings, "silver.market_trades")
+    frame = load_dataset(settings, "silver.market_trades", ("symbol", "trade_id"))
     sample = frame.head(1000).copy()
     extra = sample.head(30).copy()
     injected = pd.concat([sample, extra], ignore_index=True)
@@ -357,7 +363,7 @@ def t31_schema_evolution(settings, *, ts: str, sha: str) -> dict[str, Any]:
         table_with_host_io,
     )
 
-    identifier = "silver.schema_evolution_probe"
+    identifier = f"silver.schema_evolution_probe_{ts}"
     catalog = load_rest_catalog(settings)
     ensure_namespace(catalog, "silver")
     try:
@@ -373,22 +379,39 @@ def t31_schema_evolution(settings, *, ts: str, sha: str) -> dict[str, Any]:
     catalog.create_table(
         identifier,
         schema=schema_v1,
-        location="s3://lakehouse/warehouse/silver.db/schema_evolution_probe",
+        location=f"s3://lakehouse/warehouse/silver.db/schema_evolution_probe_{ts}",
         partition_spec=PartitionSpec(),
     )
     table = table_with_host_io(catalog, settings, identifier)
     stamp = _now()
+    schema_v1_arrow = pa.schema(
+        [
+            pa.field("post_key", pa.large_string(), nullable=False),
+            pa.field("event_ts", pa.timestamp("us", tz="UTC"), nullable=False),
+            pa.field("score", pa.float64(), nullable=False),
+        ]
+    )
     table.append(
-        pa.Table.from_pylist([{"post_key": "probe-1", "event_ts": stamp, "score": 0.5}])
+        pa.Table.from_pylist(
+            [{"post_key": "probe-1", "event_ts": stamp, "score": 0.5}],
+            schema=schema_v1_arrow,
+        )
     )
     snapshot_v1 = table.current_snapshot().snapshot_id
 
     with table.update_schema() as update:
         update.add_column("confidence", DoubleType(), required=False)
     table = table_with_host_io(catalog, settings, identifier)
+    schema_v2_arrow = pa.schema(
+        [
+            *schema_v1_arrow,
+            pa.field("confidence", pa.float64(), nullable=True),
+        ]
+    )
     table.append(
         pa.Table.from_pylist(
-            [{"post_key": "probe-2", "event_ts": stamp, "score": -0.5, "confidence": 0.9}]
+            [{"post_key": "probe-2", "event_ts": stamp, "score": -0.5, "confidence": 0.9}],
+            schema=schema_v2_arrow,
         )
     )
 
