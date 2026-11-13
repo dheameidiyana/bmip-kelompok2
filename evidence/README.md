@@ -35,7 +35,8 @@ Isi saat evidence freeze:
 W1-C menambahkan:
 
 - Commit SHA: lihat header `commit` di tiap file W1-C (kode diuji: `3742fe9`).
-- Base branch: `feat/silver-lois` (`fdaf360`), karena W1-B belum di-merge ke `dev`.
+- Base branch: `feat/silver-lois` (`fdaf360`), yaitu tag `w1-b-ok`; W1-B masuk ke
+  `dev` lewat PR W1-C.
 - Python: 3.11.9, Great Expectations 1.25.0, VADER 3.3.2.
 - Lint: `ruff` + `sqlfluff` (config `.sqlfluff`) bersih; `e2e-smoke` PASS.
 - Data: replay nyata Binance Vision `BTCUSDT-aggTrades-2026-11-10` pukul

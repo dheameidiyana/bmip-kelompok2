@@ -12,6 +12,9 @@
 - CP2: PASS
 - CP3: PASS
 - Tag: `w1-b-ok`
+- Catatan tag: tag `w1-b-ok` dibuat pada `fdaf360` oleh Vio atas kesepakatan tim
+  (Lois tidak tersedia saat itu). W1-B masuk ke `dev` lewat PR W1-C
+  `slot/w1-c-vio`, yang memuat commit W1-B dan W1-C sekaligus.
 - CP1/CP2 evidence was captured on the W1-B working tree before commit; their `commit` field records base `328e0b2`. Final W1-B evidence (CP3/T27/Prefect/dbt/health) records `5be34b3`.
 
 Gate: stream processor, silver market, replay idempotence, retry after bronze,

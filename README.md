@@ -19,7 +19,7 @@ ledger, dan idempotensi dalam satu gate.
 W1-B selesai di branch `feat/silver-lois`: stream processor OHLCV 1 menit dengan
 watermark, dedup, DLQ, quarantine, dan freshness; `silver.market_trades` dan
 `silver.market_ohlcv_1m` terisi; dbt silver dan Prefect schedule hijau. Branch itu
-belum di-merge ke `dev` dan belum diberi tag `w1-b-ok` saat W1-C dimulai.
+di-tag `w1-b-ok` pada `fdaf360` dan masuk ke `dev` lewat PR W1-C.
 
 W1-C selesai di branch `slot/w1-c-vio` (base `feat/silver-lois`): silver social
 dengan pseudonimisasi HMAC dan VADER, tiga gold mart (`mart_market`,

@@ -4,7 +4,8 @@
 - Branch: `slot/w1-c-vio`
 - Handoff to: Anin (W1-D)
 - Last update: 2026-11-14
-- Base: `feat/silver-lois` (`fdaf360`), the branch that carries W1-A and W1-B
+- Base: `feat/silver-lois` (`fdaf360`), the branch that carries W1-A and W1-B;
+  `fdaf360` is also tag `w1-b-ok`
 
 ## Status
 
@@ -116,10 +117,11 @@ which has two posts at 14:05 and 14:06.
   before relying on the schedule. `transform-gold` itself was executed once
   through the worker and is evidenced.
 - **Serving, API, dashboard** are W1-D.
-- **PR dan review.** `slot/w1-c-vio` belum dibuka sebagai PR ke `dev`; butuh satu
-  reviewer (Lois atau Anin) sebelum W1-D mulai. W1-B juga belum di-merge ke `dev`
-  dan belum punya tag `w1-b-ok`; W1-C karena itu dimulai dari
-  `feat/silver-lois`, bukan dari tag.
+- **PR dan review.** `slot/w1-c-vio` di-PR langsung ke `dev` atas kesepakatan tim
+  (Lois tidak tersedia), jadi PR itu memuat W1-B dan W1-C sekaligus. Butuh satu
+  reviewer (Lois atau Anin) sebelum W1-D mulai. Tag `w1-b-ok` sekarang ada di
+  `fdaf360`; tag itu dibuat oleh Vio atas nama Lois. Setelah PR merge, Anin
+  sebaiknya branch dari `dev`.
 - **Issue W1-C** belum dibuat di GitHub; tidak ada kredensial GitHub di mesin ini.
 
 ## Cara menjalankan
