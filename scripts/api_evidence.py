@@ -477,6 +477,14 @@ def step_pagination(ctx: dict[str, Any]) -> dict[str, Any]:
                 {"symbol": "BTCUSDT"},
                 limit=100,
             )
+            # The fixture must actually be visible through the fallback path;
+            # otherwise this step would pass on two real rows and prove nothing.
+            serving["expectation"] = {"min_rows": 1000, "min_pages": 10}
+            serving["pass"] = (
+                bool(serving.get("pass"))
+                and serving["rows"] >= 1000
+                and serving["pages"] >= 10
+            )
             results.append({"mode": "1000-row fixture, limit=100", **serving})
         finally:
             _compose("start", "minio")

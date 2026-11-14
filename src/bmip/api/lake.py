@@ -128,6 +128,13 @@ class DuckDBLakeReader:
         connection.execute(f"SET s3_access_key_id = '{access_key}'")
         connection.execute(f"SET s3_secret_access_key = '{secret_key}'")
         connection.execute(f"SET s3_region = '{self.settings.minio_region}'")
+        # DuckDB 1.5 caches remote files by default. A serving tier must not
+        # answer from bytes it cannot invalidate: otherwise "MinIO is down"
+        # looks healthy and the X-Data-Stale fallback never triggers.
+        try:
+            connection.execute("SET enable_external_file_cache = false")
+        except Exception:  # noqa: BLE001 - older DuckDB has no such setting
+            log.info("duckdb has no external file cache setting; cache stays default")
         self._attach(connection)
         return connection
 
