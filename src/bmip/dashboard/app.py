@@ -135,7 +135,7 @@ def main() -> None:
             disabled=preset != "Rentang khusus",
         )
         symbol = st.text_input("Simbol", value=SYMBOL)
-        if st.button("Muat ulang", use_container_width=True):
+        if st.button("Muat ulang", width="stretch"):
             st.cache_data.clear()
         st.caption(f"API: {target}")
 
@@ -292,7 +292,7 @@ def main() -> None:
                 f"- {failure.get('severity')} · {failure.get('suite')} · "
                 f"{failure.get('rule_id')} — {failure.get('detail')}"
             )
-        st.dataframe(pd.DataFrame(freshness.get("data", [])), use_container_width=True)
+        st.dataframe(pd.DataFrame(freshness.get("data", [])), width="stretch")
         st.caption(
             "status ok = umur data ≤ SLO · warn = ≤ 2× SLO · stale = di atasnya · "
             "unknown = belum ada data."
