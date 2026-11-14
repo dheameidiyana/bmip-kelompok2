@@ -1,0 +1,24 @@
+{
+  "id": "T-37-W1D",
+  "scope": "draft (final in W2-B)",
+  "timestamp": "2026-11-14T02:25:51Z",
+  "commit": "9881478",
+  "command": "python scripts/api_evidence.py --steps reconcile",
+  "result": "PASS",
+  "owner": "anin",
+  "range": {
+    "window_start_min": "2026-11-10T13:00:00+00:00",
+    "window_start_max": "2026-11-10T14:00:00+00:00"
+  },
+  "counts": {
+    "api": 2,
+    "serving": 2,
+    "gold": 2,
+    "common_api_serving": 2,
+    "common_serving_gold": 2
+  },
+  "mismatches_api_vs_serving": [],
+  "mismatches_serving_vs_gold": [],
+  "tolerance": "relative 1e-9",
+  "dashboard_note": "The Streamlit page renders these same API payloads; the screenshot is evidence/dashboards/streamlit_<ts>.png."
+}

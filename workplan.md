@@ -384,6 +384,21 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 | Menyerahkan ke | Dhea (W2-A) |
 | Gate keluar | Tag `w1-d-ok`; demo end-to-end M1 jalan |
 
+**Keputusan implementasi (disetujui 14 November 2026)**
+
+1. **Prediksi tanpa model.** Dashboard menampilkan **"belum ada model"**; `POST /v1/predict`
+   mengembalikan `200` dengan `status=not_available` selama belum ada champion. Tidak ada
+   baseline persistence yang dipresentasikan sebagai model. Training dan registry adalah W2-A.
+2. **Alias route ARCHITECTURE.** Nama kanonik tetap milik workplan; alias `/v1/market/ohlcv`,
+   `/v1/market/volatility`, `/v1/sentiment/timeseries`, `/v1/dq/results`, dan
+   `/v1/catalog/search` ditambahkan di W1-D agar tidak ada rework di siklus berikutnya.
+3. **`symbol` default `BTCUSDT`** pada endpoint market, tetapi selalu divalidasi terhadap
+   allowlist (`MARKET_SYMBOLS`). Simbol di luar allowlist menghasilkan `400 unknown-symbol`.
+4. **`serving.volatility` adalah view** di atas `serving.market_hourly`, sehingga hanya ada satu
+   jalur tulis. Nama dan kolomnya tetap sesuai workplan.
+5. **`/api` dan `/health/*` tidak memakai API key**, karena `scripts/e2e_smoke.py` (gate W1-A) dan
+   healthcheck container memanggil keduanya. Auth `X-API-Key` hanya untuk `/v1/*`.
+
 **Lingkup Must**
 
 1. Skema serving PostgreSQL: `serving.market_latest`, `serving.sentiment_hourly`, `serving.volatility`, `serving.predictions` (tabel disiapkan walau belum terisi), `serving.freshness`.  

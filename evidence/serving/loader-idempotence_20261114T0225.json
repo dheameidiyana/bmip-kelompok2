@@ -1,0 +1,122 @@
+{
+  "id": "SERVING-IDEMPOTENCE",
+  "timestamp": "2026-11-14T02:25:49Z",
+  "commit": "9881478",
+  "command": "python scripts/serve_load.py (twice)",
+  "result": "PASS",
+  "owner": "anin",
+  "counts_equal": true,
+  "hash_equal": true,
+  "first": {
+    "counts": {
+      "serving.market_hourly": 2,
+      "serving.market_latest": 1,
+      "serving.sentiment_hourly": 1,
+      "serving.predictions": 1,
+      "serving.freshness": 4,
+      "serving.catalog_datasets": 11,
+      "serving.dq_runs": 1
+    },
+    "freshness": [
+      {
+        "metric": "market",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 300347.081,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:25:47Z",
+        "clock": "live"
+      },
+      {
+        "metric": "sentiment",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 300347.081,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:25:47Z",
+        "clock": "live"
+      },
+      {
+        "metric": "quality",
+        "data_ts": "2026-11-13T22:26:37Z",
+        "age_seconds": 14350.081,
+        "slo_seconds": 86400,
+        "status": "ok",
+        "as_of": "2026-11-14T02:25:47Z",
+        "clock": "live"
+      },
+      {
+        "metric": "predictions",
+        "data_ts": null,
+        "age_seconds": null,
+        "slo_seconds": 7200,
+        "status": "unknown",
+        "as_of": "2026-11-14T02:25:47Z",
+        "clock": "live"
+      }
+    ],
+    "logical_hash": "98ac824117ae49092a17418c2b7a456f28631e65d52a791443040e582122c8fc",
+    "market_rows": 2,
+    "sentiment_rows": 1,
+    "quality_run": "2026-11-13T22:26:37Z",
+    "registry_rows": 11,
+    "started_at": "2026-11-14T02:25:45Z",
+    "finished_at": "2026-11-14T02:25:47Z"
+  },
+  "second": {
+    "counts": {
+      "serving.market_hourly": 2,
+      "serving.market_latest": 1,
+      "serving.sentiment_hourly": 1,
+      "serving.predictions": 1,
+      "serving.freshness": 4,
+      "serving.catalog_datasets": 11,
+      "serving.dq_runs": 1
+    },
+    "freshness": [
+      {
+        "metric": "market",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 300349.494,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:25:49Z",
+        "clock": "live"
+      },
+      {
+        "metric": "sentiment",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 300349.494,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:25:49Z",
+        "clock": "live"
+      },
+      {
+        "metric": "quality",
+        "data_ts": "2026-11-13T22:26:37Z",
+        "age_seconds": 14352.494,
+        "slo_seconds": 86400,
+        "status": "ok",
+        "as_of": "2026-11-14T02:25:49Z",
+        "clock": "live"
+      },
+      {
+        "metric": "predictions",
+        "data_ts": null,
+        "age_seconds": null,
+        "slo_seconds": 7200,
+        "status": "unknown",
+        "as_of": "2026-11-14T02:25:49Z",
+        "clock": "live"
+      }
+    ],
+    "logical_hash": "98ac824117ae49092a17418c2b7a456f28631e65d52a791443040e582122c8fc",
+    "market_rows": 2,
+    "sentiment_rows": 1,
+    "quality_run": "2026-11-13T22:26:37Z",
+    "registry_rows": 11,
+    "started_at": "2026-11-14T02:25:47Z",
+    "finished_at": "2026-11-14T02:25:49Z"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "T-36",
+  "scope": "W1-D validation (final scoring is W2-A)",
+  "timestamp": "2026-11-14T02:25:40Z",
+  "commit": "9881478",
+  "command": "python scripts/api_evidence.py --steps predict",
+  "result": "PASS",
+  "owner": "anin",
+  "cases": [
+    {
+      "case": "malformed feature",
+      "status": 422,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/validation-error",
+      "pass": true
+    },
+    {
+      "case": "out-of-range feature",
+      "status": 200,
+      "status_field": "error",
+      "pass": true
+    },
+    {
+      "case": "valid payload, no champion",
+      "status": 200,
+      "status_field": "not_available",
+      "detail": "No champion model is registered yet. Training, the MLflow registry, and the promotion gate are W2-A scope; until then the platform reports this state instead of a synthetic prediction.",
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "T-34",
+  "timestamp": "2026-11-14T02:25:40Z",
+  "commit": "9881478",
+  "command": "python scripts/api_evidence.py --steps invalid",
+  "result": "PASS",
+  "owner": "anin",
+  "cases": [
+    {
+      "case": "unknown symbol",
+      "path": "/v1/market/latest",
+      "params": {
+        "symbol": "ETHUSDT"
+      },
+      "status": 400,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/unknown-symbol",
+      "request_id": "req-c2642ce98d18461e",
+      "pass": true
+    },
+    {
+      "case": "from after to",
+      "path": "/v1/market/ohlc",
+      "params": {
+        "symbol": "BTCUSDT",
+        "from": "2026-11-16T00:00:00Z",
+        "to": "2026-11-15T00:00:00Z"
+      },
+      "status": 400,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/invalid-range",
+      "request_id": "req-760e8c9e8dba4b06",
+      "pass": true
+    },
+    {
+      "case": "limit zero",
+      "path": "/v1/market/ohlc",
+      "params": {
+        "symbol": "BTCUSDT",
+        "limit": 0
+      },
+      "status": 422,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/invalid-limit",
+      "request_id": "req-50d42a3f83be4828",
+      "pass": true
+    },
+    {
+      "case": "limit over cap",
+      "path": "/v1/market/ohlc",
+      "params": {
+        "symbol": "BTCUSDT",
+        "limit": 5000
+      },
+      "status": 422,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/invalid-limit",
+      "request_id": "req-644fe5e76f2d4237",
+      "pass": true
+    },
+    {
+      "case": "broken cursor",
+      "path": "/v1/market/ohlc",
+      "params": {
+        "symbol": "BTCUSDT",
+        "cursor": "broken"
+      },
+      "status": 400,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/invalid-cursor",
+      "request_id": "req-f70618d1242c4cf3",
+      "pass": true
+    },
+    {
+      "case": "bad datetime",
+      "path": "/v1/market/ohlc",
+      "params": {
+        "symbol": "BTCUSDT",
+        "from": "yesterday"
+      },
+      "status": 422,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/validation-error",
+      "request_id": "req-a86c89cd6f5f4a5a",
+      "pass": true
+    },
+    {
+      "case": "range without bounds",
+      "path": "/v1/sentiment/range",
+      "params": {},
+      "status": 400,
+      "content_type": "application/problem+json",
+      "type": "https://bmip.local/problems/missing-range",
+      "request_id": "req-0343ac45332b4400",
+      "pass": true
+    }
+  ]
+}

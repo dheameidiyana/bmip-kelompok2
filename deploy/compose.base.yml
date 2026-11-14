@@ -273,26 +273,86 @@ services:
 
   api:
     build:
-      context: ./api
+      context: ..
+      dockerfile: deploy/api/Dockerfile
     image: bmip/api:dev
     restart: unless-stopped
     user: "10001:10001"
+    environment:
+      BMIP_ENV: ${BMIP_ENV:-dev}
+      BMIP_NODE: ${BMIP_NODE:-n1}
+      BMIP_LOG_LEVEL: ${BMIP_LOG_LEVEL:-INFO}
+      BMIP_COMMIT: ${BMIP_COMMIT:-local}
+      API_HOST: 0.0.0.0
+      API_PORT: "8000"
+      API_AUTH_REQUIRED: ${API_AUTH_REQUIRED:-true}
+      BMIP_API_KEY: ${BMIP_API_KEY:?set BMIP_API_KEY in .env}
+      MARKET_SYMBOL: ${MARKET_SYMBOL:-BTCUSDT}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT_INTERNAL:-http://minio:9000}
+      MINIO_S3_REGION: ${MINIO_S3_REGION:-local}
+      LAKEKEEPER_URL: ${LAKEKEEPER_URL_INTERNAL:-http://lakekeeper:8181}
+      LAKEKEEPER_WAREHOUSE: ${LAKEKEEPER_WAREHOUSE:-lakehouse}
+      POSTGRES_CORE_DSN: postgresql://${POSTGRES_USER:-bmip}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres-core:5432/${POSTGRES_DB:-bmip}
+      MINIO_SVC_API_ACCESS_KEY: ${MINIO_SVC_API_ACCESS_KEY:-svc-api}
+      MINIO_SVC_API_SECRET_KEY: ${MINIO_SVC_API_SECRET_KEY:?set MINIO_SVC_API_SECRET_KEY in .env}
+      FRESHNESS_MARKET_SLO_SECONDS: ${FRESHNESS_MARKET_SLO_SECONDS:-5400}
+      FRESHNESS_SENTIMENT_SLO_SECONDS: ${FRESHNESS_SENTIMENT_SLO_SECONDS:-5400}
+      FRESHNESS_PREDICTIONS_SLO_SECONDS: ${FRESHNESS_PREDICTIONS_SLO_SECONDS:-7200}
+      BMIP_AS_OF: ${BMIP_AS_OF:-}
     networks:
       - edge
       - data
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres-core:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      lakekeeper:
+        condition: service_healthy
     healthcheck:
       test:
         - CMD
         - python
         - -c
-        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5)"
+      interval: 10s
+      timeout: 6s
+      retries: 12
+      start_period: 20s
+    logging: *default-logging
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: deploy/dashboard/Dockerfile
+    image: bmip/dashboard:dev
+    restart: unless-stopped
+    user: "10001:10001"
+    environment:
+      BMIP_ENV: ${BMIP_ENV:-dev}
+      BMIP_LOG_LEVEL: ${BMIP_LOG_LEVEL:-INFO}
+      BMIP_API_BASE_URL: http://api:8000
+      BMIP_API_KEY: ${BMIP_API_KEY:?set BMIP_API_KEY in .env}
+      BMIP_DASHBOARD_SYMBOL: ${MARKET_SYMBOL:-BTCUSDT}
+    networks:
+      - edge
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3)"
       interval: 10s
       timeout: 5s
       retries: 12
-      start_period: 10s
+      start_period: 30s
     logging: *default-logging
+
 
 networks:
   edge:

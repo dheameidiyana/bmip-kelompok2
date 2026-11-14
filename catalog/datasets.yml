@@ -1,0 +1,187 @@
+# BMIP dataset registry (W1-D).
+#
+# This file is the source of truth for the business metadata the Query API
+# serves on /v1/dataset. It is loaded into serving.catalog_datasets by
+# bmip.serving.loader and will migrate to ops.dataset_registry in W2-C without
+# changing the API contract.
+#
+# kind: iceberg  -> location is a catalog identifier; the schema comes from
+#                   the Iceberg table itself.
+# kind: postgres -> location is schema.table; the schema comes from
+#                   information_schema.
+datasets:
+  - id: bronze.market_trade_raw
+    name: Bronze market trades
+    layer: bronze
+    domain: market
+    kind: iceberg
+    location: bronze.market_trade_raw
+    description: Raw Binance aggTrade payloads, immutable and partitioned by event_date.
+    owner: dhea
+    classification: internal
+    retention_days: 14
+    refresh_schedule: continuous
+    sla: silver within 120 seconds of event time
+    license: Binance public market data (data.binance.vision)
+    contains_pii: false
+    tags: [bronze, market, streaming]
+
+  - id: bronze.social_post_raw
+    name: Bronze social posts
+    layer: bronze
+    domain: social
+    kind: iceberg
+    location: bronze.social_post_raw
+    description: Raw Bluesky posts with the original URI, DID, and handle.
+    owner: dhea
+    classification: restricted
+    retention_days: 14
+    refresh_schedule: hourly at :10 UTC
+    sla: bronze within 75 minutes of the hour
+    license: Bluesky public AT Protocol data
+    contains_pii: true
+    tags: [bronze, social, batch, pii]
+
+  - id: silver.market_trades
+    name: Silver market trades
+    layer: silver
+    domain: market
+    kind: iceberg
+    location: silver.market_trades
+    description: Deduplicated trades keyed by (symbol, trade_id), conformed to market_trade.v1.
+    owner: lois
+    classification: internal
+    retention_days: 30
+    refresh_schedule: continuous
+    sla: lag under 5 seconds p95
+    license: Binance public market data
+    contains_pii: false
+    tags: [silver, market, dedup]
+
+  - id: silver.market_ohlcv_1m
+    name: Silver one-minute OHLCV
+    layer: silver
+    domain: market
+    kind: iceberg
+    location: silver.market_ohlcv_1m
+    description: One-minute OHLCV bars per symbol with late-event correction.
+    owner: lois
+    classification: internal
+    retention_days: 30
+    refresh_schedule: continuous
+    sla: within 2 minutes of event time
+    license: Binance public market data
+    contains_pii: false
+    tags: [silver, market, ohlcv]
+
+  - id: silver.social_post
+    name: Silver social posts
+    layer: silver
+    domain: social
+    kind: iceberg
+    location: silver.social_post
+    description: Deduplicated posts with the raw URI, DID, and handle replaced by salted keys.
+    owner: vio
+    classification: internal
+    retention_days: 30
+    refresh_schedule: hourly at :40 UTC
+    sla: within 90 minutes of the hour
+    license: Bluesky public AT Protocol data
+    contains_pii: false
+    tags: [silver, social, pseudonymized]
+
+  - id: silver.social_sentiment
+    name: Silver social sentiment
+    layer: silver
+    domain: social
+    kind: iceberg
+    location: silver.social_sentiment
+    description: VADER compound, pos, neu, neg scores per post with the model version.
+    owner: vio
+    classification: internal
+    retention_days: 30
+    refresh_schedule: hourly at :40 UTC
+    sla: within 90 minutes of the hour
+    license: Bluesky public AT Protocol data
+    contains_pii: false
+    tags: [silver, social, sentiment]
+
+  - id: gold.mart_market
+    name: Market mart
+    layer: gold
+    domain: market
+    kind: iceberg
+    location: gold.mart_market
+    description: Hourly OHLC, log return, realized volatility, and 24-hour EWMA per symbol.
+    owner: vio
+    classification: internal
+    retention_days: 90
+    refresh_schedule: hourly at :50 UTC
+    sla: within 90 minutes of silver
+    license: Binance public market data
+    contains_pii: false
+    tags: [gold, market, mart]
+
+  - id: gold.mart_sentiment
+    name: Sentiment mart
+    layer: gold
+    domain: social
+    kind: iceberg
+    location: gold.mart_sentiment
+    description: Hourly post volume, sentiment shares, engagement, and top hashtags.
+    owner: vio
+    classification: internal
+    retention_days: 90
+    refresh_schedule: hourly at :50 UTC
+    sla: within 90 minutes of silver
+    license: Bluesky public AT Protocol data
+    contains_pii: false
+    tags: [gold, social, mart]
+
+  - id: gold.mart_ml
+    name: ML feature mart
+    layer: gold
+    domain: ml
+    kind: iceberg
+    location: gold.mart_ml
+    description: Point-in-time feature row per symbol and hour plus the next-hour volatility label.
+    owner: dhea
+    classification: internal
+    retention_days: 90
+    refresh_schedule: hourly at :50 UTC
+    sla: within 90 minutes of silver
+    license: Derived from Binance market data and Bluesky public posts
+    contains_pii: false
+    tags: [gold, ml, features]
+
+  - id: serving.market_latest
+    name: Serving market latest
+    layer: serving
+    domain: market
+    kind: postgres
+    location: serving.market_latest
+    description: Indexed latest price and volatility per symbol, read by the Query API.
+    owner: anin
+    classification: internal
+    retention_days: 1
+    refresh_schedule: hourly, after gold publish
+    sla: market freshness under 90 minutes
+    license: Derived from Binance public market data
+    contains_pii: false
+    tags: [serving, market, api]
+
+  - id: serving.predictions
+    name: Serving predictions
+    layer: serving
+    domain: ml
+    kind: postgres
+    location: serving.predictions
+    description: Hourly next-hour realized-volatility predictions with model version and status.
+    owner: anin
+    classification: internal
+    retention_days: 90
+    refresh_schedule: hourly at :05 once a champion exists
+    sla: prediction freshness under 2 hours
+    license: Derived from Binance market data and Bluesky public posts
+    contains_pii: false
+    tags: [serving, ml, api]

@@ -14,7 +14,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi
 
 help:
 	@echo "BMIP targets:"
@@ -49,6 +49,15 @@ help:
 	@echo "  evidence-w1c Write T03/T09/T10/T11/T12/T31/T32/T33 evidence (W1-C)"
 	@echo "  e2e-smoke    W1-A smoke: health + replay + bronze + ledger"
 	@echo "  evidence     Collect the health evidence file"
+	@echo "  serving      Load gold into the serving schema (W1-D)"
+	@echo "  serving-counts  Print serving table counts"
+	@echo "  api-dev      Run the Query API on the host (uvicorn, port 8000)"
+	@echo "  dashboard-dev   Run Streamlit on the host (port 8501)"
+	@echo "  evidence-api    CP1/CP2 API evidence: smoke, routes, T-13, T-34, T-36"
+	@echo "  evidence-api-faults  T-14/T-15/T-37/Idempotence (stops MinIO briefly)"
+	@echo "  e2e-m1       M1 gate: bronze -> silver -> gold -> serving -> API -> dashboard"
+	@echo "  reconcile    T-37 draft: API vs serving SQL vs Iceberg"
+	@echo "  openapi      Write contracts/openapi.json from the running API"
 
 $(PYTHON):
 	$(PYTHON_BOOT) -m venv .venv
@@ -162,6 +171,33 @@ e2e-smoke: $(PYTHON)
 	$(PYTHON) scripts/e2e_smoke.py
 
 smoke: e2e-smoke
+
+serving: $(PYTHON)
+	$(PYTHON) scripts/serve_load.py
+
+serving-counts: $(PYTHON)
+	$(PYTHON) scripts/serve_load.py --counts
+
+api-dev: $(PYTHON)
+	$(PYTHON) -m uvicorn bmip.api.main:create_app --factory --host 0.0.0.0 --port 8000
+
+dashboard-dev: $(PYTHON)
+	$(PYTHON) -m streamlit run src/bmip/dashboard/app.py --server.port 8501 --server.headless true
+
+evidence-api: $(PYTHON)
+	$(PYTHON) scripts/api_evidence.py --steps smoke,routes,auth,invalid,predict
+
+evidence-api-faults: $(PYTHON)
+	$(PYTHON) scripts/api_evidence.py --steps pagination,stale,idempotence,reconcile --with-faults
+
+e2e-m1: $(PYTHON)
+	$(PYTHON) scripts/m1_smoke.py
+
+reconcile: $(PYTHON)
+	$(PYTHON) scripts/reconciliation.py
+
+openapi: $(PYTHON)
+	$(PYTHON) scripts/api_evidence.py --steps routes
 
 test-cov:
 	@echo "[stub] test-cov: implemented in W2-D"

@@ -1,0 +1,24 @@
+id        : CP1-API
+timestamp : 2026-11-14T02:25:40Z
+commit    : 9881478
+command   : python scripts/api_evidence.py --steps smoke
+result    : PASS
+owner     : anin
+
+
+| Check | Status | Detail |
+|---|---|---|
+| `health/live` | PASS | HTTP 200 |
+| `health/ready` | PASS | HTTP 200 |
+| `v1/meta/instance` | PASS | HTTP 200 |
+| `v1/market/latest` | PASS | HTTP 200 |
+| `v1/market/volatility/latest` | PASS | HTTP 200 |
+| `v1/sentiment/latest` | PASS | HTTP 200 |
+| `v1/freshness` | PASS | HTTP 200 |
+| `v1/quality/status` | PASS | HTTP 200 |
+| `v1/model/latest` | PASS | HTTP 200 |
+| `v1/dataset` | PASS | HTTP 200 |
+| `market/data` | PASS | row present |
+| `market/freshness` | PASS | {"metric": "market", "data_ts": "2026-11-10T15:00:00Z", "age_seconds": 300339.976, "slo_seconds": 5400, "status": "stale", "as_of": "2026-11-14T02:25:39Z", "clock": "live"} |
+| `market/request-id` | PASS | req-ee8143c1d67148d4 |
+| `freshness/metrics` | PASS | metrics=['market', 'predictions', 'quality', 'sentiment'] |

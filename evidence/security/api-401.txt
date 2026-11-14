@@ -1,0 +1,45 @@
+id        : T-13
+timestamp : 2026-11-14T02:25:40Z
+commit    : 9881478
+command   : python scripts/api_evidence.py --steps auth
+result    : PASS
+owner     : anin
+
+
+| Case | Path | HTTP | Pass |
+|---|---|---|---|
+| no key | `/v1/market/latest` | 401 | True |
+| wrong key | `/v1/market/latest` | 401 | True |
+| no key on predict | `/v1/predict` | 401 | True |
+| public discovery stays open | `/api` | 200 | True |
+
+Raw responses:
+[
+  {
+    "case": "no key",
+    "path": "/v1/market/latest",
+    "status": 401,
+    "content_type": "application/problem+json",
+    "problem_type": "https://bmip.local/problems/unauthorized",
+    "request_id": "req-2ca878e5cb9c4bc3",
+    "pass": true
+  },
+  {
+    "case": "wrong key",
+    "path": "/v1/market/latest",
+    "status": 401,
+    "pass": true
+  },
+  {
+    "case": "no key on predict",
+    "path": "/v1/predict",
+    "status": 401,
+    "pass": true
+  },
+  {
+    "case": "public discovery stays open",
+    "path": "/api",
+    "status": 200,
+    "pass": true
+  }
+]

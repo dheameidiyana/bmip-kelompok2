@@ -29,6 +29,20 @@ def _env(name: str, default: str | None = None) -> str:
     return value
 
 
+def _flag(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None or raw == "":
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _symbols() -> tuple[str, ...]:
+    """Allowlist of symbols; MARKET_SYMBOLS wins, then MARKET_SYMBOL."""
+    raw = os.getenv("MARKET_SYMBOLS") or os.getenv("MARKET_SYMBOL") or "BTCUSDT"
+    symbols = tuple(part.strip().upper() for part in raw.split(",") if part.strip())
+    return symbols or ("BTCUSDT",)
+
+
 @dataclass(frozen=True)
 class Settings:
     env: str
@@ -70,15 +84,40 @@ class Settings:
     gold_max_gap_hours: int
     gold_freshness_threshold_minutes: int
 
+    # W1-D serving and API. Optional so every W1-A..W1-C command keeps working
+    # with an older .env that predates the serving tier.
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
+    api_key: str = ""
+    api_auth_required: bool = True
+    api_cache_seconds: int = 30
+    serving_max_range_days: int = 31
+    serving_max_rows: int = 50000
+    serving_page_size_default: int = 100
+    serving_page_size_max: int = 1000
+    lake_reader: str = "duckdb"
+    lake_query_timeout_seconds: float = 5.0
+    duckdb_extension_dir: str = ""
+    market_symbols: tuple[str, ...] = ("BTCUSDT",)
+    freshness_market_slo_seconds: int = 5400
+    freshness_sentiment_slo_seconds: int = 5400
+    freshness_predictions_slo_seconds: int = 7200
+    freshness_quality_slo_seconds: int = 86400
+    bmip_as_of: str = ""
+    dq_report_path: str = "evidence/dq/dq_report.json"
+    dataset_registry_path: str = "catalog/datasets.yml"
+
     @classmethod
     def from_env(cls) -> Settings:
         user = os.getenv("POSTGRES_USER", "bmip")
-        password = _env("POSTGRES_PASSWORD")
         database = os.getenv("POSTGRES_DB", "bmip")
-        dsn = os.getenv(
-            "POSTGRES_CORE_DSN",
-            f"postgresql://{quote(user)}:{quote(password)}@localhost:5433/{database}",
-        )
+        # Containers receive a fully formed DSN (postgres-core:5432) and do not
+        # need the password as a separate variable; host tools fall back to the
+        # published port 5433.
+        dsn = os.getenv("POSTGRES_CORE_DSN")
+        if not dsn:
+            password = _env("POSTGRES_PASSWORD")
+            dsn = f"postgresql://{quote(user)}:{quote(password)}@localhost:5433/{database}"
         return cls(
             env=os.getenv("BMIP_ENV", "dev"),
             node=os.getenv("BMIP_NODE", "n1"),
@@ -136,13 +175,47 @@ class Settings:
             binance_vision_base_url=os.getenv(
                 "BINANCE_VISION_BASE_URL", "https://data.binance.vision"
             ),
-            pii_hash_salt=_env("PII_HASH_SALT"),
+            pii_hash_salt=os.getenv("PII_HASH_SALT", ""),
             sentiment_model_version=os.getenv(
                 "SENTIMENT_MODEL_VERSION", "vaderSentiment-3.3.2"
             ),
             gold_max_gap_hours=int(os.getenv("GOLD_MAX_GAP_HOURS", "24")),
             gold_freshness_threshold_minutes=int(
                 os.getenv("GOLD_FRESHNESS_THRESHOLD_MINUTES", "90")
+            ),
+            api_host=os.getenv("API_HOST", "0.0.0.0"),
+            api_port=int(os.getenv("API_PORT", "8000")),
+            api_key=os.getenv("BMIP_API_KEY", ""),
+            api_auth_required=_flag("API_AUTH_REQUIRED", True),
+            api_cache_seconds=int(os.getenv("API_CACHE_SECONDS", "30")),
+            serving_max_range_days=int(os.getenv("SERVING_MAX_RANGE_DAYS", "31")),
+            serving_max_rows=int(os.getenv("SERVING_MAX_ROWS", "50000")),
+            serving_page_size_default=int(os.getenv("SERVING_PAGE_SIZE", "100")),
+            serving_page_size_max=int(os.getenv("SERVING_PAGE_SIZE_MAX", "1000")),
+            lake_reader=os.getenv("LAKE_READER", "duckdb"),
+            lake_query_timeout_seconds=float(
+                os.getenv("LAKE_QUERY_TIMEOUT_SECONDS", "5")
+            ),
+            duckdb_extension_dir=os.getenv("DUCKDB_EXTENSION_DIR", ""),
+            market_symbols=_symbols(),
+            freshness_market_slo_seconds=int(
+                os.getenv("FRESHNESS_MARKET_SLO_SECONDS", "5400")
+            ),
+            freshness_sentiment_slo_seconds=int(
+                os.getenv("FRESHNESS_SENTIMENT_SLO_SECONDS", "5400")
+            ),
+            freshness_predictions_slo_seconds=int(
+                os.getenv("FRESHNESS_PREDICTIONS_SLO_SECONDS", "7200")
+            ),
+            freshness_quality_slo_seconds=int(
+                os.getenv("FRESHNESS_QUALITY_SLO_SECONDS", "86400")
+            ),
+            bmip_as_of=os.getenv("BMIP_AS_OF", ""),
+            dq_report_path=os.getenv(
+                "DQ_REPORT_PATH", "evidence/dq/dq_report.json"
+            ),
+            dataset_registry_path=os.getenv(
+                "DATASET_REGISTRY_PATH", "catalog/datasets.yml"
             ),
         )
 

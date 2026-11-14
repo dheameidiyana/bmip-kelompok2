@@ -1,0 +1,34 @@
+id        : API-ROUTES
+timestamp : 2026-11-14T02:25:40Z
+commit    : 9881478
+command   : python scripts/api_evidence.py --steps routes
+result    : PASS
+owner     : anin
+
+
+Canonical /v1 routes: 14
+Alias routes: 5
+
+| Method | Path | Summary |
+|---|---|---|
+| GET | `/v1/catalog/search` | Alias of /v1/dataset (ARCHITECTURE naming) |
+| GET | `/v1/dataset` | List catalogue datasets |
+| GET | `/v1/dataset/{dataset_id}/schema` | Columns of one dataset, from Iceberg or PostgreSQL |
+| GET | `/v1/dq/results` | Alias of /v1/quality/status (ARCHITECTURE naming) |
+| GET | `/v1/freshness` | Age of every serving metric against its SLO |
+| GET | `/v1/market/latest` | Latest hourly bar and volatility for a symbol |
+| GET | `/v1/market/ohlc` | Hourly OHLC range (DuckDB over Iceberg, PostgreSQL fallback) |
+| GET | `/v1/market/ohlcv` | Alias of /v1/market/ohlc (ARCHITECTURE naming) |
+| GET | `/v1/market/volatility` | Alias of /v1/market/volatility/range (ARCHITECTURE naming) |
+| GET | `/v1/market/volatility/latest` | Latest realized and EWMA volatility |
+| GET | `/v1/market/volatility/range` | Realized volatility range |
+| GET | `/v1/meta/instance` | Replica identity |
+| GET | `/v1/model/latest` | Champion model metadata, or an explicit not_available state |
+| POST | `/v1/predict` | Score the next-hour realized volatility |
+| GET | `/v1/quality/status` | Last Great Expectations run and its failures |
+| GET | `/v1/sentiment/hourly` | Hourly sentiment series (defaults to the most recent page) |
+| GET | `/v1/sentiment/latest` | Latest hourly sentiment aggregate |
+| GET | `/v1/sentiment/range` | Hourly sentiment range with explicit from/to |
+| GET | `/v1/sentiment/timeseries` | Alias of /v1/sentiment/hourly (ARCHITECTURE naming) |
+
+openapi.json written to contracts/openapi.json

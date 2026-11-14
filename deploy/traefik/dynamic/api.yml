@@ -1,13 +1,27 @@
 http:
   routers:
+    # The placeholder W1-A gate probes /api; the data routes live under /v1.
     api:
-      rule: "PathPrefix(`/api`) || PathPrefix(`/health`)"
+      rule: "PathPrefix(`/api`) || PathPrefix(`/v1`) || PathPrefix(`/health`) || PathPrefix(`/metrics`) || PathPrefix(`/docs`) || PathPrefix(`/openapi.json`)"
       entryPoints:
         - web
       service: api
+      priority: 20
+
+    dashboard:
+      rule: "PathPrefix(`/`)"
+      entryPoints:
+        - web
+      service: dashboard
+      priority: 1
 
   services:
     api:
       loadBalancer:
         servers:
           - url: "http://api:8000"
+
+    dashboard:
+      loadBalancer:
+        servers:
+          - url: "http://dashboard:8501"

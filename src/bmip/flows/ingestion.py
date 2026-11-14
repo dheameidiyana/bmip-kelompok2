@@ -145,6 +145,22 @@ def publish_gold_task(
     }
 
 
+@task(name="publish-serving", retries=1, retry_delay_seconds=30)
+def publish_serving_task(
+    start: str | None = None,
+    end: str | None = None,
+) -> dict[str, Any]:
+    """Gold -> PostgreSQL serving tables. Idempotent by primary key."""
+    from bmip.serving.loader import load_serving
+
+    result = load_serving(
+        get_settings(),
+        start=_ts(start),
+        end=_ts(end),
+    )
+    return result.as_dict()
+
+
 def _ts(value: str | None):
     if not value:
         return None
@@ -177,6 +193,7 @@ def transform_gold_flow(
         start=start,
         end=end,
     )
+    serving = publish_serving_task(start=start, end=end)
     return {
         "social_silver": social_silver,
         "silver_build": silver_build,
@@ -184,6 +201,7 @@ def transform_gold_flow(
         "gold_build": gold_build,
         "gold_quality": gold_quality,
         "published": published,
+        "serving": serving,
     }
 
 

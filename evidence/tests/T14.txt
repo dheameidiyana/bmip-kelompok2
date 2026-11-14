@@ -1,0 +1,37 @@
+id        : T-14
+timestamp : 2026-11-14T02:25:45Z
+commit    : 9881478
+command   : python scripts/api_evidence.py --steps pagination
+result    : PASS
+owner     : anin
+
+
+Keyset pagination: every page is strictly older than the previous cursor.
+
+## live rows, limit=1
+pages        : 2
+rows         : 2
+unique rows  : 2
+duplicates   : 0
+cursor stable: True
+result       : PASS
+
+## page detail
+[
+  [
+    {
+      "page": 1,
+      "rows": 1,
+      "next_cursor": "eyJ3IjoiMjAyNi0xMS0xMFQxNDowMDowMFoifQ",
+      "first": "2026-11-10T14:00:00Z",
+      "last": "2026-11-10T14:00:00Z"
+    },
+    {
+      "page": 2,
+      "rows": 1,
+      "next_cursor": null,
+      "first": "2026-11-10T13:00:00Z",
+      "last": "2026-11-10T13:00:00Z"
+    }
+  ]
+]

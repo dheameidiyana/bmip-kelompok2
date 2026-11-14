@@ -1520,6 +1520,15 @@ curl -s -H "X-API-Key: $BMIP_API_KEY" \
 }
 ```
 
+### 10.3.1 W1-D implementation notes
+
+The implemented route set follows the workplan's 13 read-only endpoints plus one scoring endpoint, which supersedes the exact list above where the two documents differ. The ARCHITECTURE names are kept as aliases so neither document is wrong: `/v1/market/ohlcv`, `/v1/market/volatility`, `/v1/sentiment/timeseries`, `/v1/dq/results`, and `/v1/catalog/search`.
+
+- `symbol` defaults to `BTCUSDT` on market routes but is always validated against the `MARKET_SYMBOLS` allowlist; an unknown symbol returns `400 unknown-symbol`.
+- `POST /v1/predict` returns `200` with `status: "not_available"` while no champion is registered (W1-D). A malformed body is `422`; a business out-of-range feature is recorded with `status: "error"` and returned as `200`. W2-A replaces the `not_available` branch once the MLflow champion exists; the route contract and the `serving.predictions` table do not change.
+- `serving.volatility` is a view over `serving.market_hourly`, so the serving tier has exactly one write path per grain.
+- `/api` and `/health/*` stay unauthenticated: the W1-A smoke gate and the container healthcheck call them. `X-API-Key` guards `/v1/*` only.
+
 ### 10.4 Fallback and degradation
 
 ```mermaid

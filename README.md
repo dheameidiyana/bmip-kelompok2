@@ -27,8 +27,15 @@ dengan pseudonimisasi HMAC dan VADER, tiga gold mart (`mart_market`,
 checkpoint Great Expectations yang memblokir gold saat critical gagal serta
 mencatat warning. `make lint`, `make test`, dan `make e2e-smoke` hijau, dan flow
 Prefect `transform-gold` sudah dijalankan lewat worker. Detail serah terima ada
-di [docs/handoff/w1-c.md](docs/handoff/w1-c.md). Berikutnya W1-D (serving, API,
-dashboard).
+di [docs/handoff/w1-c.md](docs/handoff/w1-c.md).
+
+W1-D selesai di branch `slot/w1-d-anin`: skema `serving.*` diisi idempoten dari
+gold, Query API 13 endpoint read-only + 1 endpoint scoring, fallback
+`X-Data-Stale` saat lake mati, dan dashboard Streamlit v1 (4 metrik, 2 filter
+waktu, freshness badge). `POST /v1/predict` menjawab `status: not_available`
+selama belum ada champion; training adalah W2-A. Detail di
+[docs/handoff/w1-d.md](docs/handoff/w1-d.md) dan runbook
+[docs/runbooks/serving.md](docs/runbooks/serving.md).
 
 ## Stack
 
@@ -92,7 +99,8 @@ Port host dev:
 | Service | Port |
 | --- | --- |
 | Traefik | 8080 (HTTP), 8082 (ping) |
-| API placeholder | 8000 |
+| Query API | 8000 |
+| Dashboard | 8501 |
 | MinIO | 9000 (S3), 9001 (console) |
 | Lakekeeper | 8181 |
 | PostgreSQL core | 5433 |
@@ -109,6 +117,10 @@ Perintah operasional:
 .\scripts\make.ps1 gold         # silver social + dbt + quality gate + publish gold
 .\scripts\make.ps1 quality      # GX checkpoint, tulis evidence/dq/dq_report.json
 .\scripts\make.ps1 evidence-w1c # T-03/T-09/T-10/T-11/T-12/T-31/T-32/T-33
+.\scripts\make.ps1 serving      # load gold -> serving (idempoten)
+.\scripts\make.ps1 evidence-api # CP1/CP2: smoke, routes, T-13, T-34, T-36
+.\scripts\make.ps1 evidence-api-faults # T-14/T-15/T-37 + idempotensi (stop MinIO sebentar)
+.\scripts\make.ps1 e2e-m1       # gate M1: bronze -> silver -> gold -> serving -> API -> dashboard
 .\scripts\make.ps1 ci           # compose config + lint + test
 ```
 
@@ -122,6 +134,27 @@ Harvester sosial per jam (Ctrl+C berhenti bersih):
 ingin merotasi seluruh secret lokal. Detail keputusan dan deviasi ada di
 `docs/adr/0001-w1-a-foundation.md`, status serah terima ada di
 `docs/handoff/w1-a.md`.
+
+## Query API dan dashboard
+
+API hanya membaca: `/v1/*` memerlukan `X-API-Key` (nilai `BMIP_API_KEY` di
+`.env`), sedangkan `/api` dan `/health/*` publik untuk healthcheck dan gate lama.
+Dashboard berjalan di `http://localhost:8501` dan hanya memanggil API.
+
+```powershell
+$key = (Select-String -Path .env -Pattern '^BMIP_API_KEY=').Line.Split('=',2)[1]
+
+curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/market/latest"
+curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/freshness"
+curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/market/ohlc?symbol=BTCUSDT&limit=5"
+curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/quality/status"
+curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/model/latest"
+```
+
+Respons memuat `meta.freshness` (`ok`/`warn`/`stale`/`unknown`) dan header
+`X-Data-Source` (`lake`/`serving`) serta `X-Data-Stale` saat jalur lake gagal.
+`BMIP_AS_OF` mengaktifkan jam replay yang selalu dilaporkan sebagai
+`clock: replay`, bukan waktu dinding.
 
 ## Model branch
 
