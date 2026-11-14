@@ -87,8 +87,15 @@ hr {{ border-color: {BORDER}; }}
     color: {BLACK} !important;
 }}
 [data-testid="stAlert"] svg {{ fill: {NAVY} !important; }}
-/* Remove Streamlit chrome that would introduce colours outside the palette. */
-[data-testid="stToolbar"] {{ display: none; }}
+/* Keep the sidebar toggle reachable: Streamlit shows it on hover only, which
+   makes a collapsed sidebar look like a missing filter panel. */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"] {{
+    visibility: visible !important;
+    opacity: 1 !important;
+}}
+/* Remove only the deploy chrome, never the sidebar controls. */
+[data-testid="stAppDeployButton"] {{ display: none; }}
 [data-testid="stDecoration"] {{ display: none; }}
 #MainMenu {{ visibility: hidden; }}
 footer {{ visibility: hidden; }}

@@ -26,6 +26,7 @@ SYMBOL = os.getenv("BMIP_DASHBOARD_SYMBOL", "BTCUSDT")
 st.set_page_config(
     page_title="Bitcoin Market Intelligence Platform (BMIP)",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 theme.apply()
 
