@@ -1,6 +1,6 @@
 id        : M1
-timestamp : 2026-11-14T03:46:27Z
-commit    : aec9e8f
+timestamp : 2026-11-14T04:05:53Z
+commit    : f06fd43
 command   : python scripts/m1_smoke.py
 result    : PASS
 owner     : anin
@@ -9,7 +9,7 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
 
 | Check | Status | Detail |
 |---|---|---|
-| `api/health-ready` | PASS | HTTP 200 {"status":"ready","checks":{"lake":true,"serving":true},"instance":"cd41e280bd2e","detail":null} |
+| `api/health-ready` | PASS | HTTP 200 {"status":"ready","checks":{"lake":true,"serving":true},"instance":"afa79062c503","detail":null} |
 | `api/market-latest` | PASS | HTTP 200 close=67999.75 |
 | `api/sentiment-latest` | PASS | HTTP 200 posts=2 |
 | `api/freshness` | PASS | ['market', 'predictions', 'quality', 'sentiment'] |
@@ -48,21 +48,21 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       "updated_at": "2026-11-14T02:05:20.494382Z"
     },
     "meta": {
-      "request_id": "req-ffe233b950f947e3",
-      "instance": "cd41e280bd2e",
+      "request_id": "req-c075d885caff409c",
+      "instance": "afa79062c503",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T03:46:26.240662Z",
+      "as_of": "2026-11-14T04:05:51.612623Z",
       "count": null,
       "next_cursor": null,
       "freshness": {
         "metric": "market",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 305186.24,
+        "age_seconds": 306351.611,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T03:46:26Z",
+        "as_of": "2026-11-14T04:05:51Z",
         "clock": "live"
       }
     }
@@ -86,21 +86,21 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       "sentiment_model_version": "vaderSentiment-3.3.2"
     },
     "meta": {
-      "request_id": "req-cadf092a17684b29",
-      "instance": "cd41e280bd2e",
+      "request_id": "req-748d6b11900546cf",
+      "instance": "afa79062c503",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T03:46:26.268854Z",
+      "as_of": "2026-11-14T04:05:51.657663Z",
       "count": null,
       "next_cursor": null,
       "freshness": {
         "metric": "sentiment",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 305186.268,
+        "age_seconds": 306351.656,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T03:46:26Z",
+        "as_of": "2026-11-14T04:05:51Z",
         "clock": "live"
       }
     }
@@ -110,10 +110,10 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       {
         "metric": "market",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 305186.297,
+        "age_seconds": 306351.679,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T03:46:26Z",
+        "as_of": "2026-11-14T04:05:51Z",
         "clock": "live"
       },
       {
@@ -122,35 +122,35 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
         "age_seconds": null,
         "slo_seconds": 7200,
         "status": "unknown",
-        "as_of": "2026-11-14T03:46:26Z",
+        "as_of": "2026-11-14T04:05:51Z",
         "clock": "live"
       },
       {
         "metric": "quality",
         "data_ts": "2026-11-14T02:55:03Z",
-        "age_seconds": 3083.297,
+        "age_seconds": 4248.679,
         "slo_seconds": 86400,
         "status": "ok",
-        "as_of": "2026-11-14T03:46:26Z",
+        "as_of": "2026-11-14T04:05:51Z",
         "clock": "live"
       },
       {
         "metric": "sentiment",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 305186.297,
+        "age_seconds": 306351.679,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T03:46:26Z",
+        "as_of": "2026-11-14T04:05:51Z",
         "clock": "live"
       }
     ],
     "meta": {
-      "request_id": "req-5c180c3174bf47a5",
-      "instance": "cd41e280bd2e",
+      "request_id": "req-c82397b253bc4c3e",
+      "instance": "afa79062c503",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T03:46:26.297329Z",
+      "as_of": "2026-11-14T04:05:51.679254Z",
       "count": 4,
       "next_cursor": null,
       "freshness": null
@@ -178,12 +178,12 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       ]
     },
     "meta": {
-      "request_id": "req-bb2e5e37220143cf",
-      "instance": "cd41e280bd2e",
+      "request_id": "req-5d12be3494e245bd",
+      "instance": "afa79062c503",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T03:46:26.330719Z",
+      "as_of": "2026-11-14T04:05:51.708204Z",
       "count": 8,
       "next_cursor": null,
       "freshness": null
@@ -197,12 +197,12 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
     "metrics": {},
     "detail": "No champion model is registered yet. Training, the MLflow registry, and the promotion gate are W2-A scope; until then the platform reports this state instead of a synthetic prediction.",
     "meta": {
-      "request_id": "req-cec5963abdec4222",
-      "instance": "cd41e280bd2e",
+      "request_id": "req-406fc8e3ec494bed",
+      "instance": "afa79062c503",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T03:46:26.348583Z",
+      "as_of": "2026-11-14T04:05:51.733147Z",
       "count": null,
       "next_cursor": null,
       "freshness": null

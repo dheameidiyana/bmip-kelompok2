@@ -7,7 +7,8 @@
 - Base: `dev` (`ef01ec5`, merge of PR W1-C)
 - Code commits: `386760e` (serving + API + dashboard), `0df6000` (lake health +
   file cache), `cd9513a` (UTC chart labels), `a58f5d7` (Streamlit width API),
-  `83e5a31` (dashboard restyle: Poppins, palette, layout)
+  `83e5a31` (dashboard restyle: Poppins, palette, layout), `ebb7de3` (sidebar
+  toggle stays visible, sidebar starts expanded)
 - Tag: `w1-d-ok`
 
 ## Status
@@ -176,6 +177,7 @@ curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/market/ohlc?symbol=BT
 | Lake reads work in the container but not on the host | Iceberg metadata URLs use `minio:9000`, which only resolves inside the compose network | test the lake path through the container, not a host uvicorn |
 | First lake query can exceed 5 s on a cold worker | DuckDB attach + metadata refresh | evidence warms the path; a longer `LAKE_QUERY_TIMEOUT_SECONDS` is the knob |
 | Dashboard falls back to Segoe UI | Poppins is loaded from the Google Fonts CDN (owner decision, ADR-0003 revision); an offline demo has no web font | expected; layout is unchanged |
+| Sidebar/filter panel looks missing | the old CSS hid `[data-testid="stToolbar"]`, which also contains the "Expand sidebar" button, and Streamlit remembers the collapsed state in `localStorage` (`stSidebarCollapsed-`) | CSS now hides only the deploy button, `initial_sidebar_state="expanded"` is set, and the expand chevron stays visible at the top-left |
 
 ## Langkah berikutnya untuk Dhea (W2-A)
 
@@ -208,8 +210,8 @@ curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/market/ohlc?symbol=BT
 | T-36 | `evidence/ml/T36.json` | Malformed → 422, out-of-range → recorded error, valid → `not_available` (W1-D validation) |
 | IDEM | `evidence/serving/loader-idempotence_20261114T0239.json` | Two loads, identical counts and logical hash |
 | T-37 | `evidence/dashboard/reconciliation-draft.json` | API vs serving SQL vs Iceberg gold, 2/2 rows, 0 mismatches (draft) |
-| M1 | `evidence/e2e/M1_20261114T0346.txt` | Bronze → silver → gold → serving → API → dashboard |
-| DASH | `evidence/dashboards/streamlit_20261114T0345.png` | 4 metrics, 2 filters, Poppins, five-colour palette, no badges, "belum ada model" |
+| M1 | `evidence/e2e/M1_20261114T0405.txt` | Bronze → silver → gold → serving → API → dashboard |
+| DASH | `evidence/dashboards/streamlit_20261114T0405.png` | 4 metrics, 2 filters, Poppins, five-colour palette, no badges, "belum ada model" |
 
 The dashboard screenshot is reproducible with Playwright against the installed
 Edge browser (no browser download):
