@@ -41,6 +41,7 @@ dev = [
 ]
 dashboard = [
     "streamlit>=1.40,<2",
+    "altair>=5,<7",
 ]
 
 [tool.setuptools.packages.find]

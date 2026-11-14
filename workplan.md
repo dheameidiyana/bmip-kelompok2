@@ -412,7 +412,7 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 7. `X-Data-Stale: true` \+ fallback ke PostgreSQL saat MinIO tidak tersedia.  
 8. Freshness field di setiap respons yang relevan (umur data dalam detik \+ status `ok/warn/stale`).  
 9. `openapi.json` di-commit; `evidence/api/` berisi curl per endpoint.  
-10. Streamlit v1: 4 metrik bisnis (harga terakhir, volatilitas jam terakhir, skor sentimen, prediksi jam berikutnya), 2 filter waktu, freshness badge per metrik. Membaca API saja, tidak query langsung ke lake.
+10. Streamlit v1: 4 metrik bisnis (harga terakhir, volatilitas jam terakhir, skor sentimen, prediksi jam berikutnya), 2 filter waktu, dan panel kualitas/freshness. Revisi 14 Nov 2026: badge freshness per metrik dihapus dari tampilan utama, layout chart menjadi baris 1 harga lalu baris 2 sentimen | volatilitas, tipografi Poppins, dan palet dikunci ke hitam-abu-putih-navy-pink (light mode). Membaca API saja, tidak query langsung ke lake.
 
 **Should**
 

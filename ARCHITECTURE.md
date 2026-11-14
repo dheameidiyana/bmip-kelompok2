@@ -233,7 +233,7 @@ The platform must make the comparison reproducible: same time split, same label 
 ### 3.4 User journeys
 
 **Journey A, analyst checks the market.**
-The analyst opens `https://app.bmip.local`, sees the latest price, the last completed hourly volatility, the current sentiment score, the next-hour prediction, and a freshness badge for each. If a badge is amber, the analyst can click through to the data quality page to see which rule failed.
+The analyst opens `https://app.bmip.local`, sees the latest price, the last completed hourly volatility, the current sentiment score, and the next-hour prediction, then opens the data-quality panel to check freshness and any failing rule.
 
 **Journey B, engineer investigates a missing hour.**
 The engineer opens the catalog portal, searches for `mart_market`, sees the owner, schema, quality status, and lineage. The lineage graph shows that the missing hour originated from a Redpanda consumer lag alert. The engineer uses the Prefect UI to replay the affected minute range and verifies the row count and freshness recover.
@@ -2135,7 +2135,7 @@ The graph answers the key grading question: "This number on the dashboard, which
 
 | Page | Content | Data source |
 |---|---|---|
-| Overview | Latest price, hourly volatility, sentiment score, next-hour prediction, freshness badges | `/v1/market/latest`, `/v1/predictions/latest`, `/v1/sentiment/timeseries` |
+| Overview | Latest price, hourly volatility, sentiment score, next-hour prediction | `/v1/market/latest`, `/v1/predictions/latest`, `/v1/sentiment/timeseries` |
 | Market | Candlestick chart, volume, realized volatility, returns, drawdown | `/v1/market/ohlcv`, `/v1/market/volatility` |
 | Sentiment | Post volume, sentiment distribution, top hashtags, sentiment versus volatility | `/v1/sentiment/timeseries`, `/v1/sentiment/topics` |
 | Predictions | Predicted versus actual, error over time, model version, drift indicators | `/v1/predictions/history`, `/v1/models/{name}/metrics` |
@@ -2144,7 +2144,8 @@ The graph answers the key grading question: "This number on the dashboard, which
 
 Design standards:
 
-- Every panel shows the data timestamp and a freshness badge: green under SLO, amber within two times SLO, red beyond.
+- Freshness is materialised in `serving.freshness` and shown in the data-quality panel; the main view stays business-focused. Server-side freshness fields stay in every API response (W1-D revision, 14 November 2026).
+- Visual system: Poppins, light mode only, palette limited to black, grey, white, navy, and pink. Charts are explicit Altair specs with the same palette so no default chart colour leaks in.
 - Every chart shows the timezone (UTC) and the sample size.
 - Predictions always show the model version and the evaluation window.
 - No dual-axis chart without a clear label; no truncated axis that exaggerates volatility.
@@ -3005,7 +3006,7 @@ Rules:
 |---|---|---|---|
 | 0:00 | Show the architecture diagram and the node topology | Scope and environment | Slide |
 | 1:30 | Catalog search for `mart_ml`, open lineage | Catalog, ownership, lineage | Screenshot |
-| 3:30 | Show live market data arriving and the freshness badge | Streaming, medallion, serving | Replay mode |
+| 3:30 | Show live market data arriving and the data-quality freshness panel | Streaming, medallion, serving | Replay mode |
 | 5:30 | Run a DQ check with a deliberately bad record | Quality gate and quarantine | Pre-recorded output |
 | 7:30 | Open MLflow, compare champion and challenger, show the gate | MLOps and honest evaluation | Saved runs |
 | 9:30 | Open the prediction dashboard and the drift panel | Model in use, monitoring | Screenshot |

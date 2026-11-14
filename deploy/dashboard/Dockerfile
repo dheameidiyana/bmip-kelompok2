@@ -33,6 +33,8 @@ COPY --from=build /wheels /wheels
 RUN pip install --no-cache-dir --no-index --find-links=/wheels "bmip[dashboard]" \
     && rm -rf /wheels
 
+# Streamlit reads .streamlit/config.toml from the working directory.
+COPY --chown=10001:10001 .streamlit/config.toml /app/.streamlit/config.toml
 COPY --chown=10001:10001 deploy/dashboard/entrypoint.sh /usr/local/bin/bmip-dashboard
 RUN chmod 0755 /usr/local/bin/bmip-dashboard
 

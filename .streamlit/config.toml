@@ -1,0 +1,16 @@
+# BMIP dashboard theme (W1-D revision).
+# Light mode only, five colours: black, grey, white, navy, pink.
+[theme]
+base = "light"
+primaryColor = "#E85D9E"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F5F6F8"
+textColor = "#0A0A0A"
+font = "sans serif"
+
+[client]
+# Hide the deploy/dev toolbar so no Streamlit chrome colour leaks into the UI.
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false

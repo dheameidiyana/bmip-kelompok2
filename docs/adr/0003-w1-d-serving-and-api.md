@@ -74,3 +74,32 @@ different set of 13. They also disagree on two path spellings.
   without updating the contract.
 - The two-node overlay still only stubs `api-2`; the real replica, load
   balancing, and circuit breaker remain C3-A scope.
+
+## Revision 2026-11-14 - dashboard visual system
+
+The dashboard owner revised the W1-D visual contract after the first
+screenshot. This section overrides ARCHITECTURE S15.1 and workplan W1-D item
+10; both were updated in the same commit.
+
+- **Typography:** Poppins (400/500/600) from the Google Fonts CDN, with
+  `Segoe UI` and the system sans stack as fallback. A fully offline demo loses
+  the web font but keeps the layout; self-hosting the woff2 files was rejected
+  for this slot to avoid shipping binary assets.
+- **Palette:** light mode only, limited to black `#0A0A0A`, grey `#6B7280` /
+  `#F5F6F8` / `#E5E7EB`, white `#FFFFFF`, navy `#0B1F3A` / `#163A66`, and pink
+  `#E85D9E`. `.streamlit/config.toml` pins the Streamlit theme; charts are
+  explicit Altair specs so the default blue/green never appears.
+- **No emoji, no decorative chrome:** the page icon, status dots, the Deploy
+  toolbar, and the Streamlit menu are removed.
+- **Title:** "Bitcoin Market Intelligence Platform (BMIP)".
+- **Layout:** metrics row, then price full width, then sentiment and volatility
+  side by side. The range control is a dropdown; the custom range stays; the
+  symbol input is removed because the symbol is a deployment setting.
+- **Freshness:** per-metric badges and the per-chart source captions are gone.
+  Freshness stays in `serving.freshness`, in every API response, and in the
+  data-quality panel. `X-Data-Stale` is no longer surfaced in the UI, so the
+  operator relies on Grafana (W2-B) and the API headers.
+
+Consequences: the page reads as a business dashboard rather than an
+operations console. The trade-off was accepted explicitly; it does not change
+the API contract or any evidence other than the dashboard screenshot.
