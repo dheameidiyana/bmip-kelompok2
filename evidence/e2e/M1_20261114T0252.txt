@@ -1,0 +1,225 @@
+id        : M1
+timestamp : 2026-11-14T02:52:44Z
+commit    : a58f5d7
+command   : python scripts/m1_smoke.py
+result    : PASS
+owner     : anin
+
+Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
+
+| Check | Status | Detail |
+|---|---|---|
+| `api/health-ready` | PASS | HTTP 200 {"status":"ready","checks":{"lake":true,"serving":true},"instance":"4cafcc141c10","detail":null} |
+| `api/market-latest` | PASS | HTTP 200 close=67999.75 |
+| `api/sentiment-latest` | PASS | HTTP 200 posts=2 |
+| `api/freshness` | PASS | ['market', 'predictions', 'quality', 'sentiment'] |
+| `api/quality-status` | PASS | pass |
+| `api/model-latest` | PASS | not_available |
+| `dashboard/health` | PASS | HTTP 200 |
+| `dashboard/page` | PASS | HTTP 200 bytes=7863 |
+| `traefik/api-route` | PASS | HTTP 200 |
+| `bronze/market` | PASS | {'bronze.market_trade_raw': 90939, 'bronze.social_post_raw': 2} |
+| `bronze/social` | PASS | {'bronze.market_trade_raw': 90939, 'bronze.social_post_raw': 2} |
+| `silver/market` | PASS | {'silver.market_ohlcv_1m': 61, 'silver.social_post': 2} |
+| `silver/social` | PASS | {'silver.market_ohlcv_1m': 61, 'silver.social_post': 2} |
+| `gold/market` | PASS | {'gold.mart_market': 2, 'gold.mart_sentiment': 1, 'gold.mart_ml': 2} |
+| `serving/market` | PASS | {'serving.market_hourly': 2, 'serving.market_latest': 1, 'serving.sentiment_hourly': 1, 'serving.predictions': 1, 'serving.freshness': 4, 'serving.catalog_datasets': 11, 'serving.dq_runs': 1} |
+| `serving/sentiment` | PASS | {'serving.market_hourly': 2, 'serving.market_latest': 1, 'serving.sentiment_hourly': 1, 'serving.predictions': 1, 'serving.freshness': 4, 'serving.catalog_datasets': 11, 'serving.dq_runs': 1} |
+
+## payloads
+{
+  "market_latest": {
+    "data": {
+      "symbol": "BTCUSDT",
+      "window_start": "2026-11-10T14:00:00Z",
+      "open": 68000.5,
+      "high": 68001.25,
+      "low": 67999.75,
+      "close": 67999.75,
+      "volume": 0.04,
+      "quote_volume": 2720.029375,
+      "trade_count": 3,
+      "vwap": 68000.734375,
+      "log_return_1h": -0.08116177996517596,
+      "realized_vol_1h": null,
+      "rv_ewma_24h": null,
+      "source": "binance_vision",
+      "event_date": null,
+      "updated_at": "2026-11-14T02:05:20.494382Z"
+    },
+    "meta": {
+      "request_id": "req-de2f6c169eb04ed8",
+      "instance": "4cafcc141c10",
+      "source": "serving",
+      "stale": false,
+      "clock": "live",
+      "as_of": "2026-11-14T02:52:41.192204Z",
+      "count": null,
+      "next_cursor": null,
+      "freshness": {
+        "metric": "market",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 301961.191,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:52:41Z",
+        "clock": "live"
+      }
+    }
+  },
+  "sentiment_latest": {
+    "data": {
+      "window_start": "2026-11-10T14:00:00Z",
+      "post_count": 2,
+      "unique_authors": 2,
+      "mean_sentiment": 0.2553,
+      "positive_share": 0.5,
+      "negative_share": 0.0,
+      "neutral_share": 0.5,
+      "total_likes": 14,
+      "total_reposts": 3,
+      "total_replies": 1,
+      "engagement_per_post": 9.0,
+      "top_hashtags": [
+        "bitcoin"
+      ],
+      "sentiment_model_version": "vaderSentiment-3.3.2"
+    },
+    "meta": {
+      "request_id": "req-ddab3acb545c4f0b",
+      "instance": "4cafcc141c10",
+      "source": "serving",
+      "stale": false,
+      "clock": "live",
+      "as_of": "2026-11-14T02:52:41.250316Z",
+      "count": null,
+      "next_cursor": null,
+      "freshness": {
+        "metric": "sentiment",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 301961.249,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:52:41Z",
+        "clock": "live"
+      }
+    }
+  },
+  "freshness": {
+    "data": [
+      {
+        "metric": "market",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 301961.278,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:52:41Z",
+        "clock": "live"
+      },
+      {
+        "metric": "predictions",
+        "data_ts": null,
+        "age_seconds": null,
+        "slo_seconds": 7200,
+        "status": "unknown",
+        "as_of": "2026-11-14T02:52:41Z",
+        "clock": "live"
+      },
+      {
+        "metric": "quality",
+        "data_ts": "2026-11-13T22:26:37Z",
+        "age_seconds": 15964.278,
+        "slo_seconds": 86400,
+        "status": "ok",
+        "as_of": "2026-11-14T02:52:41Z",
+        "clock": "live"
+      },
+      {
+        "metric": "sentiment",
+        "data_ts": "2026-11-10T15:00:00Z",
+        "age_seconds": 301961.278,
+        "slo_seconds": 5400,
+        "status": "stale",
+        "as_of": "2026-11-14T02:52:41Z",
+        "clock": "live"
+      }
+    ],
+    "meta": {
+      "request_id": "req-00a3ce9fad77419f",
+      "instance": "4cafcc141c10",
+      "source": "serving",
+      "stale": false,
+      "clock": "live",
+      "as_of": "2026-11-14T02:52:41.278329Z",
+      "count": 4,
+      "next_cursor": null,
+      "freshness": null
+    }
+  },
+  "quality": {
+    "data": {
+      "run_ts": "2026-11-13T22:26:37.320765Z",
+      "status": "pass",
+      "critical_failures": 0,
+      "warning_failures": 0,
+      "commit_sha": "3742fe9",
+      "warning_only": false,
+      "report_path": "E:\\5 DABD\\project\\bmip-kelompok2\\evidence\\dq\\dq_report.json",
+      "failures": []
+    },
+    "meta": {
+      "request_id": "req-d19b025879e947db",
+      "instance": "4cafcc141c10",
+      "source": "serving",
+      "stale": false,
+      "clock": "live",
+      "as_of": "2026-11-14T02:52:41.298216Z",
+      "count": 8,
+      "next_cursor": null,
+      "freshness": null
+    }
+  },
+  "model": {
+    "status": "not_available",
+    "model_name": "volatility_model",
+    "version": null,
+    "alias": null,
+    "metrics": {},
+    "detail": "No champion model is registered yet. Training, the MLflow registry, and the promotion gate are W2-A scope; until then the platform reports this state instead of a synthetic prediction.",
+    "meta": {
+      "request_id": "req-916d91b729f24c1d",
+      "instance": "4cafcc141c10",
+      "source": "serving",
+      "stale": false,
+      "clock": "live",
+      "as_of": "2026-11-14T02:52:41.312950Z",
+      "count": null,
+      "next_cursor": null,
+      "freshness": null
+    }
+  },
+  "counts": {
+    "bronze": {
+      "bronze.market_trade_raw": 90939,
+      "bronze.social_post_raw": 2
+    },
+    "silver": {
+      "silver.market_ohlcv_1m": 61,
+      "silver.social_post": 2
+    },
+    "gold": {
+      "gold.mart_market": 2,
+      "gold.mart_sentiment": 1,
+      "gold.mart_ml": 2
+    },
+    "serving": {
+      "serving.market_hourly": 2,
+      "serving.market_latest": 1,
+      "serving.sentiment_hourly": 1,
+      "serving.predictions": 1,
+      "serving.freshness": 4,
+      "serving.catalog_datasets": 11,
+      "serving.dq_runs": 1
+    }
+  }
+}

@@ -77,3 +77,24 @@ W1-C menambahkan:
 | E2E | e2e | `e2e/SMOKE-W1A_20261113T2226_3742fe9.txt` | PASS | health + replay + bronze counts + ledger + idempotensi, dengan warm-up |
 | Prefect | deploy | `deploy/prefect-gold_20261113T2229_3742fe9.json` | PASS | flow `transform-gold` berstatus Completed lewat worker |
 | W1-C | w1c | `w1c/SUMMARY_20261113T2223.json` | PASS | ringkasan satu baris per test |
+
+### W1-D
+
+Environment: profil `dev`, Windows 11 / Docker 29.2.1 / Compose v5, Python 3.11.9,
+replay Binance Vision 2026-11-10 13:00-14:00 UTC (90.936 trade) plus dua post
+fixture. Kode diuji: `0df6000` (API) dan `a58f5d7` (dashboard). Tag `w1-d-ok`
+menunjuk commit final W1-D setelah evidence ini di-commit.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | api | `api/smoke_20261114T0239.txt` | PASS | health, 10 endpoint, baris market, freshness, request id |
+| ROUTES | api | `api/routes_20261114T0239.txt` | PASS | 14 route kanonik + 5 alias; `contracts/openapi.json` ditulis |
+| T-13 | security | `security/api-401.txt` | PASS | tanpa key / key salah → 401 problem+json; `/api` tetap publik |
+| T-14 | tests | `tests/T14.txt` | PASS | 2 halaman live (limit=1) dan 11 halaman atas 1.002 baris, 0 duplikat |
+| T-15 | tests | `tests/T15.txt` | PASS | MinIO stop → 200 `X-Data-Stale: true`; pulih → `false` |
+| T-34 | api | `api/T34.json` | PASS | symbol, range, limit, cursor, datetime, missing range |
+| T-36 | ml | `ml/T36.json` | PASS | 422 malformed, error out-of-range, `not_available` tanpa champion |
+| IDEM | serving | `serving/loader-idempotence_20261114T0239.json` | PASS | dua load, counts + logical hash identik |
+| T-37 | dashboard | `dashboard/reconciliation-draft.json` | PASS | API vs serving vs gold, 2/2 baris, 0 selisih (draft) |
+| M1 | e2e | `e2e/M1_20261114T0252.txt` | PASS | bronze → silver → gold → serving → API → dashboard |
+| DASH | dashboards | `dashboards/streamlit_20261114T0253.png` | PASS | 4 metrik, 2 filter, badge freshness, "belum ada model", sumbu UTC |

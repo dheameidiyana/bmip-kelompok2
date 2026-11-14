@@ -1,7 +1,7 @@
 {
   "id": "SERVING-IDEMPOTENCE",
-  "timestamp": "2026-11-14T02:25:49Z",
-  "commit": "9881478",
+  "timestamp": "2026-11-14T02:39:12Z",
+  "commit": "0df6000",
   "command": "python scripts/serve_load.py (twice)",
   "result": "PASS",
   "owner": "anin",
@@ -21,28 +21,28 @@
       {
         "metric": "market",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 300347.081,
+        "age_seconds": 301149.546,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:25:47Z",
+        "as_of": "2026-11-14T02:39:09Z",
         "clock": "live"
       },
       {
         "metric": "sentiment",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 300347.081,
+        "age_seconds": 301149.546,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:25:47Z",
+        "as_of": "2026-11-14T02:39:09Z",
         "clock": "live"
       },
       {
         "metric": "quality",
         "data_ts": "2026-11-13T22:26:37Z",
-        "age_seconds": 14350.081,
+        "age_seconds": 15152.546,
         "slo_seconds": 86400,
         "status": "ok",
-        "as_of": "2026-11-14T02:25:47Z",
+        "as_of": "2026-11-14T02:39:09Z",
         "clock": "live"
       },
       {
@@ -51,7 +51,7 @@
         "age_seconds": null,
         "slo_seconds": 7200,
         "status": "unknown",
-        "as_of": "2026-11-14T02:25:47Z",
+        "as_of": "2026-11-14T02:39:09Z",
         "clock": "live"
       }
     ],
@@ -60,8 +60,8 @@
     "sentiment_rows": 1,
     "quality_run": "2026-11-13T22:26:37Z",
     "registry_rows": 11,
-    "started_at": "2026-11-14T02:25:45Z",
-    "finished_at": "2026-11-14T02:25:47Z"
+    "started_at": "2026-11-14T02:39:08Z",
+    "finished_at": "2026-11-14T02:39:09Z"
   },
   "second": {
     "counts": {
@@ -77,28 +77,28 @@
       {
         "metric": "market",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 300349.494,
+        "age_seconds": 301151.807,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:25:49Z",
+        "as_of": "2026-11-14T02:39:11Z",
         "clock": "live"
       },
       {
         "metric": "sentiment",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 300349.494,
+        "age_seconds": 301151.807,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:25:49Z",
+        "as_of": "2026-11-14T02:39:11Z",
         "clock": "live"
       },
       {
         "metric": "quality",
         "data_ts": "2026-11-13T22:26:37Z",
-        "age_seconds": 14352.494,
+        "age_seconds": 15154.807,
         "slo_seconds": 86400,
         "status": "ok",
-        "as_of": "2026-11-14T02:25:49Z",
+        "as_of": "2026-11-14T02:39:11Z",
         "clock": "live"
       },
       {
@@ -107,7 +107,7 @@
         "age_seconds": null,
         "slo_seconds": 7200,
         "status": "unknown",
-        "as_of": "2026-11-14T02:25:49Z",
+        "as_of": "2026-11-14T02:39:11Z",
         "clock": "live"
       }
     ],
@@ -116,7 +116,7 @@
     "sentiment_rows": 1,
     "quality_run": "2026-11-13T22:26:37Z",
     "registry_rows": 11,
-    "started_at": "2026-11-14T02:25:47Z",
-    "finished_at": "2026-11-14T02:25:49Z"
+    "started_at": "2026-11-14T02:39:10Z",
+    "finished_at": "2026-11-14T02:39:12Z"
   }
 }

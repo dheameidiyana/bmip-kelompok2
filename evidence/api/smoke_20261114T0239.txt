@@ -1,6 +1,6 @@
 id        : CP1-API
-timestamp : 2026-11-14T02:25:40Z
-commit    : 9881478
+timestamp : 2026-11-14T02:39:06Z
+commit    : 0df6000
 command   : python scripts/api_evidence.py --steps smoke
 result    : PASS
 owner     : anin
@@ -19,6 +19,6 @@ owner     : anin
 | `v1/model/latest` | PASS | HTTP 200 |
 | `v1/dataset` | PASS | HTTP 200 |
 | `market/data` | PASS | row present |
-| `market/freshness` | PASS | {"metric": "market", "data_ts": "2026-11-10T15:00:00Z", "age_seconds": 300339.976, "slo_seconds": 5400, "status": "stale", "as_of": "2026-11-14T02:25:39Z", "clock": "live"} |
-| `market/request-id` | PASS | req-ee8143c1d67148d4 |
+| `market/freshness` | PASS | {"metric": "market", "data_ts": "2026-11-10T15:00:00Z", "age_seconds": 301146.936, "slo_seconds": 5400, "status": "stale", "as_of": "2026-11-14T02:39:06Z", "clock": "live"} |
+| `market/request-id` | PASS | req-76f03497af7f4e6b |
 | `freshness/metrics` | PASS | metrics=['market', 'predictions', 'quality', 'sentiment'] |

@@ -1,6 +1,6 @@
 id        : T-14
-timestamp : 2026-11-14T02:25:45Z
-commit    : 9881478
+timestamp : 2026-11-14T02:40:30Z
+commit    : 0df6000
 command   : python scripts/api_evidence.py --steps pagination
 result    : PASS
 owner     : anin
@@ -12,6 +12,14 @@ Keyset pagination: every page is strictly older than the previous cursor.
 pages        : 2
 rows         : 2
 unique rows  : 2
+duplicates   : 0
+cursor stable: True
+result       : PASS
+
+## 1000-row fixture, limit=100
+pages        : 11
+rows         : 1002
+unique rows  : 1002
 duplicates   : 0
 cursor stable: True
 result       : PASS
@@ -32,6 +40,85 @@ result       : PASS
       "next_cursor": null,
       "first": "2026-11-10T13:00:00Z",
       "last": "2026-11-10T13:00:00Z"
+    }
+  ],
+  [
+    {
+      "page": 1,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMi0wN1QxNDowMDowMFoifQ",
+      "first": "2026-11-10T14:00:00Z",
+      "last": "2020-02-07T14:00:00Z"
+    },
+    {
+      "page": 2,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMi0wM1QxMDowMDowMFoifQ",
+      "first": "2020-02-07T13:00:00Z",
+      "last": "2020-02-03T10:00:00Z"
+    },
+    {
+      "page": 3,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0zMFQwNjowMDowMFoifQ",
+      "first": "2020-02-03T09:00:00Z",
+      "last": "2020-01-30T06:00:00Z"
+    },
+    {
+      "page": 4,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0yNlQwMjowMDowMFoifQ",
+      "first": "2020-01-30T05:00:00Z",
+      "last": "2020-01-26T02:00:00Z"
+    },
+    {
+      "page": 5,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0yMVQyMjowMDowMFoifQ",
+      "first": "2020-01-26T01:00:00Z",
+      "last": "2020-01-21T22:00:00Z"
+    },
+    {
+      "page": 6,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0xN1QxODowMDowMFoifQ",
+      "first": "2020-01-21T21:00:00Z",
+      "last": "2020-01-17T18:00:00Z"
+    },
+    {
+      "page": 7,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0xM1QxNDowMDowMFoifQ",
+      "first": "2020-01-17T17:00:00Z",
+      "last": "2020-01-13T14:00:00Z"
+    },
+    {
+      "page": 8,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0wOVQxMDowMDowMFoifQ",
+      "first": "2020-01-13T13:00:00Z",
+      "last": "2020-01-09T10:00:00Z"
+    },
+    {
+      "page": 9,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0wNVQwNjowMDowMFoifQ",
+      "first": "2020-01-09T09:00:00Z",
+      "last": "2020-01-05T06:00:00Z"
+    },
+    {
+      "page": 10,
+      "rows": 100,
+      "next_cursor": "eyJ3IjoiMjAyMC0wMS0wMVQwMjowMDowMFoifQ",
+      "first": "2020-01-05T05:00:00Z",
+      "last": "2020-01-01T02:00:00Z"
+    },
+    {
+      "page": 11,
+      "rows": 2,
+      "next_cursor": null,
+      "first": "2020-01-01T01:00:00Z",
+      "last": "2020-01-01T00:00:00Z"
     }
   ]
 ]

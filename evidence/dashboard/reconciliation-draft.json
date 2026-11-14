@@ -1,8 +1,8 @@
 {
   "id": "T-37-W1D",
   "scope": "draft (final in W2-B)",
-  "timestamp": "2026-11-14T02:25:51Z",
-  "commit": "9881478",
+  "timestamp": "2026-11-14T02:39:13Z",
+  "commit": "0df6000",
   "command": "python scripts/api_evidence.py --steps reconcile",
   "result": "PASS",
   "owner": "anin",
