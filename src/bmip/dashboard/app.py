@@ -226,11 +226,15 @@ def main() -> None:
         rows = ohlc.get("data", [])
         if rows:
             frame = pd.DataFrame(rows)
-            frame["window_start"] = pd.to_datetime(frame["window_start"], utc=True)
+            # Drop the tz so the chart labels stay in UTC instead of being
+            # converted to the browser's local timezone.
+            frame["window_start"] = pd.to_datetime(
+                frame["window_start"], utc=True
+            ).dt.tz_localize(None)
             st.line_chart(frame.set_index("window_start")["close"], height=240)
             st.caption(
                 f"{len(rows)} bar · sumber {ohlc.get('meta', {}).get('source')} · "
-                f"stale={ohlc.get('meta', {}).get('stale')}"
+                f"stale={ohlc.get('meta', {}).get('stale')} · sumbu waktu UTC"
             )
         else:
             st.info(
@@ -243,11 +247,15 @@ def main() -> None:
         rows = volatility.get("data", [])
         if rows:
             frame = pd.DataFrame(rows)
-            frame["window_start"] = pd.to_datetime(frame["window_start"], utc=True)
+            # Drop the tz so the chart labels stay in UTC instead of being
+            # converted to the browser's local timezone.
+            frame["window_start"] = pd.to_datetime(
+                frame["window_start"], utc=True
+            ).dt.tz_localize(None)
             st.line_chart(frame.set_index("window_start")["realized_vol_1h"], height=240)
             st.caption(
                 f"{len(rows)} bar · sumber {volatility.get('meta', {}).get('source')} · "
-                f"stale={volatility.get('meta', {}).get('stale')}"
+                f"stale={volatility.get('meta', {}).get('stale')} · sumbu waktu UTC"
             )
         else:
             st.info("Belum ada bar volatilitas pada rentang ini.")
@@ -255,12 +263,15 @@ def main() -> None:
     st.subheader("Sentimen per jam")
     if sentiment_row:
         frame = pd.DataFrame(sentiment_row)
-        frame["window_start"] = pd.to_datetime(frame["window_start"], utc=True)
+        frame["window_start"] = pd.to_datetime(
+            frame["window_start"], utc=True
+        ).dt.tz_localize(None)
         frame = frame.set_index("window_start")
         st.bar_chart(frame["mean_sentiment"], height=200)
         st.caption(
             f"{len(sentiment_row)} jam · model "
-            f"{sentiment_latest.get('sentiment_model_version', '—')}"
+            f"{sentiment_latest.get('sentiment_model_version', '—')} · "
+            "sumbu waktu UTC"
         )
     else:
         st.info("Belum ada agregat sentimen pada rentang ini.")
