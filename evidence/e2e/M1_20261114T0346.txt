@@ -1,6 +1,6 @@
 id        : M1
-timestamp : 2026-11-14T02:52:44Z
-commit    : a58f5d7
+timestamp : 2026-11-14T03:46:27Z
+commit    : aec9e8f
 command   : python scripts/m1_smoke.py
 result    : PASS
 owner     : anin
@@ -9,7 +9,7 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
 
 | Check | Status | Detail |
 |---|---|---|
-| `api/health-ready` | PASS | HTTP 200 {"status":"ready","checks":{"lake":true,"serving":true},"instance":"4cafcc141c10","detail":null} |
+| `api/health-ready` | PASS | HTTP 200 {"status":"ready","checks":{"lake":true,"serving":true},"instance":"cd41e280bd2e","detail":null} |
 | `api/market-latest` | PASS | HTTP 200 close=67999.75 |
 | `api/sentiment-latest` | PASS | HTTP 200 posts=2 |
 | `api/freshness` | PASS | ['market', 'predictions', 'quality', 'sentiment'] |
@@ -23,8 +23,8 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
 | `silver/market` | PASS | {'silver.market_ohlcv_1m': 61, 'silver.social_post': 2} |
 | `silver/social` | PASS | {'silver.market_ohlcv_1m': 61, 'silver.social_post': 2} |
 | `gold/market` | PASS | {'gold.mart_market': 2, 'gold.mart_sentiment': 1, 'gold.mart_ml': 2} |
-| `serving/market` | PASS | {'serving.market_hourly': 2, 'serving.market_latest': 1, 'serving.sentiment_hourly': 1, 'serving.predictions': 1, 'serving.freshness': 4, 'serving.catalog_datasets': 11, 'serving.dq_runs': 1} |
-| `serving/sentiment` | PASS | {'serving.market_hourly': 2, 'serving.market_latest': 1, 'serving.sentiment_hourly': 1, 'serving.predictions': 1, 'serving.freshness': 4, 'serving.catalog_datasets': 11, 'serving.dq_runs': 1} |
+| `serving/market` | PASS | {'serving.market_hourly': 2, 'serving.market_latest': 1, 'serving.sentiment_hourly': 1, 'serving.predictions': 1, 'serving.freshness': 4, 'serving.catalog_datasets': 11, 'serving.dq_runs': 2} |
+| `serving/sentiment` | PASS | {'serving.market_hourly': 2, 'serving.market_latest': 1, 'serving.sentiment_hourly': 1, 'serving.predictions': 1, 'serving.freshness': 4, 'serving.catalog_datasets': 11, 'serving.dq_runs': 2} |
 
 ## payloads
 {
@@ -48,21 +48,21 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       "updated_at": "2026-11-14T02:05:20.494382Z"
     },
     "meta": {
-      "request_id": "req-de2f6c169eb04ed8",
-      "instance": "4cafcc141c10",
+      "request_id": "req-ffe233b950f947e3",
+      "instance": "cd41e280bd2e",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T02:52:41.192204Z",
+      "as_of": "2026-11-14T03:46:26.240662Z",
       "count": null,
       "next_cursor": null,
       "freshness": {
         "metric": "market",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 301961.191,
+        "age_seconds": 305186.24,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:52:41Z",
+        "as_of": "2026-11-14T03:46:26Z",
         "clock": "live"
       }
     }
@@ -86,21 +86,21 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       "sentiment_model_version": "vaderSentiment-3.3.2"
     },
     "meta": {
-      "request_id": "req-ddab3acb545c4f0b",
-      "instance": "4cafcc141c10",
+      "request_id": "req-cadf092a17684b29",
+      "instance": "cd41e280bd2e",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T02:52:41.250316Z",
+      "as_of": "2026-11-14T03:46:26.268854Z",
       "count": null,
       "next_cursor": null,
       "freshness": {
         "metric": "sentiment",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 301961.249,
+        "age_seconds": 305186.268,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:52:41Z",
+        "as_of": "2026-11-14T03:46:26Z",
         "clock": "live"
       }
     }
@@ -110,10 +110,10 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       {
         "metric": "market",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 301961.278,
+        "age_seconds": 305186.297,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:52:41Z",
+        "as_of": "2026-11-14T03:46:26Z",
         "clock": "live"
       },
       {
@@ -122,35 +122,35 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
         "age_seconds": null,
         "slo_seconds": 7200,
         "status": "unknown",
-        "as_of": "2026-11-14T02:52:41Z",
+        "as_of": "2026-11-14T03:46:26Z",
         "clock": "live"
       },
       {
         "metric": "quality",
-        "data_ts": "2026-11-13T22:26:37Z",
-        "age_seconds": 15964.278,
+        "data_ts": "2026-11-14T02:55:03Z",
+        "age_seconds": 3083.297,
         "slo_seconds": 86400,
         "status": "ok",
-        "as_of": "2026-11-14T02:52:41Z",
+        "as_of": "2026-11-14T03:46:26Z",
         "clock": "live"
       },
       {
         "metric": "sentiment",
         "data_ts": "2026-11-10T15:00:00Z",
-        "age_seconds": 301961.278,
+        "age_seconds": 305186.297,
         "slo_seconds": 5400,
         "status": "stale",
-        "as_of": "2026-11-14T02:52:41Z",
+        "as_of": "2026-11-14T03:46:26Z",
         "clock": "live"
       }
     ],
     "meta": {
-      "request_id": "req-00a3ce9fad77419f",
-      "instance": "4cafcc141c10",
+      "request_id": "req-5c180c3174bf47a5",
+      "instance": "cd41e280bd2e",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T02:52:41.278329Z",
+      "as_of": "2026-11-14T03:46:26.297329Z",
       "count": 4,
       "next_cursor": null,
       "freshness": null
@@ -158,22 +158,32 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
   },
   "quality": {
     "data": {
-      "run_ts": "2026-11-13T22:26:37.320765Z",
+      "run_ts": "2026-11-14T02:55:03.521729Z",
       "status": "pass",
       "critical_failures": 0,
-      "warning_failures": 0,
-      "commit_sha": "3742fe9",
+      "warning_failures": 1,
+      "commit_sha": "a58f5d7",
       "warning_only": false,
       "report_path": "E:\\5 DABD\\project\\bmip-kelompok2\\evidence\\dq\\dq_report.json",
-      "failures": []
+      "failures": [
+        {
+          "suite": "gold_ml",
+          "rule_id": "gold-ml-label-coverage",
+          "severity": "warning",
+          "status": "fail",
+          "detail": "{\"observed_value\": 0.0}",
+          "observed": 0.0,
+          "expected": "ExpectColumnProportionOfNonNullValuesToBeBetween"
+        }
+      ]
     },
     "meta": {
-      "request_id": "req-d19b025879e947db",
-      "instance": "4cafcc141c10",
+      "request_id": "req-bb2e5e37220143cf",
+      "instance": "cd41e280bd2e",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T02:52:41.298216Z",
+      "as_of": "2026-11-14T03:46:26.330719Z",
       "count": 8,
       "next_cursor": null,
       "freshness": null
@@ -187,12 +197,12 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
     "metrics": {},
     "detail": "No champion model is registered yet. Training, the MLflow registry, and the promotion gate are W2-A scope; until then the platform reports this state instead of a synthetic prediction.",
     "meta": {
-      "request_id": "req-916d91b729f24c1d",
-      "instance": "4cafcc141c10",
+      "request_id": "req-cec5963abdec4222",
+      "instance": "cd41e280bd2e",
       "source": "serving",
       "stale": false,
       "clock": "live",
-      "as_of": "2026-11-14T02:52:41.312950Z",
+      "as_of": "2026-11-14T03:46:26.348583Z",
       "count": null,
       "next_cursor": null,
       "freshness": null
@@ -219,7 +229,7 @@ Gate M1: bronze -> silver -> gold -> serving -> API -> dashboard.
       "serving.predictions": 1,
       "serving.freshness": 4,
       "serving.catalog_datasets": 11,
-      "serving.dq_runs": 1
+      "serving.dq_runs": 2
     }
   }
 }

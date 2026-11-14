@@ -6,7 +6,8 @@
 - Last update: 2026-11-14
 - Base: `dev` (`ef01ec5`, merge of PR W1-C)
 - Code commits: `386760e` (serving + API + dashboard), `0df6000` (lake health +
-  file cache), `cd9513a` (UTC chart labels), `a58f5d7` (Streamlit width API)
+  file cache), `cd9513a` (UTC chart labels), `a58f5d7` (Streamlit width API),
+  `83e5a31` (dashboard restyle: Poppins, palette, layout)
 - Tag: `w1-d-ok`
 
 ## Status
@@ -16,7 +17,7 @@
 - CP2: PASS — 14 canonical routes + 5 aliases in OpenAPI, T-13/T-34/T-36 pass,
   keyset pagination proven.
 - CP3: PASS — MinIO stopped → 200 with `X-Data-Stale: true`, dashboard renders
-  4 metrics + 2 filters + freshness badges, M1 gate green, gate W1-A..W1-C
+  4 metrics + 2 filters + data-quality panel, M1 gate green, gate W1-A..W1-C
   still green.
 
 Gate M1: one trade and one post are visible from bronze → silver → gold →
@@ -70,10 +71,16 @@ serving.market_hourly          2     serving.sentiment_hourly 1   serving.catalo
 
 - Streamlit v1 at `http://localhost:8501`, four business metrics (last price,
   last-hour realized volatility, sentiment score, prediction = "belum ada
-  model"), two time filters (preset + explicit dates), a freshness badge per
-  metric, and a quality/freshness expander. It reads **only** the API.
-- Chart axes are labelled UTC; empty windows show an explicit explanation
-  instead of a blank chart.
+  model"), two time filters (dropdown preset + explicit dates), and a
+  data-quality panel. It reads **only** the API.
+- Revision 14 Nov 2026 (owner decision): Poppins via Google Fonts CDN, light
+  mode only, palette limited to black/grey/white/navy/pink, no emoji, no
+  per-metric badges or chart captions, title "Bitcoin Market Intelligence
+  Platform (BMIP)". Layout is price full width, then sentiment and volatility
+  side by side. See ADR-0003 (revision section) and ADR-0003/`theme.py`.
+- `src/bmip/dashboard/theme.py` pins the palette and builds the Altair specs, so
+  no default chart colour appears; `.streamlit/config.toml` pins the Streamlit
+  theme; chart axes stay in UTC.
 
 ### Environment
 
@@ -168,6 +175,7 @@ curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/market/ohlc?symbol=BT
 | Docker build fails `pyarrow` | alpine base has no musl wheel | `python:3.11-slim` |
 | Lake reads work in the container but not on the host | Iceberg metadata URLs use `minio:9000`, which only resolves inside the compose network | test the lake path through the container, not a host uvicorn |
 | First lake query can exceed 5 s on a cold worker | DuckDB attach + metadata refresh | evidence warms the path; a longer `LAKE_QUERY_TIMEOUT_SECONDS` is the knob |
+| Dashboard falls back to Segoe UI | Poppins is loaded from the Google Fonts CDN (owner decision, ADR-0003 revision); an offline demo has no web font | expected; layout is unchanged |
 
 ## Langkah berikutnya untuk Dhea (W2-A)
 
@@ -200,15 +208,16 @@ curl.exe -s -H "X-API-Key: $key" "http://localhost:8000/v1/market/ohlc?symbol=BT
 | T-36 | `evidence/ml/T36.json` | Malformed → 422, out-of-range → recorded error, valid → `not_available` (W1-D validation) |
 | IDEM | `evidence/serving/loader-idempotence_20261114T0239.json` | Two loads, identical counts and logical hash |
 | T-37 | `evidence/dashboard/reconciliation-draft.json` | API vs serving SQL vs Iceberg gold, 2/2 rows, 0 mismatches (draft) |
-| M1 | `evidence/e2e/M1_20261114T0252.txt` | Bronze → silver → gold → serving → API → dashboard |
-| DASH | `evidence/dashboards/streamlit_20261114T0253.png` | 4 metrics, 2 filters, freshness badges, "belum ada model" |
+| M1 | `evidence/e2e/M1_20261114T0346.txt` | Bronze → silver → gold → serving → API → dashboard |
+| DASH | `evidence/dashboards/streamlit_20261114T0345.png` | 4 metrics, 2 filters, Poppins, five-colour palette, no badges, "belum ada model" |
 
 The dashboard screenshot is reproducible with Playwright against the installed
 Edge browser (no browser download):
 
 ```python
 page.goto("http://localhost:8501")
-page.get_by_text("Semua data", exact=True).click()
+page.locator('[data-testid="stSelectbox"]').first.click()
+page.get_by_role("option", name="Semua data", exact=True).click()
 page.screenshot(path="evidence/dashboards/streamlit_<ts>.png", full_page=True)
 ```
 
