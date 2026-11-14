@@ -32,10 +32,9 @@ di [docs/handoff/w1-c.md](docs/handoff/w1-c.md).
 W1-D selesai di branch `slot/w1-d-anin`: skema `serving.*` diisi idempoten dari
 gold, Query API 13 endpoint read-only + 1 endpoint scoring, fallback
 `X-Data-Stale` saat lake mati, dan dashboard Streamlit v1 (4 metrik, 2 filter
-waktu, freshness badge). `POST /v1/predict` menjawab `status: not_available`
-selama belum ada champion; training adalah W2-A. Detail di
-[docs/handoff/w1-d.md](docs/handoff/w1-d.md) dan runbook
-[docs/runbooks/serving.md](docs/runbooks/serving.md).
+waktu, panel kualitas). `POST /v1/predict` menjawab `status: not_available`
+selama belum ada champion; training adalah W2-A. Status, keputusan, operasi,
+dan bukti ada di [docs/w1-d.md](docs/w1-d.md).
 
 ## Stack
 

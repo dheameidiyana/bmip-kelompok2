@@ -84,8 +84,6 @@ class Settings:
     gold_max_gap_hours: int
     gold_freshness_threshold_minutes: int
 
-    # W1-D serving and API. Optional so every W1-A..W1-C command keeps working
-    # with an older .env that predates the serving tier.
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     api_key: str = ""
@@ -111,9 +109,6 @@ class Settings:
     def from_env(cls) -> Settings:
         user = os.getenv("POSTGRES_USER", "bmip")
         database = os.getenv("POSTGRES_DB", "bmip")
-        # Containers receive a fully formed DSN (postgres-core:5432) and do not
-        # need the password as a separate variable; host tools fall back to the
-        # published port 5433.
         dsn = os.getenv("POSTGRES_CORE_DSN")
         if not dsn:
             password = _env("POSTGRES_PASSWORD")

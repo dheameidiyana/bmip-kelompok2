@@ -169,7 +169,7 @@ def iceberg_columns(settings: Settings, identifier: str) -> list[dict[str, Any]]
             }
             for field in table.schema().fields
         ]
-    except Exception as exc:  # the catalogue must degrade, not 500
+    except Exception as exc:
         log.warning(
             "iceberg schema lookup failed",
             extra={"ctx_dataset": identifier, "ctx_error": f"{type(exc).__name__}: {exc}"},

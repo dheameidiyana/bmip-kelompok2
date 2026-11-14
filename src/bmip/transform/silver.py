@@ -482,7 +482,7 @@ class SilverWriter:
         try:
             scan = table.scan(row_filter=row_filter) if row_filter is not None else table.scan()
             return scan.to_arrow().to_pylist()
-        except Exception as exc:  # table may not exist yet
+        except Exception as exc:
             log.warning("quarantine read failed", extra={"ctx_error": str(exc)})
             return []
 

@@ -258,8 +258,6 @@ def load_serving(
     if not market:
         if start is None and end is None:
             raise LoaderError(f"{MART_MARKET} produced no rows")
-        # A scoped backfill over an empty hour must not blank the freshness
-        # rows or the latest pointer for the rest of the day.
         log.warning(
             "no market rows in the requested range; serving left untouched",
             extra={"ctx_start": str(start), "ctx_end": str(end)},

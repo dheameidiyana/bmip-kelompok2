@@ -83,7 +83,6 @@ class DuckDBLakeReader:
         self._s3_ssl = parsed.scheme == "https"
         self._catalog_uri = f"{settings.lakekeeper_url.rstrip('/')}/catalog"
 
-    # ------------------------------------------------------------- connection
 
     def _connection(self):
         connection = getattr(self._local, "connection", None)
@@ -96,8 +95,6 @@ class DuckDBLakeReader:
         try:
             connection = self._build_connection()
         except LakeUnavailable:
-            # Fail fast for a while instead of paying the attach timeout on
-            # every request (and on every Docker healthcheck).
             self._cooldown_until = time.monotonic() + ATTACH_COOLDOWN_SECONDS
             raise
         self._cooldown_until = 0.0
@@ -128,9 +125,6 @@ class DuckDBLakeReader:
         connection.execute(f"SET s3_access_key_id = '{access_key}'")
         connection.execute(f"SET s3_secret_access_key = '{secret_key}'")
         connection.execute(f"SET s3_region = '{self.settings.minio_region}'")
-        # DuckDB 1.5 caches remote files by default. A serving tier must not
-        # answer from bytes it cannot invalidate: otherwise "MinIO is down"
-        # looks healthy and the X-Data-Stale fallback never triggers.
         try:
             connection.execute("SET enable_external_file_cache = false")
         except Exception:  # noqa: BLE001 - older DuckDB has no such setting
@@ -181,7 +175,6 @@ class DuckDBLakeReader:
         except Exception as exc:  # noqa: BLE001 - any engine error is a fallback
             raise LakeUnavailable(f"lake query failed: {type(exc).__name__}: {exc}") from exc
 
-    # ---------------------------------------------------------------- queries
 
     def market_range(self, symbol, start, end, limit):
         clauses = ["symbol = ?"]

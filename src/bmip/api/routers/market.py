@@ -104,7 +104,6 @@ def market_ohlc(
     )
 
 
-# ARCHITECTURE §10.3 spells this endpoint /v1/market/ohlcv.
 router.add_api_route(
     "/ohlcv",
     market_ohlc,

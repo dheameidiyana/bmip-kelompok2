@@ -442,7 +442,7 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 | :---- | :---- | :---- | :---- |
 | CP1 | Sen 16 Nov 00.00 | `/health/ready` hijau; tiga endpoint inti mengembalikan data serving; freshness terhitung | `evidence/api/smoke_<ts>.txt` |
 | CP2 | Sen 16 Nov 12.00 | 14 route terdaftar di OpenAPI; pagination T-14; parameter tidak valid T-34 mengembalikan 400/422 \+ `request_id`; tanpa API key T-13 \= 401 | `openapi.json`, `evidence/tests/T14.txt`, `evidence/api/T34.json`, `evidence/security/api-401.txt` |
-| CP3 | Sen 16 Nov 23.59 | MinIO dimatikan → response 200 dengan `X-Data-Stale: true` (T-15); Streamlit menampilkan 4 metrik \+ 2 filter \+ freshness badge; reconciliasi dashboard vs SQL untuk 24 jam (draft T-37); gate M1 demo direkam | `evidence/tests/T15.txt`, `evidence/dashboards/streamlit_<ts>.png`, `evidence/dashboard/reconciliation-draft.json`, `docs/handoff/w1-d.md` |
+| CP3 | Sen 16 Nov 23.59 | MinIO dimatikan → response 200 dengan `X-Data-Stale: true` (T-15); Streamlit menampilkan 4 metrik \+ 2 filter \+ freshness badge; reconciliasi dashboard vs SQL untuk 24 jam (draft T-37); gate M1 demo direkam | `evidence/tests/T15.txt`, `evidence/dashboards/streamlit_<ts>.png`, `evidence/dashboard/reconciliation-draft.json`, `docs/w1-d.md` |
 
 **Risiko khusus**
 

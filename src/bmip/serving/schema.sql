@@ -1,12 +1,3 @@
--- Serving tier schema (W1-D).
---
--- Gold lives in Iceberg for history and reproducibility. These tables exist
--- because "latest value" queries from a dashboard deserve an index, not a
--- 5-second lake scan. The API never writes here; the loader owns every row.
---
--- Idempotency: every table has a natural primary key and the loader upserts
--- with ON CONFLICT, so re-running a publish never duplicates a row.
-
 CREATE SCHEMA IF NOT EXISTS serving;
 
 CREATE TABLE IF NOT EXISTS serving.market_hourly (
@@ -74,9 +65,6 @@ CREATE TABLE IF NOT EXISTS serving.sentiment_hourly (
 CREATE INDEX IF NOT EXISTS sentiment_hourly_window_idx
     ON serving.sentiment_hourly (window_start DESC);
 
--- The workplan names serving.volatility as a table. It is a view over
--- market_hourly so there is exactly one write path and no chance of the two
--- tables disagreeing. Documented in docs/handoff/w1-d.md.
 CREATE OR REPLACE VIEW serving.volatility AS
 SELECT
     symbol,

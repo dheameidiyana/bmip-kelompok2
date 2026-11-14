@@ -222,4 +222,3 @@ def backfill_gold_flow(
         raise ValueError("backfill start must be before end")
     result = transform_gold_flow(duckdb_path=duckdb_path, start=start, end=end)
     return {"range": {"start": start, "end": end}, **result}
-

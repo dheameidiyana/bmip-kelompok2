@@ -1,8 +1,4 @@
 # syntax=docker/dockerfile:1.7
-# BMIP Query API image (W1-D).
-#
-# Debian slim, not alpine: pyarrow (pulled in by PyIceberg) publishes manylinux
-# wheels only, so an alpine base fails at install time.
 FROM python:3.11-slim AS build
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
@@ -37,8 +33,6 @@ COPY --from=build /wheels /wheels
 RUN pip install --no-cache-dir --no-index --find-links=/wheels bmip \
     && rm -rf /wheels
 
-# Bake the DuckDB extensions into the image so a redeploy never needs egress
-# to extensions.duckdb.org (the api container sits on the internal data net).
 USER 10001:10001
 RUN python -c "import duckdb; c = duckdb.connect(config={'extension_directory': '/app/.duckdb/extensions'}); c.execute('INSTALL iceberg'); c.execute('INSTALL httpfs'); c.close()"
 

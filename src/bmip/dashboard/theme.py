@@ -12,8 +12,6 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-# ----------------------------------------------------------------- palette
-
 WHITE = "#FFFFFF"
 SURFACE = "#F5F6F8"
 BORDER = "#E5E7EB"
@@ -105,9 +103,6 @@ footer {{ visibility: hidden; }}
 
 def apply() -> None:
     st.markdown(FONT_LINKS + CSS, unsafe_allow_html=True)
-
-
-# ------------------------------------------------------------------ charts
 
 
 def _axis(title: str | None = None) -> alt.Axis:

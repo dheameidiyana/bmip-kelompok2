@@ -1,6 +1,5 @@
 http:
   routers:
-    # The placeholder W1-A gate probes /api; the data routes live under /v1.
     api:
       rule: "PathPrefix(`/api`) || PathPrefix(`/v1`) || PathPrefix(`/health`) || PathPrefix(`/metrics`) || PathPrefix(`/docs`) || PathPrefix(`/openapi.json`)"
       entryPoints:

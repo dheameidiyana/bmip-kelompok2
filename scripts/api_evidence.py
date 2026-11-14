@@ -163,9 +163,6 @@ def _check(name: str, ok: bool, detail: str = "") -> tuple[str, bool, str]:
     return (name, ok, detail)
 
 
-# --------------------------------------------------------------------- steps
-
-
 def step_smoke(ctx: dict[str, Any]) -> dict[str, Any]:
     checks: list[tuple[str, bool, str]] = []
     for name, path in (
@@ -454,8 +451,6 @@ def step_pagination(ctx: dict[str, Any]) -> dict[str, Any]:
     is exercised on the serving path with a clearly labelled fixture that is
     deleted at the end. The real rows are always paged first.
     """
-    # Warm the lake path: the first DuckDB query in a fresh worker attaches the
-    # catalog and may exceed the 5s query budget, which would mark a page stale.
     for _ in range(3):
         status, headers, _, _ = request(
             "GET", "/v1/market/ohlc", params={"symbol": "BTCUSDT", "limit": 1}
@@ -477,8 +472,6 @@ def step_pagination(ctx: dict[str, Any]) -> dict[str, Any]:
                 {"symbol": "BTCUSDT"},
                 limit=100,
             )
-            # The fixture must actually be visible through the fallback path;
-            # otherwise this step would pass on two real rows and prove nothing.
             serving["expectation"] = {"min_rows": 1000, "min_pages": 10}
             serving["pass"] = (
                 bool(serving.get("pass"))
@@ -560,7 +553,7 @@ def _walk(
         )
         if not cursor:
             break
-        if pages > 200:  # runaway guard
+        if pages > 200:
             break
     duplicates = len(seen) - len(set(seen))
     descending = all(left > right for left, right in zip(seen, seen[1:], strict=False))
@@ -686,8 +679,6 @@ def step_stale(ctx: dict[str, Any]) -> dict[str, Any]:
     finally:
         _compose("start", "minio")
         _wait_minio_up()
-    # The cached DuckDB connection failed while MinIO was down; give it a few
-    # attempts to re-attach before declaring the recovery check failed.
     recovery = {"path": "/v1/market/ohlc (after recovery)", "pass": False}
     for _ in range(6):
         status, headers, _, _ = request(
@@ -871,9 +862,6 @@ def _close(left: Any, right: Any, tolerance: float = 1e-9) -> bool:
         return left == right
     scale = max(abs(left_f), abs(right_f), 1.0)
     return abs(left_f - right_f) / scale <= tolerance
-
-
-# ---------------------------------------------------------------------- main
 
 
 def main(argv: list[str] | None = None) -> int:

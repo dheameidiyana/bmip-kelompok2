@@ -77,7 +77,6 @@ def test_mart_ml_labels_start_at_window_start(built):
     for row in labelled:
         assert row["label_start"] == row["window_start"]
         assert row["label_end"] == row["window_start"] + timedelta(hours=1)
-        # The first hour has no 60-minute history yet, so it is a warning row.
         if row["window_start"].astimezone(UTC).hour >= 2:
             assert row["dq_status"] == "pass"
     assert any(row["dq_status"] == "warn" for row in rows)

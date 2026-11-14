@@ -379,7 +379,7 @@ def run_suite(
     for rule in suite.rules:
         try:
             result.rules.append(run_rule(rule, frame, batch, datasets))
-        except Exception as exc:  # a broken rule fails closed
+        except Exception as exc:
             result.rules.append(
                 _result(rule, False, detail=f"{type(exc).__name__}: {exc}")
             )

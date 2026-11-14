@@ -1,5 +1,4 @@
 #!/bin/sh
-# Resolve the installed dashboard module instead of hardcoding a site-packages path.
 set -eu
 APP="$(python -c 'import os, bmip.dashboard; print(os.path.join(os.path.dirname(bmip.dashboard.__file__), "app.py"))')"
 exec python -m streamlit run "$APP" \

@@ -67,7 +67,7 @@ top_hashtags as (
 
     select
         window_start,
-        list(tag order by n desc, tag)[1:5] as top_hashtags  -- noqa: AM03
+        list(tag order by n desc, tag asc)[1:5] as top_hashtags
     from hashtags
     group by 1
 

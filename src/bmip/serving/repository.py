@@ -147,9 +147,6 @@ class ServingRepository:
     @property
     def connection(self) -> psycopg.Connection:
         if self._connection is None:
-            # Read-only API sessions use autocommit so one invalid statement
-            # (for example a serving table that has not been loaded yet) cannot
-            # poison the rest of the request.
             self._connection = psycopg.connect(
                 self.settings.postgres_dsn,
                 row_factory=dict_row,
@@ -169,7 +166,6 @@ class ServingRepository:
     def __exit__(self, *_: object) -> None:
         self.close()
 
-    # ------------------------------------------------------------------ health
 
     def ping(self) -> bool:
         try:
@@ -178,7 +174,6 @@ class ServingRepository:
         except Exception:  # noqa: BLE001 - readiness reports the failure
             return False
 
-    # ----------------------------------------------------------------- market
 
     def market_latest(self, symbol: str) -> dict[str, Any] | None:
         return _one(
@@ -256,7 +251,6 @@ class ServingRepository:
         page.rows = [{key: row[key] for key in keep} for row in page.rows]
         return page
 
-    # -------------------------------------------------------------- sentiment
 
     def sentiment_latest(self) -> dict[str, Any] | None:
         return _one(
@@ -301,7 +295,6 @@ class ServingRepository:
         )
         return _page(rows, limit)
 
-    # -------------------------------------------------------------- freshness
 
     def freshness(self) -> list[dict[str, Any]]:
         return _many(self.connection, "SELECT * FROM serving.freshness ORDER BY metric")
@@ -313,7 +306,6 @@ class ServingRepository:
             (metric,),
         )
 
-    # --------------------------------------------------------------- catalog
 
     def datasets(
         self,
@@ -370,7 +362,6 @@ class ServingRepository:
             (dataset_id,),
         )
 
-    # --------------------------------------------------------------- quality
 
     def quality_status(self) -> dict[str, Any]:
         run = _one(
@@ -391,7 +382,6 @@ class ServingRepository:
         )
         return {**run, "failures": failures}
 
-    # ----------------------------------------------------------------- model
 
     def model_latest(self, model_name: str = "volatility_model") -> dict[str, Any] | None:
         return _one(
@@ -417,7 +407,6 @@ class ServingRepository:
             (model_name,),
         )
 
-    # ---------------------------------------------------------------- writes
 
     def upsert_market_hourly(self, rows: Iterable[dict[str, Any]]) -> int:
         payload = [dict(row) for row in rows]

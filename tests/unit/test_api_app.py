@@ -60,14 +60,12 @@ class FakeRepository:
         self.inserted: list[dict] = []
         self.closed = False
 
-    # health
     def ping(self) -> bool:
         return True
 
     def close(self) -> None:
         self.closed = True
 
-    # market
     def market_latest(self, symbol: str):
         return bar(HOUR, 101.0) if symbol == "BTCUSDT" else None
 
@@ -81,7 +79,6 @@ class FakeRepository:
     def volatility_range(self, symbol, *, start=None, end=None, limit=100, cursor=None):
         return self.market_hourly(symbol, limit=limit)
 
-    # sentiment
     def sentiment_latest(self):
         return sentiment(HOUR)
 
@@ -89,7 +86,6 @@ class FakeRepository:
         rows = [sentiment(HOUR - timedelta(hours=index)) for index in range(2)]
         return Page(rows=rows[:limit])
 
-    # freshness
     def freshness(self):
         return [
             {
@@ -105,7 +101,6 @@ class FakeRepository:
     def freshness_one(self, metric):
         return self.freshness()[0]
 
-    # catalog
     def datasets(self, *, q=None, domain=None, layer=None, owner=None, limit=100, cursor=None):
         row = {
             "id": "gold.mart_market",
@@ -131,11 +126,9 @@ class FakeRepository:
             return None
         return self.datasets().rows[0]
 
-    # quality
     def quality_status(self):
         return {"status": "pass", "run_ts": NOW, "critical_failures": 0, "failures": []}
 
-    # model
     def model_latest(self, model_name="volatility_model"):
         return None
 

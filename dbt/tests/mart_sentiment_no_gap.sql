@@ -1,4 +1,3 @@
--- Every hour between the first and last observation must appear exactly once.
 with bounds as (
 
     select
