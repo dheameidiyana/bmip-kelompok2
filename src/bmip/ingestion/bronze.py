@@ -227,7 +227,7 @@ class BronzeWriter:
         ):
             try:
                 rows = self._table(identifier).scan().to_arrow().to_pylist()
-            except Exception as exc:  # table may not exist yet
+            except Exception as exc:
                 results.append(
                     {
                         "table": identifier,

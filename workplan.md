@@ -384,6 +384,21 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 | Menyerahkan ke | Dhea (W2-A) |
 | Gate keluar | Tag `w1-d-ok`; demo end-to-end M1 jalan |
 
+**Keputusan implementasi (disetujui 14 November 2026)**
+
+1. **Prediksi tanpa model.** Dashboard menampilkan **"belum ada model"**; `POST /v1/predict`
+   mengembalikan `200` dengan `status=not_available` selama belum ada champion. Tidak ada
+   baseline persistence yang dipresentasikan sebagai model. Training dan registry adalah W2-A.
+2. **Alias route ARCHITECTURE.** Nama kanonik tetap milik workplan; alias `/v1/market/ohlcv`,
+   `/v1/market/volatility`, `/v1/sentiment/timeseries`, `/v1/dq/results`, dan
+   `/v1/catalog/search` ditambahkan di W1-D agar tidak ada rework di siklus berikutnya.
+3. **`symbol` default `BTCUSDT`** pada endpoint market, tetapi selalu divalidasi terhadap
+   allowlist (`MARKET_SYMBOLS`). Simbol di luar allowlist menghasilkan `400 unknown-symbol`.
+4. **`serving.volatility` adalah view** di atas `serving.market_hourly`, sehingga hanya ada satu
+   jalur tulis. Nama dan kolomnya tetap sesuai workplan.
+5. **`/api` dan `/health/*` tidak memakai API key**, karena `scripts/e2e_smoke.py` (gate W1-A) dan
+   healthcheck container memanggil keduanya. Auth `X-API-Key` hanya untuk `/v1/*`.
+
 **Lingkup Must**
 
 1. Skema serving PostgreSQL: `serving.market_latest`, `serving.sentiment_hourly`, `serving.volatility`, `serving.predictions` (tabel disiapkan walau belum terisi), `serving.freshness`.  
@@ -397,7 +412,7 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 7. `X-Data-Stale: true` \+ fallback ke PostgreSQL saat MinIO tidak tersedia.  
 8. Freshness field di setiap respons yang relevan (umur data dalam detik \+ status `ok/warn/stale`).  
 9. `openapi.json` di-commit; `evidence/api/` berisi curl per endpoint.  
-10. Streamlit v1: 4 metrik bisnis (harga terakhir, volatilitas jam terakhir, skor sentimen, prediksi jam berikutnya), 2 filter waktu, freshness badge per metrik. Membaca API saja, tidak query langsung ke lake.
+10. Streamlit v1: 4 metrik bisnis (harga terakhir, volatilitas jam terakhir, skor sentimen, prediksi jam berikutnya), 2 filter waktu, dan panel kualitas/freshness. Revisi 14 Nov 2026: badge freshness per metrik dihapus dari tampilan utama, layout chart menjadi baris 1 harga lalu baris 2 sentimen | volatilitas, tipografi Poppins, dan palet dikunci ke hitam-abu-putih-navy-pink (light mode). Membaca API saja, tidak query langsung ke lake.
 
 **Should**
 
@@ -427,7 +442,7 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 | :---- | :---- | :---- | :---- |
 | CP1 | Sen 16 Nov 00.00 | `/health/ready` hijau; tiga endpoint inti mengembalikan data serving; freshness terhitung | `evidence/api/smoke_<ts>.txt` |
 | CP2 | Sen 16 Nov 12.00 | 14 route terdaftar di OpenAPI; pagination T-14; parameter tidak valid T-34 mengembalikan 400/422 \+ `request_id`; tanpa API key T-13 \= 401 | `openapi.json`, `evidence/tests/T14.txt`, `evidence/api/T34.json`, `evidence/security/api-401.txt` |
-| CP3 | Sen 16 Nov 23.59 | MinIO dimatikan → response 200 dengan `X-Data-Stale: true` (T-15); Streamlit menampilkan 4 metrik \+ 2 filter \+ freshness badge; reconciliasi dashboard vs SQL untuk 24 jam (draft T-37); gate M1 demo direkam | `evidence/tests/T15.txt`, `evidence/dashboards/streamlit_<ts>.png`, `evidence/dashboard/reconciliation-draft.json`, `docs/handoff/w1-d.md` |
+| CP3 | Sen 16 Nov 23.59 | MinIO dimatikan → response 200 dengan `X-Data-Stale: true` (T-15); Streamlit menampilkan 4 metrik \+ 2 filter \+ freshness badge; reconciliasi dashboard vs SQL untuk 24 jam (draft T-37); gate M1 demo direkam | `evidence/tests/T15.txt`, `evidence/dashboards/streamlit_<ts>.png`, `evidence/dashboard/reconciliation-draft.json`, `docs/w1-d.md` |
 
 **Risiko khusus**
 

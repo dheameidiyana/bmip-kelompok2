@@ -78,5 +78,11 @@ services:
   api:
     ports:
       - "8000:8000"
-    mem_limit: 256m
+    mem_limit: 768m
+    cpus: 1.00
+
+  dashboard:
+    ports:
+      - "8501:8501"
+    mem_limit: 384m
     cpus: 0.50

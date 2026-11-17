@@ -68,6 +68,15 @@ def main(argv: list[str] | None = None) -> int:
     writer.ensure_tables()
     for result in writer.publish_from_duckdb(duckdb_path, start=start, end=end):
         print(f"published {result.table}: rows={result.rows} partitions={result.partitions}")
+
+    from bmip.serving.loader import load_serving
+
+    serving = load_serving(get_settings(), start=start, end=end)
+    print(
+        "serving: "
+        f"market={serving.market_rows} sentiment={serving.sentiment_rows} "
+        f"registry={serving.registry_rows} hash={serving.logical_hash[:12]}"
+    )
     return 0
 
 

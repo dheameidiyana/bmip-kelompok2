@@ -1,5 +1,3 @@
-# Stub overlay used by CI to prove that the two-node profile stays parseable.
-# The real two-node placement is delivered in a later workstream.
 services:
   api-2:
     image: bmip/api:dev

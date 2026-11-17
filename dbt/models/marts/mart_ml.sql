@@ -8,7 +8,6 @@ with features as (
 
 sentiment_previous_hour as (
 
-    -- Feature hour H may only see posts created in [H-1h, H).
     select
         window_start + interval 1 hour as window_start,
         mean_sentiment as sent_mean_1h,
@@ -32,7 +31,6 @@ minute_returns as (
 
 labels as (
 
-    -- Label window is (window_start, window_start + 1h]: strictly after the features.
     select
         symbol,
         date_trunc('hour', window_start) as window_start,

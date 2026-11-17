@@ -310,7 +310,6 @@ def dbt_build(
 
 
 def read_mart(path: str | Path, table: str) -> list[dict]:
-    # dbt keeps its DuckDB connection open in-process, so match its read-write mode.
     connection = duckdb.connect(str(path))
     try:
         return connection.execute(f'select * from gold."{table}"').to_arrow_table().to_pylist()

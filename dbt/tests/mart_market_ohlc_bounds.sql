@@ -1,4 +1,3 @@
--- OHLC invariants and non-negative volume at the gold layer.
 select *
 from {{ ref('mart_market') }}
 where not (

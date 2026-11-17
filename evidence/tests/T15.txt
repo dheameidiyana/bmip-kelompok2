@@ -1,0 +1,57 @@
+id        : T-15
+timestamp : 2026-11-14T02:40:58Z
+commit    : 0df6000
+command   : python scripts/api_evidence.py --steps stale --with-faults
+result    : PASS
+owner     : anin
+
+
+Fault: MinIO stopped, range queries must answer 200 from PostgreSQL
+with X-Data-Stale: true and meta.source = serving.
+
+| Path | HTTP | X-Data-Stale | meta.source | Rows | Pass |
+|---|---|---|---|---|---|
+| `/v1/market/volatility/range` | 200 | true | serving | 2 | True |
+| `/v1/sentiment/hourly` | 200 | true | serving | 1 | True |
+| `/v1/market/ohlc` | 200 | true | serving | 2 | True |
+| `/v1/market/ohlc (after recovery)` | 200 | false | None |  | True |
+
+[
+  {
+    "path": "/v1/market/volatility/range",
+    "status": 200,
+    "x_data_stale": "true",
+    "x_data_source": "serving",
+    "meta_source": "serving",
+    "rows": 2,
+    "pass": true,
+    "error": null
+  },
+  {
+    "path": "/v1/sentiment/hourly",
+    "status": 200,
+    "x_data_stale": "true",
+    "x_data_source": "serving",
+    "meta_source": "serving",
+    "rows": 1,
+    "pass": true,
+    "error": null
+  },
+  {
+    "path": "/v1/market/ohlc",
+    "status": 200,
+    "x_data_stale": "true",
+    "x_data_source": "serving",
+    "meta_source": "serving",
+    "rows": 2,
+    "pass": true,
+    "error": null
+  },
+  {
+    "path": "/v1/market/ohlc (after recovery)",
+    "pass": true,
+    "status": 200,
+    "x_data_stale": "false",
+    "x_data_source": "lake"
+  }
+]

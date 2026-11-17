@@ -1,4 +1,3 @@
--- A symbol may appear at most once per hour.
 select
     symbol,
     window_start,

@@ -22,7 +22,6 @@ SILVER_DATASETS = (
 GOLD_DATASETS = ("gold.mart_market", "gold.mart_sentiment", "gold.mart_ml")
 ALL_DATASETS = SILVER_DATASETS + GOLD_DATASETS
 
-# Large tables are projected to the columns their suites actually read.
 PROJECTIONS: dict[str, tuple[str, ...]] = {
     "silver.market_trades": ("symbol", "trade_id"),
 }
@@ -44,7 +43,6 @@ def datasets_for(scope: str = "all") -> tuple[str, ...]:
     if scope == "silver":
         return SILVER_DATASETS
     if scope == "gold":
-        # Gold suites compare against silver (lag rule), so load one reference.
         return GOLD_DATASETS + ("silver.market_ohlcv_1m",)
     return ALL_DATASETS
 
@@ -98,7 +96,6 @@ def load_datasets(
                     },
                 )
                 if attempt == LOAD_ATTEMPTS:
-                    # A missing table is reported by the suite as a critical failure.
                     break
                 time.sleep(LOAD_RETRY_SECONDS)
     return datasets
