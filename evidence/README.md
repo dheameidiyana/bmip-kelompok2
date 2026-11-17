@@ -96,5 +96,6 @@ menunjuk commit final W1-D setelah evidence ini di-commit.
 | T-36 | ml | `ml/T36.json` | PASS | 422 malformed, error out-of-range, `not_available` tanpa champion |
 | IDEM | serving | `serving/loader-idempotence_20261114T0239.json` | PASS | dua load, counts + logical hash identik |
 | T-37 | dashboard | `dashboard/reconciliation-draft.json` | PASS | API vs serving vs gold, 2/2 baris, 0 selisih (draft) |
+| DQ | dq | `dq/dq_report_w1d_20261114T0255.json` | PASS | checkpoint GX run W1-D (`a58f5d7`); `dq_report.json` kanonik tetap milik W1-C |
 | M1 | e2e | `e2e/M1_20261114T0405.txt` | PASS | bronze → silver → gold → serving → API → dashboard |
 | DASH | dashboards | `dashboards/streamlit_20261114T0405.png` | PASS | 4 metrik, 2 filter, "belum ada model", Poppins, palet hitam-abu-putih-navy-pink, sidebar bisa ditutup/dibuka |

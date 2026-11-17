@@ -188,10 +188,15 @@ Pipeline penuh (jalur yang sama dengan Prefect): `python scripts/build_gold.py`.
 | T-34 | `evidence/api/T34.json` | symbol, range, limit, cursor, datetime, missing range |
 | T-36 | `evidence/ml/T36.json` | 422 malformed, error out-of-range, `not_available` |
 | IDEM | `evidence/serving/loader-idempotence_20261114T0239.json` | dua load, counts + hash identik |
+| DQ | `evidence/dq/dq_report_w1d_20261114T0255.json` | checkpoint GX saat run W1-D (`a58f5d7`): `pass`, 1 warning `gold-ml-label-coverage` |
 | T-37 | `evidence/dashboard/reconciliation-draft.json` | API vs serving vs gold, 0 selisih (draft) |
 | M1 | `evidence/e2e/M1_20261114T0405.txt` | bronze -> silver -> gold -> serving -> API -> dashboard |
 | DASH | `evidence/dashboards/streamlit_20261114T0405.png` | 4 metrik, 2 filter, Poppins, palet, sidebar |
 | E2E | `evidence/e2e/SMOKE-W1A_20261114T0253_a58f5d7.txt` | gate W1-A tetap hijau |
+
+`evidence/dq/dq_report.json` tidak diubah karena itu evidence beku W1-C; loader
+tetap mengimpor file kanonik tersebut, sedangkan hasil checkpoint W1-D disimpan
+sebagai file terpisah di atas.
 
 ## 9. Gap dan serah terima ke W2-A
 
