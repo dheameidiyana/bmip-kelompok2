@@ -70,11 +70,26 @@ def _fit(model, frame: pd.DataFrame, features: tuple[str, ...]):
     return model
 
 
+def gate_metrics(
+    actual: pd.Series | np.ndarray,
+    challenger_pred: np.ndarray,
+    champion_pred: np.ndarray,
+) -> dict[str, Any]:
+    """Compare a challenger against the incumbent champion on identical rows."""
+
+    metrics = regression_metrics(actual, challenger_pred, champion_pred)
+    metrics["champion_mae"] = float(metrics["baseline_mae"])
+    metrics["champion_rmse"] = float(metrics["baseline_rmse"])
+    metrics["comparison"] = "champion"  # type: ignore[assignment]
+    return metrics
+
+
 def build_candidate(
     frame: pd.DataFrame,
     *,
     experiment: str,
     algorithm: str,
+    champion: tuple[Any, tuple[str, ...]] | None = None,
 ) -> Candidate:
     include_sentiment = experiment == "E2"
     features = feature_columns(include_sentiment=include_sentiment)
@@ -103,14 +118,24 @@ def build_candidate(
     last_dates = sorted(test["window_start"].dt.date.unique())[-7:]
     gate_frame = test[test["window_start"].dt.date.isin(last_dates)]
     gate_pred = _predict(final, gate_frame, features)
-    gate_metrics = regression_metrics(
-        gate_frame[LABEL_COLUMN],
-        gate_pred,
-        gate_frame["rv_60m"],
-    )
+    if champion is not None:
+        champion_model, champion_features = champion
+        champion_pred = _predict(champion_model, gate_frame, champion_features)
+        gate_result = gate_metrics(
+            gate_frame[LABEL_COLUMN],
+            gate_pred,
+            champion_pred,
+        )
+    else:
+        gate_result = regression_metrics(
+            gate_frame[LABEL_COLUMN],
+            gate_pred,
+            gate_frame["rv_60m"],
+        )
+        gate_result["comparison"] = "persistence-baseline"  # type: ignore[assignment]
     gate_pass = (
-        gate_metrics["mae_improvement"] >= 0.05
-        and gate_metrics["rmse_change"] <= 0.05
+        gate_result["mae_improvement"] >= 0.05
+        and gate_result["rmse_change"] <= 0.05
     )
     return Candidate(
         name=f"{experiment.lower()}_{algorithm}",
@@ -121,7 +146,7 @@ def build_candidate(
         model=final,
         validation=validation_metrics,
         test=test_metrics,
-        gate=gate_metrics,
+        gate=gate_result,
         per_symbol=per_symbol_metrics(test, test_pred),
         gate_pass=gate_pass,
     )

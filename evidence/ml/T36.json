@@ -14,61 +14,76 @@
     },
     {
       "case": "valid payload BTCUSDT",
+      "feature_ts": "2026-11-17T00:00:00Z",
       "model_name": "volatility_model",
       "model_version": "2",
       "pass": true,
       "predicted_rv_next_1h": 0.0005755128222517669,
+      "stale": true,
+      "stale_header": "true",
       "status": 200,
       "status_field": "ok",
       "symbol": "BTCUSDT"
     },
     {
       "case": "valid payload ETHUSDT",
+      "feature_ts": "2026-11-17T00:00:00Z",
       "model_name": "volatility_model",
       "model_version": "2",
       "pass": true,
       "predicted_rv_next_1h": 0.0006108006346039474,
+      "stale": true,
+      "stale_header": "true",
       "status": 200,
       "status_field": "ok",
       "symbol": "ETHUSDT"
     },
     {
       "case": "valid payload BNBUSDT",
+      "feature_ts": "2026-11-17T00:00:00Z",
       "model_name": "volatility_model",
       "model_version": "2",
       "pass": true,
       "predicted_rv_next_1h": 0.0005148305208422244,
+      "stale": true,
+      "stale_header": "true",
       "status": 200,
       "status_field": "ok",
       "symbol": "BNBUSDT"
     },
     {
       "case": "valid payload SOLUSDT",
+      "feature_ts": "2026-11-17T00:00:00Z",
       "model_name": "volatility_model",
       "model_version": "2",
       "pass": true,
       "predicted_rv_next_1h": 0.0007835619617253542,
+      "stale": true,
+      "stale_header": "true",
       "status": 200,
       "status_field": "ok",
       "symbol": "SOLUSDT"
     },
     {
       "case": "valid payload XRPUSDT",
+      "feature_ts": "2026-11-17T00:00:00Z",
       "model_name": "volatility_model",
       "model_version": "2",
       "pass": true,
       "predicted_rv_next_1h": 0.0007904220838099718,
+      "stale": true,
+      "stale_header": "true",
       "status": 200,
       "status_field": "ok",
       "symbol": "XRPUSDT"
     }
   ],
   "command": "python scripts/w2a_evidence.py",
-  "commit": "4384822",
+  "commit": "eec3186",
   "id": "T-36",
   "notes": "The W1-D no-champion case was a W1-D placeholder. This final run replaces it with valid five-symbol payloads, malformed input, and an out-of-range feature while champion v2 is registered.",
   "owner": "dhea",
   "result": "PASS",
   "scope": "W2-A final: champion volatility_model v2",
-  "timestamp": "2026-11-18T07:23:53Z"
+  "timestamp": "2026-11-18T11:39:31Z"
 }

@@ -17,9 +17,8 @@ from sklearn.dummy import DummyRegressor
 
 from bmip.common.config import get_settings
 from bmip.ml.dataset import load_mart_ml, save_snapshot, sentiment_coverage
-from bmip.ml.metrics import regression_metrics
 from bmip.ml.registry import record_decision, upsert_model_metric
-from bmip.ml.training import build_candidate, select_candidate
+from bmip.ml.training import build_candidate, gate_metrics, select_candidate
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT = "volatility"
@@ -89,14 +88,20 @@ def t21(settings, snapshot, best) -> bool:
     last_dates = sorted(test["window_start"].dt.date.unique())[-7:]
     gate = test[test["window_start"].dt.date.isin(last_dates)].reset_index(drop=True)
     features = list(best.features)
+    champion = mlflow.pyfunc.load_model(f"models:/{MODEL_NAME}@champion")
+    champion_signature = champion.metadata.signature
+    if champion_signature is None or champion_signature.inputs is None:
+        raise RuntimeError("champion model has no input signature")
+    champion_features = [field.name for field in champion_signature.inputs]
     bad = DummyRegressor(strategy="mean")
     train = snapshot.frame[snapshot.frame["split"] == "train"]
     bad.fit(train[features], train["label_rv_next_1h"])
     prediction = bad.predict(gate[features])
-    metrics = regression_metrics(
+    champion_prediction = champion.predict(gate[champion_features])
+    metrics = gate_metrics(
         gate["label_rv_next_1h"],
         prediction,
-        gate["rv_60m"],
+        champion_prediction,
     )
     gate_pass = metrics["mae_improvement"] >= 0.05 and metrics["rmse_change"] <= 0.05
     example = gate[features].head(2)
@@ -119,6 +124,11 @@ def t21(settings, snapshot, best) -> bool:
         "champion_after": champion_after.version,
         "challenger_version": version,
         "gate_pass": gate_pass,
+        "gate_comparison": "champion",
+        "checks": {
+            "leakage": (ROOT / "evidence" / "tests" / "T09.txt").exists(),
+            "model_card": (ROOT / "evidence" / "ml" / "model-card.md").exists(),
+        },
         "metrics": metrics,
         "pass": (not gate_pass) and champion_before.version == champion_after.version,
     }

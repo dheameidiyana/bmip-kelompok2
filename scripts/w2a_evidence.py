@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
-BASE_URL = "http://localhost:8000"
+BASE_URL = os.getenv("BMIP_API_URL", "http://localhost:8000").rstrip("/")
 API_KEY = os.getenv("BMIP_API_KEY", "")
 EVIDENCE = ROOT / "evidence" / "ml" / "T36.json"
 SYMBOLS = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT")
@@ -37,7 +37,7 @@ def _commit() -> str:
         return "unknown"
 
 
-def _post(body: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+def _post(body: dict[str, Any]) -> tuple[int, dict[str, Any], dict[str, str]]:
     request = urllib.request.Request(
         f"{BASE_URL}/v1/predict",
         data=json.dumps(body).encode("utf-8"),
@@ -50,20 +50,26 @@ def _post(body: dict[str, Any]) -> tuple[int, dict[str, Any]]:
     )
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
-            return response.status, json.loads(response.read())
+            headers = {
+                key.lower(): value for key, value in response.headers.items()
+            }
+            return response.status, json.loads(response.read()), headers
     except urllib.error.HTTPError as exc:
         raw = exc.read().decode("utf-8", errors="replace")
         try:
             payload = json.loads(raw)
         except json.JSONDecodeError:
             payload = {"raw": raw}
-        return exc.code, payload
+        headers = {
+            key.lower(): value for key, value in (exc.headers or {}).items()
+        }
+        return exc.code, payload, headers
 
 
 def main() -> int:
     cases: list[dict[str, Any]] = []
 
-    status, payload = _post(
+    status, payload, _ = _post(
         {"symbol": "BTCUSDT", "features": {"rv_60m": "nan-ish"}}
     )
     cases.append(
@@ -75,7 +81,7 @@ def main() -> int:
         }
     )
 
-    status, payload = _post(
+    status, payload, _ = _post(
         {"symbol": "BTCUSDT", "features": {"rv_60m": -1}}
     )
     cases.append(
@@ -89,7 +95,7 @@ def main() -> int:
 
     valid: list[dict[str, Any]] = []
     for symbol in SYMBOLS:
-        status, payload = _post({"symbol": symbol})
+        status, payload, headers = _post({"symbol": symbol})
         row = {
             "symbol": symbol,
             "status": status,
@@ -97,7 +103,15 @@ def main() -> int:
             "model_name": payload.get("model_name"),
             "model_version": payload.get("model_version"),
             "predicted_rv_next_1h": payload.get("predicted_rv_next_1h"),
-            "pass": status == 200 and payload.get("status") == "ok",
+            "feature_ts": payload.get("feature_ts"),
+            "stale": (payload.get("meta") or {}).get("stale"),
+            "stale_header": headers.get("x-data-stale"),
+            "pass": (
+                status == 200
+                and payload.get("status") == "ok"
+                and payload.get("feature_ts") is not None
+                and headers.get("x-data-stale") in {"true", "false"}
+            ),
         }
         valid.append(row)
         cases.append(

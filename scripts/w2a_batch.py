@@ -26,7 +26,7 @@ def main() -> int:
         encoding="utf-8",
     )
     print(json.dumps(result, indent=2, sort_keys=True, default=str))
-    return 0
+    return 1 if result.get("failed") else 0
 
 
 if __name__ == "__main__":

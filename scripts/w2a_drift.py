@@ -1,7 +1,8 @@
-"""Build the W2-A drift report: training reference vs recent production rows."""
+"""Build the W2-A drift report: holdout reference vs recent production rows."""
 
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import subprocess
@@ -14,18 +15,21 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from bmip.common.config import get_settings
 from bmip.ml.dataset import (
     LABEL_COLUMN,
     feature_columns,
-    load_mart_ml,
+    load_frozen_snapshot,
     prepare_frame,
     split_frame,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_PATH = ROOT / "data" / "ml" / "models" / "selected.joblib"
-DRIFT_THRESHOLD = 0.25
+DEFAULT_SNAPSHOT = (
+    ROOT / "data" / "ml" / "snapshots" / "mart_ml_3627445140691597595.parquet"
+)
+DRIFT_THRESHOLD = 0.2
+MIN_REFERENCE_ROWS = 24
 
 
 def _now() -> datetime:
@@ -41,6 +45,13 @@ def _commit() -> str:
         ).strip()
     except (OSError, subprocess.CalledProcessError):
         return "unknown"
+
+
+def latest_metadata() -> Path:
+    paths = sorted((ROOT / "evidence" / "ml").glob("dataset_*.json"))
+    if not paths:
+        raise FileNotFoundError("no dataset_*.json evidence")
+    return paths[-1]
 
 
 def _psi(reference: pd.Series, actual: pd.Series, bins: int = 10) -> float:
@@ -72,48 +83,64 @@ def _metrics(actual: pd.Series, predicted: np.ndarray) -> dict[str, Any]:
 
 
 def main() -> int:
-    settings = get_settings()
-    frame, snapshot_id = load_mart_ml(settings)
-    prepared = split_frame(prepare_frame(frame))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
+    parser.add_argument("--metadata", type=Path, default=None)
+    args = parser.parse_args()
+    metadata_path = args.metadata or latest_metadata()
+    snapshot = load_frozen_snapshot(args.snapshot, metadata_path)
+    prepared = split_frame(prepare_frame(snapshot.frame))
     bundle = joblib.load(MODEL_PATH)
     model = bundle["model"]
     features = tuple(bundle["features"])
     all_features = feature_columns(include_sentiment=True)
 
-    train = prepared[prepared["split"] == "train"]
-    production = prepared[prepared["split"] == "test"]
-    cutoff = production["window_start"].max() - pd.Timedelta(days=7)
-    recent = production[production["window_start"] >= cutoff].copy()
+    holdout = prepared[prepared["split"] == "test"].copy()
+    cutoff = holdout["window_start"].max() - pd.Timedelta(days=7)
+    production = holdout[holdout["window_start"] >= cutoff].copy()
+    reference = holdout[holdout["window_start"] < cutoff].copy()
+    reference_kind = "holdout-pre-production"
+    if len(reference) < MIN_REFERENCE_ROWS:
+        validation = prepared[prepared["split"] == "validation"].copy()
+        if len(validation) < MIN_REFERENCE_ROWS:
+            raise RuntimeError(
+                "drift reference is too small: "
+                f"{len(reference)} holdout rows and {len(validation)} validation rows"
+            )
+        reference = validation
+        reference_kind = "validation-fallback"
 
-    if train.empty or recent.empty:
+    if reference.empty or production.empty:
         raise RuntimeError("drift reference or production window is empty")
 
     feature_drift = []
     for feature in all_features:
-        psi = _psi(train[feature], recent[feature])
+        psi = _psi(reference[feature], production[feature])
         feature_drift.append(
             {
                 "feature": feature,
                 "psi": psi,
                 "drift": psi >= DRIFT_THRESHOLD,
-                "train_mean": float(pd.to_numeric(train[feature], errors="coerce").mean()),
+                "reference_mean": float(
+                    pd.to_numeric(reference[feature], errors="coerce").mean()
+                ),
                 "production_mean": float(
-                    pd.to_numeric(recent[feature], errors="coerce").mean()
+                    pd.to_numeric(production[feature], errors="coerce").mean()
                 ),
             }
         )
     feature_drift.sort(key=lambda item: item["psi"], reverse=True)
 
-    predictions = np.asarray(model.predict(recent[list(features)]), dtype=float)
-    recent = recent.assign(_prediction=predictions)
+    predictions = np.asarray(model.predict(production[list(features)]), dtype=float)
+    production = production.assign(_prediction=predictions)
     daily = []
-    for date, group in recent.groupby(recent["window_start"].dt.date):
+    for date, group in production.groupby(production["window_start"].dt.date):
         values = _metrics(group[LABEL_COLUMN], group["_prediction"].to_numpy())
         daily.append({"date": str(date), **values})
     daily.sort(key=lambda item: item["date"])
 
     per_symbol = []
-    for symbol, group in recent.groupby("symbol"):
+    for symbol, group in production.groupby("symbol"):
         values = _metrics(group[LABEL_COLUMN], group["_prediction"].to_numpy())
         per_symbol.append({"symbol": str(symbol), **values})
     per_symbol.sort(key=lambda item: item["symbol"])
@@ -124,19 +151,21 @@ def main() -> int:
         "timestamp": _now().isoformat(timespec="seconds").replace("+00:00", "Z"),
         "commit": _commit(),
         "model": bundle.get("name"),
-        "dataset_id": bundle.get("dataset_id"),
-        "snapshot_id": snapshot_id,
+        "dataset_id": snapshot.dataset_id,
+        "snapshot_id": snapshot.snapshot_id,
+        "sha256": snapshot.sha256,
         "reference": {
-            "split": "train",
-            "rows": int(len(train)),
-            "start": train["window_start"].min().isoformat(),
-            "end": train["window_start"].max().isoformat(),
+            "split": reference_kind,
+            "rows": int(len(reference)),
+            "start": reference["window_start"].min().isoformat(),
+            "end": reference["window_start"].max().isoformat(),
         },
         "production": {
-            "split": "test/recent",
-            "rows": int(len(recent)),
-            "start": recent["window_start"].min().isoformat(),
-            "end": recent["window_start"].max().isoformat(),
+            "split": "holdout-recent",
+            "rows": int(len(production)),
+            "start": production["window_start"].min().isoformat(),
+            "end": production["window_start"].max().isoformat(),
+            "window_days": 7,
         },
         "result": "PASS",
         "threshold": DRIFT_THRESHOLD,
@@ -147,8 +176,11 @@ def main() -> int:
         "per_symbol": per_symbol,
         "limitations": (
             "Production here means the most recent seven labelled days in the "
-            "gold snapshot. Realised labels are one hour behind the features, so "
-            "the newest unlabelled hours are excluded."
+            "frozen holdout. The reference is the earlier part of the same "
+            "holdout, so the two windows do not overlap. Realised labels are "
+            "one hour behind the features, so the newest unlabelled hours are "
+            "excluded. KS, prediction PSI, rolling MAE, and serving.drift_metrics "
+            "remain W2-B/C3-B scope."
         ),
     }
     stamp = _now().strftime("%Y%m%dT%H%M%SZ")
@@ -162,9 +194,10 @@ def main() -> int:
         json.dumps(
             {
                 "evidence": str(output.relative_to(ROOT)),
+                "reference": report["reference"],
+                "production": report["production"],
                 "drift_detected": report["drift_detected"],
                 "flagged_features": report["flagged_features"],
-                "production_rows": len(recent),
                 "daily_mae": daily,
             },
             indent=2,

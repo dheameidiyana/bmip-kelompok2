@@ -195,6 +195,7 @@ class PredictOut(BaseModel):
     status: Literal["ok", "error", "not_available"]
     symbol: str
     window_start: datetime | None = None
+    feature_ts: datetime | None = None
     predicted_rv_next_1h: float | None = None
     model_name: str | None = None
     model_version: str | None = None

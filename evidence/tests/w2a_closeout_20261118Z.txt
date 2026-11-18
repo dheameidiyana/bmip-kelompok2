@@ -1,0 +1,21 @@
+id        : W2-A-CLOSEOUT
+timestamp : 2026-11-18T11:44:00Z
+commit    : eec3186 (+ closeout worktree)
+command   : python -m pytest -q; python -m ruff check src scripts tests deploy
+result    : PASS
+owner     : dhea
+
+pytest:
+........................................................................ [ 48%]
+........................................................................ [ 97%]
+....                                                                     [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\SEMESTER 5\Desain Aplikasi Big Data\PROJECT\bmip-kelompok2\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+
+ruff:
+All checks passed!

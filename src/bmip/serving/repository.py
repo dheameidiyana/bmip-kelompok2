@@ -661,6 +661,7 @@ class ServingRepository:
         model_version: str = "none",
         model_alias: str = "none",
         predicted_rv_next_1h: float | None = None,
+        feature_ts: datetime | None = None,
         request_id: str | None = None,
         input_hash: str | None = None,
     ) -> None:
@@ -669,11 +670,12 @@ class ServingRepository:
                 """
                 INSERT INTO serving.predictions
                     (symbol, window_start, model_version, model_name, model_alias,
-                     predicted_rv_next_1h, predicted_at, status, detail, request_id,
-                     input_hash)
-                VALUES (%s, %s, %s, %s, %s, %s, now(), %s, %s, %s, %s)
+                     predicted_rv_next_1h, feature_ts, predicted_at, status, detail,
+                     request_id, input_hash)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, now(), %s, %s, %s, %s)
                 ON CONFLICT (symbol, window_start, model_version) DO UPDATE SET
                     predicted_rv_next_1h = EXCLUDED.predicted_rv_next_1h,
+                    feature_ts = EXCLUDED.feature_ts,
                     predicted_at = now(),
                     status = EXCLUDED.status,
                     detail = EXCLUDED.detail,
@@ -687,6 +689,7 @@ class ServingRepository:
                     model_name,
                     model_alias,
                     predicted_rv_next_1h,
+                    feature_ts,
                     status,
                     detail,
                     request_id,

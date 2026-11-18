@@ -8,13 +8,15 @@
 
 ## Status
 
-- W2-A scope: IMPLEMENTED
+- W2-A scope: IMPLEMENTED and verified; final commit/tag pending
 - T-20 reproducibility: PASS
-- T-21 bad challenger rejected: PASS
+- T-21 bad challenger rejected: PASS (challenger v4 vs champion v2)
 - T-35 E1 vs E2: PASS (E1 promoted under H0)
-- T-36 final payload cases: PASS
-- Drift report: generated; drift detected on volatility features
-- Tag: pending until the final test pass
+- T-36 final payload cases: PASS (`feature_ts` and freshness included)
+- Persistence/EWMA baselines: PASS
+- Drift report: generated; drift detected on seven features
+- Registry tags and model-card artifact: PASS
+- Tag `w2-a-ok`: still points at `eec3186`; do not move without approval
 
 ## Scope and decisions
 
@@ -27,6 +29,12 @@
   seed 42, no shuffle.
 - E2 (sentiment) was tested but the sentiment coverage is only 0.07%. The H0
   policy promotes the market-only `e1_xgboost` model.
+- Drift reference: validation holdout before the most recent seven days.
+  PSI threshold is `0.2`; production points are never used as reference.
+- Batch refuses features older than two hours. A stale batch exits non-zero
+  and does not refresh the API cache.
+- API exposes `feature_ts`, computes `meta.stale` from feature age, and writes
+  the timestamp to `serving.predictions`.
 
 ## Data and model
 
@@ -39,27 +47,34 @@
 | Selected model | `e1_xgboost` |
 | Test MAE | 0.0002262944 |
 | Test directional accuracy | 0.6546 |
-| Gate MAE improvement | 14.50% |
+| Training gate MAE improvement vs persistence | 14.50% |
+| T-21 gate MAE improvement vs champion | -64.97% (rejected) |
 | Champion | `volatility_model` version 2 |
 
 MLflow experiment is `volatility`; the registered model is
 `volatility_model`, with `champion` and `challenger` aliases. Artifacts use the
 MinIO `artifacts` bucket. The local MLflow UI is `http://localhost:5000`.
+The champion run carries `data_snapshot_id`, `feature_version`, `trigger`, and
+`git_sha`, plus the model-card artifact under `model_card/`.
 
 ## Serving
 
 - `/v1/predict` accepts `{"symbol": "..."}` or a feature payload.
-- A valid symbol-only request returns `200 status="ok"` with model version 2.
+- A valid symbol-only request returns `200 status="ok"` with model version 2,
+  a `feature_ts`, and `X-Data-Stale` reflecting feature age.
 - Malformed feature payload returns `422`; an out-of-range feature returns
   `200 status="error"`.
 - The API uses the `champion` alias and reads a local latest-feature cache at
-  `/app/data/ml/latest_features.json`. The cache is mounted read-only from the
-  host `data/ml` directory, so the API does not have to reach Lakekeeper from
-  the container.
-- Regenerate the cache with `python scripts/w2a_batch.py`. The predictor loads
-  the cache at startup, so restart the API after the cache changes.
-- Batch inference writes five rows to `serving.predictions` with the champion
-  model version and field mappings documented in `docs/handoff/w1-d.md`.
+  `/app/data/ml/latest_features.json`. A missing or malformed cache disables
+  the cache path instead of falling back to Lakekeeper from the container.
+- Refresh the cache without scoring with
+  `python scripts/w2a_cache.py`. Refresh it with scoring via
+  `python scripts/w2a_batch.py`; stale inputs make that command exit `1`.
+- Batch inference writes `feature_ts`, status, and champion metadata to
+  `serving.predictions` using the field mappings in `docs/handoff/w1-d.md`.
+- The current local snapshot ends at `2026-11-17T00:00Z`; T-36 therefore
+  reports `stale=true` until a newer feature refresh is available. This is the
+  intended fail-visible behaviour, not a fresh-data claim.
 
 ## Commands
 
@@ -68,8 +83,11 @@ MinIO `artifacts` bucket. The local MLflow UI is `http://localhost:5000`.
 .\.venv\Scripts\python.exe scripts\w2a_dataset.py
 .\.venv\Scripts\python.exe scripts\w2a_train.py
 .\.venv\Scripts\python.exe scripts\w2a_gate.py
-.\.venv\Scripts\python.exe scripts\w2a_batch.py
+.\.venv\Scripts\python.exe scripts\w2a_baselines.py
 .\.venv\Scripts\python.exe scripts\w2a_drift.py
+.\.venv\Scripts\python.exe scripts\w2a_batch.py
+.\.venv\Scripts\python.exe scripts\w2a_cache.py
+.\.venv\Scripts\python.exe scripts\w2a_registry_evidence.py
 .\.venv\Scripts\python.exe scripts\w2a_evidence.py
 ```
 
@@ -91,31 +109,47 @@ multi-symbol settings and secrets.
 - `evidence/ml/dataset_20261118T044935Z.json`
 - `evidence/ml/train_20261118T044935Z.json`
 - `evidence/experiments/E1_vs_E2.md`
+- `evidence/experiments/baselines.md`
+- `evidence/experiments/baselines_20261118T092655Z.json`
 - `evidence/experiments/mlflow_volatility_20261118T0719Z.png`
 - `evidence/ml/model-card.md`
 - `evidence/tests/T09.txt`
 - `evidence/ml/T20.txt`
 - `evidence/ml/T21.json`
 - `evidence/ml/T36.json`
-- `evidence/ml/predictions_20261118T054850Z.json`
-- `evidence/ml/drift_20261118T072404Z.json`
+- `evidence/ml/predictions_20261118T093616Z.json`
+- `evidence/ml/drift_20261118T092731Z.json`
+- `evidence/ml/registry-metadata_20261118T110808Z.json`
+- `evidence/tests/w2a_closeout_20261118Z.txt`
+- `evidence/ml/archive/20261118T0930Z/`: pre-closeout T-21/T-36 copies
 
 ## Drift and limitations
 
-The drift report compares the training split with the most recent seven labelled
-days. `rv_60m`, `rv_15m`, `rv_5m`, and `hl_range_1m` exceed the PSI threshold
-(0.25). This is a monitoring signal for W2-B, not an automatic promotion or
-demotion in W2-A.
+The new drift report uses 235 reference rows
+(`2026-11-08T00:00Z`-`2026-11-09T22:00Z`) and 845 production rows
+(`2026-11-09T23:00Z`-`2026-11-16T23:00Z`). PSI flags `rv_60m`, `rv_15m`,
+`rv_5m`, `hl_range_1m`, `trade_count_60m`, `ret_5m`, and `vwap_dev`. This is a
+monitoring signal for W2-B, not an automatic promotion or demotion in W2-A.
 
 Known limitations:
 
 - Sentiment is market-wide and almost absent in the available history.
 - Source lineage for kline-only history falls back to `binance_ws`.
 - The feature cache is batch-refreshed, not streamed continuously.
+- The demo dataset ends before the current wall clock; stale responses are
+  expected and visible through `meta.stale` / `X-Data-Stale`.
 - The W1-D no-champion T-36 case was a placeholder; W2-A replaces it with valid
   five-symbol payloads, malformed input, and an out-of-range feature while
   champion v2 is registered.
 - The model is a volatility estimate, not financial advice or a trading signal.
+
+## Deferred to W2-B or later
+
+- Walk-forward validation and a scheduled retraining flow.
+- Feast feature store and `gold.predictions`.
+- KS test and prediction-distribution PSI; `serving.drift_metrics`.
+- Automatic drift-triggered promotion/demotion.
+- Hourly Prefect scheduling for batch inference and cache refresh.
 
 ## Next for W2-B
 

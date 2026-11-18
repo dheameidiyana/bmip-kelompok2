@@ -397,6 +397,32 @@ def test_predict_without_a_champion_is_not_available(harness):
     assert response.json()["status"] == "not_available"
 
 
+def test_predict_returns_feature_timestamp_and_stale_flag(harness):
+    client, repository, _, app = harness
+    feature_ts = NOW - timedelta(hours=3)
+    repository.champion = lambda model_name="volatility_model": {
+        "model_name": model_name,
+        "version": "2",
+        "alias": "champion",
+    }
+    app.state.predictor = lambda payload: {
+        "predicted_rv_next_1h": 0.01,
+        "feature_ts": feature_ts,
+    }
+    response = client.post(
+        "/v1/predict",
+        json={"symbol": "BTCUSDT"},
+        headers=auth(),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["feature_ts"] == feature_ts.isoformat().replace("+00:00", "Z")
+    assert body["meta"]["stale"] is True
+    assert response.headers["X-Data-Stale"] == "true"
+    assert repository.inserted[-1]["feature_ts"] == feature_ts
+
+
 def test_health_ready_reports_both_paths(harness):
     client, repository, lake, _ = harness
     response = client.get("/health/ready")

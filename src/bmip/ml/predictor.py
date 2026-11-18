@@ -43,9 +43,13 @@ class VolatilityPredictor:
         self.features = tuple(field.name for field in signature.inputs)
         cache_path = os.getenv("ML_FEATURE_CACHE")
         self.cache: dict[str, dict[str, Any]] | None = None
-        if cache_path and Path(cache_path).exists():
-            payload = json.loads(Path(cache_path).read_text(encoding="utf-8"))
-            self.cache = dict(payload.get("symbols") or {})
+        if cache_path:
+            self.cache = {}
+            try:
+                payload = json.loads(Path(cache_path).read_text(encoding="utf-8"))
+                self.cache = dict(payload.get("symbols") or {})
+            except (OSError, ValueError, TypeError):
+                self.cache = {}
 
     def _row(
         self,

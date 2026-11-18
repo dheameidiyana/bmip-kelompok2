@@ -13,6 +13,7 @@ import hashlib
 import json
 import math
 from collections.abc import Callable
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, Request, Response
@@ -101,6 +102,13 @@ def predict(
             detail="No usable feature row and no feature payload for this symbol.",
             meta=build_meta(request, source="serving", stale=False),
         )
+    feature_ts = _as_datetime(result.get("feature_ts"))
+    stale = _is_stale(
+        feature_ts,
+        now,
+        settings.freshness_predictions_slo_seconds,
+    )
+    response.headers["X-Data-Stale"] = "true" if stale else "false"
     repository.insert_prediction(
         symbol=symbol,
         window_start=window_start,
@@ -109,6 +117,7 @@ def predict(
         model_version=str(champion["version"]),
         model_alias=str(champion.get("alias") or "champion"),
         predicted_rv_next_1h=float(result["predicted_rv_next_1h"]),
+        feature_ts=feature_ts,
         request_id=request_id,
         input_hash=_input_hash(payload),
     )
@@ -116,11 +125,36 @@ def predict(
         status="ok",
         symbol=symbol,
         window_start=window_start,
+        feature_ts=feature_ts,
         predicted_rv_next_1h=float(result["predicted_rv_next_1h"]),
         model_name=str(champion["model_name"]),
         model_version=str(champion["version"]),
-        meta=build_meta(request, source="serving", stale=False),
+        meta=build_meta(request, source="serving", stale=stale),
     )
+
+
+def _as_datetime(value: Any) -> datetime | None:
+    if value is None:
+        return None
+    if hasattr(value, "to_pydatetime"):
+        value = value.to_pydatetime()
+    if isinstance(value, datetime):
+        parsed = value
+    else:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _is_stale(
+    feature_ts: datetime | None,
+    now: datetime,
+    slo_seconds: int,
+) -> bool:
+    if feature_ts is None:
+        return False
+    return (now - feature_ts).total_seconds() > slo_seconds
 
 
 def _feature_problems(features: dict[str, float] | None) -> list[str]:

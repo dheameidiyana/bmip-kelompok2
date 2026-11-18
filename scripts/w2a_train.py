@@ -13,6 +13,7 @@ from typing import Any
 
 import joblib
 import mlflow
+import mlflow.pyfunc
 import mlflow.sklearn
 import mlflow.xgboost
 import pandas as pd
@@ -26,6 +27,7 @@ from bmip.ml.dataset import (
     sentiment_coverage,
     write_metadata,
 )
+from bmip.ml.metrics import baseline_metrics
 from bmip.ml.registry import record_decision, upsert_model_metric
 from bmip.ml.training import (
     SEED,
@@ -56,6 +58,21 @@ def git_sha() -> str:
         return "unknown"
 
 
+def load_champion() -> tuple[Any, tuple[str, ...]] | None:
+    tracking = os.getenv("MLFLOW_TRACKING_URI", "file:./mlruns")
+    mlflow.set_tracking_uri(tracking)
+    try:
+        model = mlflow.pyfunc.load_model(
+            f"models:/{REGISTERED_MODEL}@champion"
+        )
+        signature = model.metadata.signature
+        if signature is None or signature.inputs is None:
+            return None
+        return model, tuple(field.name for field in signature.inputs)
+    except Exception:
+        return None
+
+
 def candidate_metrics(prefix: str, values: dict[str, float]) -> dict[str, float]:
     return {f"{prefix}_{key}": float(value) for key, value in values.items()}
 
@@ -68,7 +85,10 @@ def run_candidate(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[s
                 "algorithm": candidate.algorithm,
                 "dataset_id": snapshot.dataset_id,
                 "dataset_snapshot_id": snapshot.snapshot_id,
+                "data_snapshot_id": snapshot.snapshot_id,
                 "feature_snapshot_id": "dev",
+                "feature_version": "features/v1",
+                "trigger": "manual",
                 "git_sha": git_sha(),
                 "seed": str(SEED),
             }
@@ -120,7 +140,10 @@ def log_best(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[str, A
                 "selected": "true",
                 "dataset_id": snapshot.dataset_id,
                 "dataset_snapshot_id": snapshot.snapshot_id,
+                "data_snapshot_id": snapshot.snapshot_id,
                 "feature_snapshot_id": "dev",
+                "feature_version": "features/v1",
+                "trigger": "manual",
                 "git_sha": git_sha(),
             }
         )
@@ -188,13 +211,36 @@ def model_card(candidate: Candidate, snapshot, selection_note: str) -> str:
         f"- Test directional accuracy: {candidate.test['directional_accuracy']:.4f}",
         f"- Gate MAE improvement: {candidate.gate['mae_improvement']:.4%}",
         f"- Gate passed: {candidate.gate_pass}",
+        f"- Gate comparison: {candidate.gate.get('comparison', 'persistence-baseline')}",
         "",
-        "## Per-symbol test MAE",
+        "## Baselines",
+        "",
+        "| Split | Baseline | Count | MAE | RMSE | R2 | Spearman |",
+        "|---|---|---:|---:|---:|---:|---:|",
     ]
+    baselines = baseline_metrics(snapshot.frame)
+    for split in ("validation", "test"):
+        for name in ("persistence", "ewma"):
+            score = baselines[split][name]
+            rows.append(
+                f"| {split} | {name} | {score['count']} | {score['mae']:.10f} | "
+                f"{score['rmse']:.10f} | {score['r2']:.4f} | {score['spearman']:.4f} |"
+            )
+    rows.extend(
+        [
+            "",
+            "## Per-symbol test MAE",
+        ]
+    )
     for symbol, metrics in sorted(candidate.per_symbol.items()):
         rows.append(f"- {symbol}: {metrics['mae']:.10f}")
     rows.extend(
         [
+            "",
+            "## Out-of-scope use",
+            "- Do not use this model as financial advice, a trading signal, "
+            "or a risk-management system.",
+            "- Do not apply it to symbols outside the five trained Binance spot USDT pairs.",
             "",
             "## Limitations",
             "- The model is pooled across five symbols and is not a general market model.",
@@ -250,8 +296,14 @@ def main() -> int:
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     metadata_path = ROOT / "evidence" / "ml" / f"dataset_{stamp}.json"
     write_metadata(snapshot, metadata_path)
+    champion = load_champion()
     candidates = [
-        build_candidate(snapshot.frame, experiment=experiment, algorithm=algorithm)
+        build_candidate(
+            snapshot.frame,
+            experiment=experiment,
+            algorithm=algorithm,
+            champion=champion,
+        )
         for experiment in ("E1", "E2")
         for algorithm in ("ridge", "xgboost")
     ]
@@ -296,6 +348,11 @@ def main() -> int:
         for candidate in candidates:
             run_candidate(candidate, snapshot, snapshot.frame)
         registry = log_best(best, snapshot, snapshot.frame)
+        MlflowClient().log_artifact(
+            registry["run_id"],
+            str(card_path),
+            artifact_path="model_card",
+        )
         serving_metrics = {
             "dataset_id": snapshot.dataset_id,
             "snapshot_id": snapshot.snapshot_id,
@@ -328,6 +385,7 @@ def main() -> int:
         "sha256": snapshot.sha256,
         "best": best.name,
         "gate_pass": best.gate_pass,
+        "gate_comparison": best.gate.get("comparison"),
         "sentiment_coverage": coverage,
         "selection_note": selection_note,
         "registry": registry,

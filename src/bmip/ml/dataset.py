@@ -95,6 +95,44 @@ def load_mart_ml(settings: Settings) -> tuple[pd.DataFrame, str]:
     return frame, str(snapshot.snapshot_id)
 
 
+def load_frozen_snapshot(
+    snapshot_path: Path,
+    metadata_path: Path,
+) -> DatasetSnapshot:
+    """Load and verify a frozen Parquet snapshot against its evidence metadata."""
+
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    frame = pd.read_parquet(snapshot_path)
+    for column in ("window_start", "label_start", "label_end"):
+        frame[column] = pd.to_datetime(frame[column], utc=True)
+    if "split_date" in frame.columns:
+        frame["split_date"] = pd.to_datetime(frame["split_date"]).dt.date
+
+    expected_sha = str(metadata["sha256"])
+    actual_sha = frame_sha256(frame, feature_columns(include_sentiment=True))
+    if actual_sha != expected_sha:
+        raise RuntimeError(
+            f"snapshot SHA mismatch: expected {expected_sha}, got {actual_sha}"
+        )
+    expected_rows = int(metadata["row_count"])
+    if len(frame) != expected_rows:
+        raise RuntimeError(
+            f"snapshot row count mismatch: expected {expected_rows}, got {len(frame)}"
+        )
+
+    return DatasetSnapshot(
+        frame=frame,
+        snapshot_id=str(metadata["snapshot_id"]),
+        dataset_id=str(metadata["dataset_id"]),
+        path=snapshot_path,
+        sha256=expected_sha,
+        row_count=len(frame),
+        counts={str(k): int(v) for k, v in metadata["counts"].items()},
+        start=pd.Timestamp(metadata["start"]).to_pydatetime(),
+        end=pd.Timestamp(metadata["end"]).to_pydatetime(),
+    )
+
+
 def sentiment_coverage(frame: pd.DataFrame) -> float:
     if frame.empty:
         return 0.0

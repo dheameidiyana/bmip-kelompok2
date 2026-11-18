@@ -17,6 +17,8 @@ from bmip.common.config import Settings
 from bmip.ml.dataset import latest_feature_row
 from bmip.ml.predictor import VolatilityPredictor
 
+MAX_FEATURE_AGE_SECONDS = 7200
+
 
 def _hash(row: dict[str, Any]) -> str:
     raw = json.dumps(
@@ -27,10 +29,11 @@ def _hash(row: dict[str, Any]) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
-def _write_cache(rows: dict[str, dict[str, Any]]) -> None:
+def write_feature_cache(rows: dict[str, dict[str, Any]]) -> None:
     path = Path(os.getenv("ML_FEATURE_CACHE", "data/ml/latest_features.json"))
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
         json.dumps(
             {
                 "generated_at": datetime.now(UTC).isoformat(),
@@ -43,6 +46,7 @@ def _write_cache(rows: dict[str, dict[str, Any]]) -> None:
         + "\n",
         encoding="utf-8",
     )
+    temporary.replace(path)
 
 
 def run_batch(settings: Settings) -> dict[str, Any]:
@@ -50,13 +54,17 @@ def run_batch(settings: Settings) -> dict[str, Any]:
     version = MlflowClient().get_model_version_by_alias(
         "volatility_model", "champion"
     ).version
-    request_id = f"batch-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
+    now = datetime.now(UTC)
+    request_id = f"batch-{now.strftime('%Y%m%dT%H%M%SZ')}"
     results: dict[str, Any] = {}
     cache_rows: dict[str, dict[str, Any]] = {}
+    stale_symbols: list[str] = []
+    failed = False
     with psycopg.connect(settings.postgres_dsn) as connection:
         for symbol in settings.market_symbols:
             latest = latest_feature_row(settings, symbol)
             if latest is None:
+                failed = True
                 results[symbol] = {"status": "error", "detail": "no feature row"}
                 _insert(
                     connection,
@@ -68,6 +76,35 @@ def run_batch(settings: Settings) -> dict[str, Any]:
                     feature_ts=None,
                     status="error",
                     detail="no feature row",
+                    model_version=version,
+                    predicted=None,
+                    input_hash=None,
+                    request_id=request_id,
+                )
+                continue
+            feature_ts = pd.Timestamp(latest["window_start"]).to_pydatetime()
+            age_seconds = (now - feature_ts).total_seconds()
+            if age_seconds > MAX_FEATURE_AGE_SECONDS:
+                failed = True
+                stale_symbols.append(symbol)
+                detail = (
+                    f"latest feature is {age_seconds:.0f}s old; "
+                    f"maximum is {MAX_FEATURE_AGE_SECONDS}s"
+                )
+                results[symbol] = {
+                    "status": "error",
+                    "detail": detail,
+                    "feature_ts": feature_ts.isoformat(),
+                    "age_seconds": age_seconds,
+                }
+                _insert(
+                    connection,
+                    settings,
+                    symbol=symbol,
+                    window_start=feature_ts,
+                    feature_ts=feature_ts,
+                    status="error",
+                    detail=detail,
                     model_version=version,
                     predicted=None,
                     input_hash=None,
@@ -89,14 +126,15 @@ def run_batch(settings: Settings) -> dict[str, Any]:
             results[symbol] = {
                 "status": "ok",
                 "predicted_rv_next_1h": predicted,
-                "feature_ts": latest["window_start"].isoformat(),
+                "feature_ts": feature_ts.isoformat(),
+                "age_seconds": age_seconds,
             }
             _insert(
                 connection,
                 settings,
                 symbol=symbol,
-                window_start=latest["window_start"],
-                feature_ts=latest["window_start"],
+                window_start=feature_ts,
+                feature_ts=feature_ts,
                 status="ok",
                 detail=None,
                 model_version=version,
@@ -105,11 +143,15 @@ def run_batch(settings: Settings) -> dict[str, Any]:
                 request_id=request_id,
             )
         connection.commit()
-    _write_cache(cache_rows)
+    if cache_rows and not failed:
+        write_feature_cache(cache_rows)
     return {
         "request_id": request_id,
         "model_name": "volatility_model",
         "model_version": version,
+        "failed": failed,
+        "stale_symbols": stale_symbols,
+        "max_feature_age_seconds": MAX_FEATURE_AGE_SECONDS,
         "symbols": results,
     }
 
