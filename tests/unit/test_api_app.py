@@ -232,7 +232,7 @@ def test_market_latest_defaults_to_btcusdt(harness):
 def test_unknown_symbol_is_a_400_problem(harness):
     client, *_ = harness
     response = client.get(
-        "/v1/market/latest", params={"symbol": "ETHUSDT"}, headers=auth()
+        "/v1/market/latest", params={"symbol": "NOPEUSDT"}, headers=auth()
     )
     assert response.status_code == 400
     assert response.json()["type"].endswith("/unknown-symbol")

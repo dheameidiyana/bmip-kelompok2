@@ -93,9 +93,28 @@ menunjuk commit final W1-D setelah evidence ini di-commit.
 | T-14 | tests | `tests/T14.txt` | PASS | 2 halaman live (limit=1) dan 11 halaman atas 1.002 baris, 0 duplikat |
 | T-15 | tests | `tests/T15.txt` | PASS | MinIO stop → 200 `X-Data-Stale: true`; pulih → `false` |
 | T-34 | api | `api/T34.json` | PASS | symbol, range, limit, cursor, datetime, missing range |
-| T-36 | ml | `ml/T36.json` | PASS | 422 malformed, error out-of-range, `not_available` tanpa champion |
+| T-36 | ml | `ml/T36.json` | PASS | W1-D contract; final W2-A run supersedes this row (see W2-A block) |
 | IDEM | serving | `serving/loader-idempotence_20261114T0239.json` | PASS | dua load, counts + logical hash identik |
 | T-37 | dashboard | `dashboard/reconciliation-draft.json` | PASS | API vs serving vs gold, 2/2 baris, 0 selisih (draft) |
 | DQ | dq | `dq/dq_report_w1d_20261114T0255.json` | PASS | checkpoint GX run W1-D (`a58f5d7`); `dq_report.json` kanonik tetap milik W1-C |
 | M1 | e2e | `e2e/M1_20261114T0405.txt` | PASS | bronze → silver → gold → serving → API → dashboard |
 | DASH | dashboards | `dashboards/streamlit_20261114T0405.png` | PASS | 4 metrik, 2 filter, "belum ada model", Poppins, palet hitam-abu-putih-navy-pink, sidebar bisa ditutup/dibuka |
+
+### W2-A
+
+Environment: branch `slot/w2-a-dhea`, Windows / Docker Compose dev + ML overlay,
+Python 3.11.9, MLflow 3.18.0. Five symbols, 60 days of 1-minute klines, pooled
+model, champion `volatility_model` version 2.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | ml | `ml/dataset_20261118T044935Z.json` | PASS | snapshot `mart_ml@3627445140691597595`; 7.190 baris; 5 symbol |
+| CP1 | tests | `tests/T09.txt` | PASS | T-09 feature-level, 7.200 baris `mart_ml` |
+| CP2 | experiments | `experiments/E1_vs_E2.md` | PASS | E1/E2 Ridge/XGBoost; E1 promoted under H0 |
+| CP2 | experiments | `experiments/mlflow_volatility_20261118T0719Z.png` | PASS | MLflow experiment `volatility`; 12 runs, tags, bad challenger |
+| T-20 | ml | `ml/T20.txt` | PASS | retrain snapshot sama; delta 0.00000000%; tolerance 1% |
+| T-21 | ml | `ml/T21.json` | PASS | bad challenger v3 rejected; champion v2 unchanged |
+| T-36 | ml | `ml/T36.json` | PASS | 422 malformed; 200 error out-of-range; 5 symbol `ok` v2 |
+| MODEL | ml | `ml/model-card.md` | PASS | intended use, metrics, limitations, ethical note |
+| BATCH | ml | `ml/predictions_20261118T054850Z.json` | PASS | 5 predictions written to `serving.predictions` |
+| DRIFT | ml | `ml/drift_20261118T071754Z.json` | PASS | training vs 7 recent labelled days; 4 volatility features flagged |

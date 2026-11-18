@@ -93,6 +93,14 @@ def predict(
         )
 
     result = predictor(payload)
+    if result is None:
+        return PredictOut(
+            status="not_available",
+            symbol=symbol,
+            window_start=window_start,
+            detail="No usable feature row and no feature payload for this symbol.",
+            meta=build_meta(request, source="serving", stale=False),
+        )
     repository.insert_prediction(
         symbol=symbol,
         window_start=window_start,

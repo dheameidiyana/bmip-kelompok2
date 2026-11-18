@@ -43,6 +43,13 @@ dashboard = [
     "streamlit>=1.40,<2",
     "altair>=5,<7",
 ]
+ml = [
+    "mlflow>=2.16,<4",
+    "scikit-learn>=1.5,<2",
+    "xgboost>=2.1,<4",
+    "pandas>=2.2,<4",
+    "joblib>=1.4,<2",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

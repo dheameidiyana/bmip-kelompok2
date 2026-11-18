@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
+from bmip.common.symbols import DEFAULT_MARKET_SYMBOLS
 from bmip.ingestion.contracts import (
     load_fixture,
     validate_market_trade,
@@ -14,6 +15,22 @@ def test_social_contract_accepts_valid_post() -> None:
     assert result.ok is True
     assert result.model is not None
     assert result.model.post_uri.startswith("at://")
+
+
+def test_market_contract_accepts_supported_symbols() -> None:
+    for symbol in DEFAULT_MARKET_SYMBOLS:
+        payload = load_fixture("market_trade_valid.json")
+        payload["symbol"] = symbol
+        result = validate_market_trade(payload)
+        assert result.ok is True, symbol
+
+
+def test_market_contract_rejects_unsupported_symbol() -> None:
+    payload = load_fixture("market_trade_valid.json")
+    payload["symbol"] = "NOPEUSDT"
+    result = validate_market_trade(payload)
+    assert result.ok is False
+    assert any(issue.path == "$.symbol" for issue in result.errors)
 
 
 def test_market_contract_rejects_negative_price() -> None:

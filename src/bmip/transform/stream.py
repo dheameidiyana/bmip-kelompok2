@@ -297,7 +297,7 @@ class MarketStreamProcessor:
 
         trade, error = parse_trade(
             raw,
-            allowed_symbols={self.settings.market_symbol},
+            allowed_symbols=set(self.settings.market_symbols),
         )
         if error is not None or trade is None:
             record = quarantine_record(
@@ -371,7 +371,7 @@ class MarketStreamProcessor:
         if not callable(freshness):
             return
         try:
-            value = freshness(symbol=self.settings.market_symbol)
+            value = freshness()
         except Exception as exc:  # noqa: BLE001 - metrics must not fail a batch
             log.warning("cannot read silver freshness", extra={"ctx_error": str(exc)})
             return

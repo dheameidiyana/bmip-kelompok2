@@ -90,6 +90,7 @@ def parse_binance_ws(
 
 def parse_binance_vision_row(
     row: dict[str, Any],
+    symbol: str,
     ingest_ts: datetime | None = None,
 ) -> dict[str, Any]:
     ingest = ingest_ts or now_utc()
@@ -99,7 +100,7 @@ def parse_binance_vision_row(
         return str(value).strip().lower() in {"true", "1", "t"}
 
     return {
-        "symbol": "BTCUSDT",
+        "symbol": symbol,
         "trade_id": int(row["agg_trade_id"]),
         "event_ts": iso_z(event_ts),
         "price": float(row["price"]),
@@ -241,7 +242,7 @@ def iter_binance_vision_csv(
                 if not values:
                     continue
                 row = dict(zip(columns, values, strict=False))
-                yield parse_binance_vision_row(row)
+                yield parse_binance_vision_row(row, symbol)
                 count += 1
                 if max_records is not None and count >= max_records:
                     return
@@ -291,6 +292,40 @@ def collect_binance_ws(
 ) -> list[dict[str, Any]]:
     url = binance_ws_url(base_url, symbol)
     return asyncio.run(_collect_binance_ws(url, symbol, max_records, idle_timeout))
+
+
+async def _collect_binance_ws_many(
+    base_url: str,
+    symbols: tuple[str, ...],
+    max_records: int,
+    idle_timeout: float,
+) -> list[dict[str, Any]]:
+    batches = await asyncio.gather(
+        *[
+            _collect_binance_ws(
+                binance_ws_url(base_url, symbol),
+                symbol,
+                max_records,
+                idle_timeout,
+            )
+            for symbol in symbols
+        ]
+    )
+    return [record for batch in batches for record in batch]
+
+
+def collect_binance_ws_many(
+    base_url: str,
+    symbols: Iterable[str],
+    max_records: int = 10,
+    idle_timeout: float = 30.0,
+) -> list[dict[str, Any]]:
+    ordered = tuple(dict.fromkeys(symbol.strip().upper() for symbol in symbols if symbol.strip()))
+    if not ordered:
+        return []
+    return asyncio.run(
+        _collect_binance_ws_many(base_url, ordered, max_records, idle_timeout)
+    )
 
 
 def _cache_page(cache_dir: Path, query: str, page: int, payload: dict[str, Any]) -> None:

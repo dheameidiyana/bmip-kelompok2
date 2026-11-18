@@ -20,6 +20,8 @@ from pydantic import (
     model_validator,
 )
 
+from bmip.common.symbols import MarketSymbol
+
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT_DIR = ROOT / "contracts"
 SCHEMA_VERSION = "1.0"
@@ -81,7 +83,7 @@ def _model_errors(exc: ValidationError) -> list[ContractIssue]:
 class MarketTradeV1(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
-    symbol: Literal["BTCUSDT"]
+    symbol: MarketSymbol
     trade_id: int = Field(gt=0)
     event_ts: AwareDatetime
     price: Decimal = Field(gt=0)

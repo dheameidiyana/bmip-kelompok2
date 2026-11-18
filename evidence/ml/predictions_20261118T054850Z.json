@@ -1,0 +1,32 @@
+{
+  "model_name": "volatility_model",
+  "model_version": "2",
+  "request_id": "batch-20261118T054839Z",
+  "symbols": {
+    "BNBUSDT": {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "predicted_rv_next_1h": 0.0005148305208422244,
+      "status": "ok"
+    },
+    "BTCUSDT": {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "predicted_rv_next_1h": 0.0005755128222517669,
+      "status": "ok"
+    },
+    "ETHUSDT": {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "predicted_rv_next_1h": 0.0006108006346039474,
+      "status": "ok"
+    },
+    "SOLUSDT": {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "predicted_rv_next_1h": 0.0007835619617253542,
+      "status": "ok"
+    },
+    "XRPUSDT": {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "predicted_rv_next_1h": 0.0007904220838099718,
+      "status": "ok"
+    }
+  }
+}

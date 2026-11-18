@@ -1,0 +1,254 @@
+{
+  "commit": "9972693",
+  "daily_mae": [
+    {
+      "count": 5,
+      "date": "2026-11-09",
+      "mae": 9.042144450270895e-05,
+      "rmse": 0.00010232290517912344
+    },
+    {
+      "count": 120,
+      "date": "2026-11-10",
+      "mae": 0.00030479856470278454,
+      "rmse": 0.00133010807533733
+    },
+    {
+      "count": 120,
+      "date": "2026-11-11",
+      "mae": 0.0001718734302580725,
+      "rmse": 0.0002373694211524902
+    },
+    {
+      "count": 120,
+      "date": "2026-11-12",
+      "mae": 0.0001507298960940828,
+      "rmse": 0.0002451787559455696
+    },
+    {
+      "count": 120,
+      "date": "2026-11-13",
+      "mae": 0.00023708662362534878,
+      "rmse": 0.00031460697635769564
+    },
+    {
+      "count": 120,
+      "date": "2026-11-14",
+      "mae": 0.00036634737664442127,
+      "rmse": 0.0005382773715876713
+    },
+    {
+      "count": 120,
+      "date": "2026-11-15",
+      "mae": 0.00028432965374805243,
+      "rmse": 0.000400379689365624
+    },
+    {
+      "count": 120,
+      "date": "2026-11-16",
+      "mae": 0.0001594891708897964,
+      "rmse": 0.00024588256429731146
+    }
+  ],
+  "dataset_id": "mart_ml@3627445140691597595",
+  "drift_detected": true,
+  "features": [
+    {
+      "drift": true,
+      "feature": "rv_60m",
+      "production_mean": 0.0009043004350497465,
+      "psi": 0.9150025825182632,
+      "train_mean": 0.0005790188801073407
+    },
+    {
+      "drift": true,
+      "feature": "rv_15m",
+      "production_mean": 0.0007787256605795763,
+      "psi": 0.7441917479284317,
+      "train_mean": 0.0005085252870208277
+    },
+    {
+      "drift": true,
+      "feature": "rv_5m",
+      "production_mean": 0.0006860238813845126,
+      "psi": 0.6433185901015983,
+      "train_mean": 0.00042312236304178295
+    },
+    {
+      "drift": true,
+      "feature": "hl_range_1m",
+      "production_mean": 0.0008833744453975461,
+      "psi": 0.45917431810945014,
+      "train_mean": 0.0005307418095185987
+    },
+    {
+      "drift": false,
+      "feature": "ret_60m",
+      "production_mean": -0.0009038206213776502,
+      "psi": 0.2057334050439863,
+      "train_mean": -3.424322338359875e-05
+    },
+    {
+      "drift": false,
+      "feature": "ret_5m",
+      "production_mean": -2.642097534575693e-05,
+      "psi": 0.20147053444497642,
+      "train_mean": 4.3763380609916235e-06
+    },
+    {
+      "drift": false,
+      "feature": "ret_15m",
+      "production_mean": -3.0515764314400864e-05,
+      "psi": 0.18330737516371517,
+      "train_mean": 2.93151829803626e-06
+    },
+    {
+      "drift": false,
+      "feature": "vwap_dev",
+      "production_mean": 7.969741226645042e-05,
+      "psi": 0.1749238228378182,
+      "train_mean": 5.228103843350689e-05
+    },
+    {
+      "drift": false,
+      "feature": "trade_count_60m",
+      "production_mean": 84143.49467455622,
+      "psi": 0.0948181818930349,
+      "train_mean": 61163.62763419483
+    },
+    {
+      "drift": false,
+      "feature": "volume_z_60m",
+      "production_mean": -0.12873737680962047,
+      "psi": 0.02180696906104867,
+      "train_mean": -0.05081481147634922
+    },
+    {
+      "drift": false,
+      "feature": "symbol_BTCUSDT",
+      "production_mean": 0.2,
+      "psi": 0.0,
+      "train_mean": 0.2
+    },
+    {
+      "drift": false,
+      "feature": "symbol_ETHUSDT",
+      "production_mean": 0.2,
+      "psi": 0.0,
+      "train_mean": 0.2
+    },
+    {
+      "drift": false,
+      "feature": "symbol_BNBUSDT",
+      "production_mean": 0.2,
+      "psi": 0.0,
+      "train_mean": 0.2
+    },
+    {
+      "drift": false,
+      "feature": "symbol_SOLUSDT",
+      "production_mean": 0.2,
+      "psi": 0.0,
+      "train_mean": 0.2
+    },
+    {
+      "drift": false,
+      "feature": "symbol_XRPUSDT",
+      "production_mean": 0.2,
+      "psi": 0.0,
+      "train_mean": 0.2
+    },
+    {
+      "drift": false,
+      "feature": "sent_mean_1h",
+      "production_mean": 0.0015106508875739647,
+      "psi": 0.0,
+      "train_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_pos_share",
+      "production_mean": 0.0029585798816568047,
+      "psi": 0.0,
+      "train_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_neg_share",
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "train_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "post_count_1h",
+      "production_mean": 0.011834319526627219,
+      "psi": 0.0,
+      "train_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "engagement_1h",
+      "production_mean": 0.05325443786982249,
+      "psi": 0.0,
+      "train_mean": 0.0
+    }
+  ],
+  "flagged_features": [
+    "rv_60m",
+    "rv_15m",
+    "rv_5m",
+    "hl_range_1m"
+  ],
+  "id": "W2-A-drift",
+  "limitations": "Production here means the most recent seven labelled days in the gold snapshot. Realised labels are one hour behind the features, so the newest unlabelled hours are excluded.",
+  "model": "e1_xgboost",
+  "per_symbol": [
+    {
+      "count": 169,
+      "mae": 0.00018028342896638598,
+      "rmse": 0.0002649877282560795,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "count": 169,
+      "mae": 0.0002505734030293254,
+      "rmse": 0.0011115658033624802,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "count": 169,
+      "mae": 0.0002600130564306061,
+      "rmse": 0.00041135157938588596,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "count": 169,
+      "mae": 0.0002442497282418234,
+      "rmse": 0.0003776114319479036,
+      "symbol": "SOLUSDT"
+    },
+    {
+      "count": 169,
+      "mae": 0.00025665951432606374,
+      "rmse": 0.0003929372957053721,
+      "symbol": "XRPUSDT"
+    }
+  ],
+  "production": {
+    "end": "2026-11-16T23:00:00+00:00",
+    "rows": 845,
+    "split": "test/recent",
+    "start": "2026-11-09T23:00:00+00:00"
+  },
+  "reference": {
+    "end": "2026-10-29T23:00:00+00:00",
+    "rows": 5030,
+    "split": "train",
+    "start": "2026-09-18T02:00:00+00:00"
+  },
+  "result": "PASS",
+  "snapshot_id": "3627445140691597595",
+  "threshold": 0.25,
+  "timestamp": "2026-11-18T07:17:53Z"
+}

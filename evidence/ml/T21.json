@@ -1,0 +1,18 @@
+{
+  "challenger_version": "3",
+  "champion_after": "2",
+  "champion_before": "2",
+  "gate_pass": false,
+  "id": "T-21",
+  "metrics": {
+    "baseline_mae": 0.00027980935484343974,
+    "baseline_rmse": 0.0007665888346403881,
+    "directional_accuracy": 0.6452380952380953,
+    "mae": 0.0003946648322761135,
+    "mae_improvement": -0.4104776178657009,
+    "rmse": 0.0007521219246635194,
+    "rmse_change": -0.01887179844414928
+  },
+  "pass": true,
+  "timestamp": "2026-11-18T04:51:45.872797+00:00"
+}

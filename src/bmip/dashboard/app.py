@@ -16,15 +16,25 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
+from bmip.common.symbols import DEFAULT_MARKET_SYMBOLS
 from bmip.dashboard import theme
 from bmip.dashboard.client import ApiClient, ApiError
 
 load_dotenv()
 
-SYMBOL = os.getenv("BMIP_DASHBOARD_SYMBOL", "BTCUSDT")
+
+def dashboard_symbols() -> tuple[str, ...]:
+    raw = os.getenv("BMIP_DASHBOARD_SYMBOLS") or os.getenv("MARKET_SYMBOLS")
+    if not raw:
+        return DEFAULT_MARKET_SYMBOLS
+    symbols = tuple(part.strip().upper() for part in raw.split(",") if part.strip())
+    return symbols or DEFAULT_MARKET_SYMBOLS
+
+
+SYMBOLS = dashboard_symbols()
 
 st.set_page_config(
-    page_title="Bitcoin Market Intelligence Platform (BMIP)",
+    page_title="Multi-Asset Market Intelligence Platform (BMIP)",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -119,10 +129,11 @@ def utc_frame(rows: list[dict[str, Any]]) -> pd.DataFrame:
 
 def main() -> None:
     target = api_target()
-    st.title("Bitcoin Market Intelligence Platform (BMIP)")
+    st.title("Multi-Asset Market Intelligence Platform (BMIP)")
 
     with st.sidebar:
         st.header("Filter")
+        symbol = st.selectbox("Symbol", SYMBOLS, index=0)
         preset = st.selectbox(
             "Rentang waktu",
             ["24 jam", "7 hari", "14 hari", "Semua data", "Rentang khusus"],
@@ -143,12 +154,12 @@ def main() -> None:
     start, end = filter_window(preset, custom)
 
     try:
-        latest = fetch_market_latest(target, SYMBOL)
+        latest = fetch_market_latest(target, symbol)
         sentiment = fetch_sentiment(target, start, end)
         model = fetch_model(target)
         quality = fetch_quality(target)
-        ohlc = fetch_ohlc(target, SYMBOL, start, end)
-        volatility = fetch_volatility(target, SYMBOL, start, end)
+        ohlc = fetch_ohlc(target, symbol, start, end)
+        volatility = fetch_volatility(target, symbol, start, end)
         freshness = fetch_freshness(target)
     except ApiError as exc:
         st.error(f"API menolak permintaan: {exc}")
@@ -161,7 +172,7 @@ def main() -> None:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.metric(
-            f"Harga terakhir ({SYMBOL})",
+            f"Harga terakhir ({symbol})",
             fmt(market_row.get("close")),
             help=f"window_start {market_row.get('window_start', '—')}",
         )
@@ -173,7 +184,7 @@ def main() -> None:
         )
     with col3:
         st.metric(
-            "Skor sentimen",
+            "Skor sentimen pasar",
             fmt(sentiment_latest.get("mean_sentiment"), 3),
             help="Rata-rata compound VADER per jam (gold.mart_sentiment).",
         )
@@ -199,7 +210,7 @@ def main() -> None:
 
     left, right = st.columns(2)
     with left:
-        st.subheader("Sentimen per jam")
+        st.subheader("Sentimen pasar per jam")
         if sentiment_rows:
             st.altair_chart(
                 theme.value_bars(

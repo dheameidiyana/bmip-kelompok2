@@ -162,8 +162,8 @@ QUARANTINE_ARROW_SCHEMA = pa.schema(
 )
 
 
-def _s3_properties(settings: Settings) -> dict[str, str]:
-    access_key, secret_key = settings.minio_credentials("process")
+def _s3_properties(settings: Settings, role: str = "process") -> dict[str, str]:
+    access_key, secret_key = settings.minio_credentials(role)
     return {
         "s3.endpoint": settings.minio_endpoint,
         "s3.access-key-id": access_key,
@@ -390,6 +390,42 @@ class SilverWriter:
                 overwrite_filter=EqualTo("event_date", event_date),
             )
         return len(bars)
+
+    def upsert_ohlcv(self, bars: list[dict[str, Any]]) -> int:
+        if not bars:
+            return 0
+        fresh_by_key = {
+            (str(bar["symbol"]), utc_datetime(bar["window_start"])): bar
+            for bar in bars
+        }
+        dates = sorted({bar["event_date"] for bar in fresh_by_key.values()})
+        table = self._table(OHLCV_TABLE)
+        existing = table.scan(row_filter=_date_filter(dates)).to_arrow().to_pylist()
+        for event_date in dates:
+            day_bars = [
+                bar
+                for bar in fresh_by_key.values()
+                if bar["event_date"] == event_date
+            ]
+            keys = {
+                (str(bar["symbol"]), utc_datetime(bar["window_start"]))
+                for bar in day_bars
+            }
+            keep = [
+                row
+                for row in existing
+                if row["event_date"] == event_date
+                and (
+                    str(row["symbol"]),
+                    utc_datetime(row["window_start"]),
+                )
+                not in keys
+            ]
+            table.overwrite(
+                pa.Table.from_pylist([*keep, *day_bars], schema=OHLCV_ARROW_SCHEMA),
+                overwrite_filter=EqualTo("event_date", event_date),
+            )
+        return len(fresh_by_key)
 
     def append_quarantine(self, records: list[dict[str, Any]]) -> int:
         if not records:

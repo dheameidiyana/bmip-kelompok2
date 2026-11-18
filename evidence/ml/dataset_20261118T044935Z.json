@@ -1,0 +1,46 @@
+{
+  "counts": {
+    "BNBUSDT": 1438,
+    "BTCUSDT": 1438,
+    "ETHUSDT": 1438,
+    "SOLUSDT": 1438,
+    "XRPUSDT": 1438
+  },
+  "dataset_id": "mart_ml@3627445140691597595",
+  "end": "2026-11-16T23:00:00+00:00",
+  "feature_columns": [
+    "ret_5m",
+    "ret_15m",
+    "ret_60m",
+    "rv_5m",
+    "rv_15m",
+    "rv_60m",
+    "volume_z_60m",
+    "trade_count_60m",
+    "hl_range_1m",
+    "vwap_dev",
+    "symbol_BTCUSDT",
+    "symbol_ETHUSDT",
+    "symbol_BNBUSDT",
+    "symbol_SOLUSDT",
+    "symbol_XRPUSDT",
+    "sent_mean_1h",
+    "sent_pos_share",
+    "sent_neg_share",
+    "post_count_1h",
+    "engagement_1h"
+  ],
+  "feature_snapshot_ids": [
+    "dev"
+  ],
+  "path": "data\\ml\\snapshots\\mart_ml_3627445140691597595.parquet",
+  "row_count": 7190,
+  "sha256": "1b1434dfffa55afe5ec163a4a26dc4bff6383e0e9050e7c8561e3404936f6ede",
+  "snapshot_id": "3627445140691597595",
+  "splits": {
+    "test": 1080,
+    "train": 5030,
+    "validation": 1080
+  },
+  "start": "2026-09-18T02:00:00+00:00"
+}
