@@ -105,7 +105,8 @@ menunjuk commit final W1-D setelah evidence ini di-commit.
 Environment: branch `slot/w2-a-dhea`, Windows / Docker Compose dev + ML overlay,
 Python 3.11.9, MLflow 3.18.0. Five symbols, 60 days of 1-minute klines, pooled
 model, champion `volatility_model` version 2. Evidence closeout: 2026-11-18;
-code under test: `eec3186` plus the uncommitted closeout diff.
+code under test: `eec3186` plus the closeout diff. Tag `w2-a-ok-final` menunjuk
+commit close-out; tag lama `w2-a-ok` tetap di `eec3186`.
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |

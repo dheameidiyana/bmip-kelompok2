@@ -8,7 +8,7 @@
 
 ## Status
 
-- W2-A scope: IMPLEMENTED and verified; final commit/tag pending
+- W2-A scope: IMPLEMENTED, verified, committed, and tagged
 - T-20 reproducibility: PASS
 - T-21 bad challenger rejected: PASS (challenger v4 vs champion v2)
 - T-35 E1 vs E2: PASS (E1 promoted under H0)
@@ -16,7 +16,8 @@
 - Persistence/EWMA baselines: PASS
 - Drift report: generated; drift detected on seven features
 - Registry tags and model-card artifact: PASS
-- Tag `w2-a-ok`: still points at `eec3186`; do not move without approval
+- Tag `w2-a-ok`: remains at `eec3186`
+- Tag `w2-a-ok-final`: points at this close-out commit
 
 ## Scope and decisions
 
