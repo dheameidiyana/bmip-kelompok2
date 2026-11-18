@@ -34,6 +34,7 @@ from bmip.ml.training import (
     XGB_PARAMS,
     Candidate,
     build_candidate,
+    feature_importance,
     select_candidate,
 )
 
@@ -110,9 +111,11 @@ def run_candidate(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[s
             mlflow.log_metrics(
                 {f"test_{symbol}_{key}": float(value) for key, value in metrics.items()}
             )
+        importance = feature_importance(candidate, limit=None)
         mlflow.log_dict(
             {
                 "feature_columns": list(candidate.features),
+                "feature_importance": importance,
                 "per_symbol": candidate.per_symbol,
                 "gate_pass": candidate.gate_pass,
                 "dataset": {
@@ -166,6 +169,10 @@ def log_best(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[str, A
         mlflow.log_metrics(candidate_metrics("validation", candidate.validation))
         mlflow.log_metrics(candidate_metrics("test", candidate.test))
         mlflow.log_metrics(candidate_metrics("gate", candidate.gate))
+        mlflow.log_dict(
+            {"features": feature_importance(candidate, limit=None)},
+            "feature_importance.json",
+        )
         version = str(info.registered_model_version)
         client = MlflowClient()
         client.set_registered_model_alias(REGISTERED_MODEL, "challenger", version)
@@ -213,11 +220,29 @@ def model_card(candidate: Candidate, snapshot, selection_note: str) -> str:
         f"- Gate passed: {candidate.gate_pass}",
         f"- Gate comparison: {candidate.gate.get('comparison', 'persistence-baseline')}",
         "",
-        "## Baselines",
+        "## Feature importance",
         "",
-        "| Split | Baseline | Count | MAE | RMSE | R2 | Spearman |",
-        "|---|---|---:|---:|---:|---:|---:|",
+        "| Feature | Importance | Share |",
+        "|---|---:|---:|",
     ]
+    rows.extend(
+        f"| `{row['feature']}` | {float(row['importance']):.10f} | "
+        f"{float(row['share']):.4%} |"
+        for row in feature_importance(candidate)
+    )
+    rows.extend(
+        [
+            "",
+            "<!-- BASELINES:START -->",
+            "## Baselines",
+            "",
+            "EWMA uses `alpha=0.06` (`lambda=0.94`) and is shifted one hour so "
+            "the prediction never sees the label window.",
+            "",
+            "| Split | Baseline | Count | MAE | RMSE | R2 | Spearman |",
+            "|---|---|---:|---:|---:|---:|---:|",
+        ]
+    )
     baselines = baseline_metrics(snapshot.frame)
     for split in ("validation", "test"):
         for name in ("persistence", "ewma"):
@@ -228,6 +253,8 @@ def model_card(candidate: Candidate, snapshot, selection_note: str) -> str:
             )
     rows.extend(
         [
+            "",
+            "<!-- BASELINES:END -->",
             "",
             "## Per-symbol test MAE",
         ]
@@ -257,7 +284,7 @@ def model_card(candidate: Candidate, snapshot, selection_note: str) -> str:
     return "\n".join(rows)
 
 
-def comparison(candidates: list[Candidate]) -> str:
+def comparison(candidates: list[Candidate], best: Candidate | None = None) -> str:
     lines = [
         "# E1 vs E2",
         "",
@@ -280,6 +307,21 @@ def comparison(candidates: list[Candidate]) -> str:
                 p=candidate.gate_pass,
             )
         )
+    if best is not None:
+        lines.extend(
+            [
+                "",
+                f"## Top features ({best.name})",
+                "",
+                "| Feature | Importance | Share |",
+                "|---|---:|---:|",
+            ]
+        )
+        lines.extend(
+            f"| `{row['feature']}` | {float(row['importance']):.10f} | "
+            f"{float(row['share']):.4%} |"
+            for row in feature_importance(best)
+        )
     lines.append("")
     return "\n".join(lines)
 
@@ -287,6 +329,7 @@ def comparison(candidates: list[Candidate]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--no-mlflow", action="store_true")
+    parser.add_argument("--ignore-champion", action="store_true")
     parser.add_argument("--snapshot", type=Path, default=None)
     args = parser.parse_args()
 
@@ -296,7 +339,7 @@ def main() -> int:
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     metadata_path = ROOT / "evidence" / "ml" / f"dataset_{stamp}.json"
     write_metadata(snapshot, metadata_path)
-    champion = load_champion()
+    champion = None if args.ignore_champion else load_champion()
     candidates = [
         build_candidate(
             snapshot.frame,
@@ -327,7 +370,22 @@ def main() -> int:
     card_path.write_text(card, encoding="utf-8")
     comparison_path = ROOT / "evidence" / "experiments" / "E1_vs_E2.md"
     comparison_path.parent.mkdir(parents=True, exist_ok=True)
-    comparison_path.write_text(comparison(candidates), encoding="utf-8")
+    comparison_path.write_text(comparison(candidates, best), encoding="utf-8")
+    importance = feature_importance(best, limit=None)
+    importance_path = ROOT / "evidence" / "ml" / f"feature_importance_{stamp}.json"
+    importance_path.write_text(
+        json.dumps(
+            {
+                "timestamp": stamp,
+                "candidate": best.name,
+                "features": importance,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     model_dir = ROOT / "data" / "ml" / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
     joblib.dump(
@@ -388,6 +446,7 @@ def main() -> int:
         "gate_comparison": best.gate.get("comparison"),
         "sentiment_coverage": coverage,
         "selection_note": selection_note,
+        "feature_importance": importance[:10],
         "registry": registry,
         "candidates": [
             {

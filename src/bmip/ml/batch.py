@@ -20,6 +20,15 @@ from bmip.ml.predictor import VolatilityPredictor
 MAX_FEATURE_AGE_SECONDS = 7200
 
 
+def _as_of(settings: Settings) -> datetime:
+    if settings.bmip_as_of:
+        parsed = datetime.fromisoformat(settings.bmip_as_of.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=UTC)
+        return parsed.astimezone(UTC)
+    return datetime.now(UTC)
+
+
 def _hash(row: dict[str, Any]) -> str:
     raw = json.dumps(
         {key: row[key] for key in sorted(row) if key not in {"window_start"}},
@@ -54,7 +63,7 @@ def run_batch(settings: Settings) -> dict[str, Any]:
     version = MlflowClient().get_model_version_by_alias(
         "volatility_model", "champion"
     ).version
-    now = datetime.now(UTC)
+    now = _as_of(settings)
     request_id = f"batch-{now.strftime('%Y%m%dT%H%M%SZ')}"
     results: dict[str, Any] = {}
     cache_rows: dict[str, dict[str, Any]] = {}
@@ -62,7 +71,7 @@ def run_batch(settings: Settings) -> dict[str, Any]:
     failed = False
     with psycopg.connect(settings.postgres_dsn) as connection:
         for symbol in settings.market_symbols:
-            latest = latest_feature_row(settings, symbol)
+            latest = latest_feature_row(settings, symbol, at=now)
             if latest is None:
                 failed = True
                 results[symbol] = {"status": "error", "detail": "no feature row"}
@@ -70,9 +79,7 @@ def run_batch(settings: Settings) -> dict[str, Any]:
                     connection,
                     settings,
                     symbol=symbol,
-                    window_start=datetime.now(UTC).replace(
-                        minute=0, second=0, microsecond=0
-                    ),
+                    window_start=now.replace(minute=0, second=0, microsecond=0),
                     feature_ts=None,
                     status="error",
                     detail="no feature row",
@@ -147,6 +154,7 @@ def run_batch(settings: Settings) -> dict[str, Any]:
         write_feature_cache(cache_rows)
     return {
         "request_id": request_id,
+        "as_of": now.isoformat(),
         "model_name": "volatility_model",
         "model_version": version,
         "failed": failed,

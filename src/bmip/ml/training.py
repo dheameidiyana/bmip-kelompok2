@@ -163,3 +163,38 @@ def select_candidate(candidates: list[Candidate]) -> Candidate:
             item.name,
         ),
     )
+
+
+def _importance_values(model: Any) -> np.ndarray | None:
+    values = getattr(model, "feature_importances_", None)
+    if values is not None:
+        return np.asarray(values, dtype=float).ravel()
+    steps = getattr(model, "named_steps", None)
+    if steps and "model" in steps:
+        coefficients = getattr(steps["model"], "coef_", None)
+        if coefficients is not None:
+            return np.abs(np.asarray(coefficients, dtype=float).ravel())
+    return None
+
+
+def feature_importance(
+    candidate: Candidate,
+    *,
+    limit: int | None = 10,
+) -> list[dict[str, float | str]]:
+    """Return model-native feature importance, normalized for reporting."""
+
+    values = _importance_values(candidate.model)
+    if values is None or len(values) != len(candidate.features):
+        return []
+    total = float(np.sum(np.abs(values)))
+    rows = [
+        {
+            "feature": feature,
+            "importance": float(value),
+            "share": float(abs(value) / total) if total else 0.0,
+        }
+        for feature, value in zip(candidate.features, values, strict=True)
+    ]
+    rows.sort(key=lambda row: float(row["importance"]), reverse=True)
+    return rows[:limit] if limit is not None else rows

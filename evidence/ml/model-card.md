@@ -28,6 +28,22 @@ Chronological 70/15/15 by event date, seed 42, no shuffle. Label is
 - Test directional accuracy: 0.6546
 - Gate MAE improvement: 14.5002%
 - Gate passed: True
+- Gate comparison: persistence-baseline
+
+## Feature importance
+
+| Feature | Importance | Share |
+|---|---:|---:|
+| `rv_60m` | 0.3560193777 | 35.6019% |
+| `rv_5m` | 0.1276581138 | 12.7658% |
+| `rv_15m` | 0.1187099740 | 11.8710% |
+| `hl_range_1m` | 0.0834576935 | 8.3458% |
+| `ret_15m` | 0.0395111926 | 3.9511% |
+| `trade_count_60m` | 0.0374080725 | 3.7408% |
+| `vwap_dev` | 0.0355481990 | 3.5548% |
+| `symbol_XRPUSDT` | 0.0330517218 | 3.3052% |
+| `ret_5m` | 0.0324903466 | 3.2490% |
+| `symbol_BTCUSDT` | 0.0311221220 | 3.1122% |
 
 <!-- BASELINES:START -->
 ## Baselines

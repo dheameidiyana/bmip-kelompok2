@@ -5,6 +5,8 @@ Contract:
 * business out-of-range       -> 200 ``status="error"`` and a row with status=error
 * no champion yet             -> 200 ``status="not_available"`` (never a fake value)
 * champion + scorer wired     -> 200 ``status="ok"`` (W2-A sets app.state.predictor)
+* stale feature snapshot      -> 200 ``status="ok"`` + ``X-Data-Stale``, but the
+  persisted serving row is ``status="error"`` so dashboards do not count it as fresh.
 """
 
 from __future__ import annotations
@@ -112,7 +114,10 @@ def predict(
     repository.insert_prediction(
         symbol=symbol,
         window_start=window_start,
-        status="ok",
+        status="error" if stale else "ok",
+        detail=_stale_detail(feature_ts, now, settings)
+        if stale
+        else None,
         model_name=str(champion["model_name"]),
         model_version=str(champion["version"]),
         model_alias=str(champion.get("alias") or "champion"),
@@ -155,6 +160,21 @@ def _is_stale(
     if feature_ts is None:
         return False
     return (now - feature_ts).total_seconds() > slo_seconds
+
+
+def _stale_detail(
+    feature_ts: datetime | None,
+    now: datetime,
+    settings: Settings,
+) -> str:
+    slo = settings.freshness_predictions_slo_seconds
+    if feature_ts is None:
+        return f"feature_ts missing; freshness SLO {slo}s"
+    age = int((now - feature_ts).total_seconds())
+    return (
+        f"stale feature_ts {feature_ts.isoformat()}; "
+        f"age {age}s exceeds freshness SLO {slo}s"
+    )
 
 
 def _feature_problems(features: dict[str, float] | None) -> list[str]:

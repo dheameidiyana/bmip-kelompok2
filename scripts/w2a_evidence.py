@@ -12,7 +12,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import psycopg
 from dotenv import load_dotenv
+
+from bmip.common.config import get_settings
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
@@ -66,6 +69,23 @@ def _post(body: dict[str, Any]) -> tuple[int, dict[str, Any], dict[str, str]]:
         return exc.code, payload, headers
 
 
+def _persisted(request_ids: list[str]) -> dict[str, dict[str, Any]]:
+    settings = get_settings()
+    with psycopg.connect(settings.postgres_dsn) as connection:
+        rows = connection.execute(
+            """
+            SELECT request_id, status, detail
+            FROM serving.predictions
+            WHERE request_id = ANY(%s)
+            """,
+            (request_ids,),
+        ).fetchall()
+    return {
+        str(request_id): {"status": status, "detail": detail}
+        for request_id, status, detail in rows
+    }
+
+
 def main() -> int:
     cases: list[dict[str, Any]] = []
 
@@ -106,6 +126,7 @@ def main() -> int:
             "feature_ts": payload.get("feature_ts"),
             "stale": (payload.get("meta") or {}).get("stale"),
             "stale_header": headers.get("x-data-stale"),
+            "request_id": headers.get("x-request-id"),
             "pass": (
                 status == 200
                 and payload.get("status") == "ok"
@@ -122,6 +143,21 @@ def main() -> int:
             }
         )
 
+    request_ids = [
+        str(case["request_id"])
+        for case in cases
+        if case.get("request_id") and case["case"].startswith("valid payload")
+    ]
+    persisted = _persisted(request_ids)
+    for case in cases:
+        if not case["case"].startswith("valid payload"):
+            continue
+        record = persisted.get(str(case["request_id"]), {})
+        expected = "error" if case["stale"] else "ok"
+        case["persisted_status"] = record.get("status")
+        case["persisted_detail"] = record.get("detail")
+        case["pass"] = case["pass"] and record.get("status") == expected
+
     passed = all(item["pass"] for item in cases)
     evidence = {
         "id": "T-36",
@@ -134,7 +170,9 @@ def main() -> int:
         "notes": (
             "The W1-D no-champion case was a W1-D placeholder. This final run "
             "replaces it with valid five-symbol payloads, malformed input, and "
-            "an out-of-range feature while champion v2 is registered."
+            "an out-of-range feature while champion v2 is registered. Valid "
+            "stale responses persist status=error with a stale-detail row, "
+            "which the evidence verifies in serving.predictions."
         ),
         "cases": cases,
     }

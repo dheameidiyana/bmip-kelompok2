@@ -421,6 +421,8 @@ def test_predict_returns_feature_timestamp_and_stale_flag(harness):
     assert body["meta"]["stale"] is True
     assert response.headers["X-Data-Stale"] == "true"
     assert repository.inserted[-1]["feature_ts"] == feature_ts
+    assert repository.inserted[-1]["status"] == "error"
+    assert "stale feature_ts" in repository.inserted[-1]["detail"]
 
 
 def test_health_ready_reports_both_paths(harness):

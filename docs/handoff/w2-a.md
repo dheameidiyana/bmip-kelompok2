@@ -8,16 +8,24 @@
 
 ## Status
 
-- W2-A scope: IMPLEMENTED, verified, committed, and tagged
+- W2-A scope: COMPLETE (10 Must + 2 Should), verified, committed, and tagged
 - T-20 reproducibility: PASS
 - T-21 bad challenger rejected: PASS (challenger v4 vs champion v2)
 - T-35 E1 vs E2: PASS (E1 promoted under H0)
-- T-36 final payload cases: PASS (`feature_ts` and freshness included)
+- T-36 final payload cases: PASS (`feature_ts`, freshness, and persisted
+  `status=error` for stale rows)
 - Persistence/EWMA baselines: PASS
 - Drift report: generated; drift detected on seven features
-- Registry tags and model-card artifact: PASS
+- Registry tags, model-card artifact, and feature-importance artifact: PASS
+- Hourly inference deployment: PASS (`infer-volatility`, cron `5 * * * *`,
+  active); one completed backdated replay run
+- Weekly retraining deployment: present (`train-volatility`, cron `0 2 * * 0`)
+  but deliberately inactive for the demo
+- Stale API rows are persisted as `status=error`; 15 existing stale `ok` rows
+  were cleaned and the final health check has `stale_ok=0`
 - Tag `w2-a-ok`: remains at `eec3186`
-- Tag `w2-a-ok-final`: points at this close-out commit
+- Tag `w2-a-ok-final`: remains at the earlier close-out commit `38f0441`
+- Tag `w2-a-ok-complete`: points at this complete close-out commit
 
 ## Scope and decisions
 
@@ -48,6 +56,8 @@
 | Selected model | `e1_xgboost` |
 | Test MAE | 0.0002262944 |
 | Test directional accuracy | 0.6546 |
+| Top feature | `rv_60m` (35.60% share) |
+| Next features | `rv_5m` 12.77%, `rv_15m` 11.87%, `hl_range_1m` 8.35% |
 | Training gate MAE improvement vs persistence | 14.50% |
 | T-21 gate MAE improvement vs champion | -64.97% (rejected) |
 | Champion | `volatility_model` version 2 |
@@ -63,6 +73,10 @@ The champion run carries `data_snapshot_id`, `feature_version`, `trigger`, and
 - `/v1/predict` accepts `{"symbol": "..."}` or a feature payload.
 - A valid symbol-only request returns `200 status="ok"` with model version 2,
   a `feature_ts`, and `X-Data-Stale` reflecting feature age.
+- When the feature is stale, the HTTP response stays `200 status="ok"` with
+  `X-Data-Stale: true`, but the `serving.predictions` row is stored as
+  `status="error"` with a stale reason. This prevents stale demo rows from
+  counting as fresh predictions.
 - Malformed feature payload returns `422`; an out-of-range feature returns
   `200 status="error"`.
 - The API uses the `champion` alias and reads a local latest-feature cache at
@@ -90,7 +104,16 @@ The champion run carries `data_snapshot_id`, `feature_version`, `trigger`, and
 .\.venv\Scripts\python.exe scripts\w2a_cache.py
 .\.venv\Scripts\python.exe scripts\w2a_registry_evidence.py
 .\.venv\Scripts\python.exe scripts\w2a_evidence.py
+.\.venv\Scripts\python.exe scripts\w2a_prediction_health.py --clean
+.\.venv\Scripts\python.exe scripts\w2a_schedule_evidence.py
+.\.venv\Scripts\python.exe scripts\prefect_bootstrap.py
 ```
+
+For a deterministic replay of the hourly flow against the last snapshot, start
+the Prefect server, trigger `infer-volatility`, and give the worker
+`BMIP_AS_OF=2026-11-17T00:00:00Z`. Without that variable the live flow correctly
+rejects the demo data as stale. The weekly training deployment is configured but
+inactive; trigger it manually only when a new retrain is intended.
 
 Use the Compose overlay for MLflow and the ML-enabled API:
 
@@ -146,15 +169,17 @@ Known limitations:
 
 ## Deferred to W2-B or later
 
-- Walk-forward validation and a scheduled retraining flow.
+- Walk-forward validation (current split is chronological holdout).
 - Feast feature store and `gold.predictions`.
 - KS test and prediction-distribution PSI; `serving.drift_metrics`.
 - Automatic drift-triggered promotion/demotion.
-- Hourly Prefect scheduling for batch inference and cache refresh.
+- Activating the weekly retraining schedule and adding a drift-triggered path.
+- A continuously running Prefect worker; the deployment is registered but the
+  local server/worker are stopped after evidence collection.
 
 ## Next for W2-B
 
-1. Add scheduled retraining and a drift-triggered retrain path.
+1. Activate the weekly retraining schedule after a fresh-data pipeline exists.
 2. Revisit sentiment coverage with a longer or higher-volume social history.
 3. Keep the T-36 contract and the champion alias when adding challengers.
 4. Capture the MLflow experiment screenshot/run tags required by the final

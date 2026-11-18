@@ -37,6 +37,13 @@ def latest_dataset_metadata() -> dict:
     return json.loads(paths[-1].read_text(encoding="utf-8"))
 
 
+def latest_feature_importance() -> Path:
+    paths = sorted((ROOT / "evidence" / "ml").glob("feature_importance_*.json"))
+    if not paths:
+        raise FileNotFoundError("no feature_importance_*.json evidence")
+    return paths[-1]
+
+
 def main() -> int:
     mlflow_tracking = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
     os.environ["MLFLOW_TRACKING_URI"] = mlflow_tracking
@@ -70,6 +77,12 @@ def main() -> int:
         str(card),
         artifact_path="model_card",
     )
+    importance = latest_feature_importance()
+    client.log_artifact(
+        champion.run_id,
+        str(importance),
+        artifact_path="feature_importance",
+    )
     payload = {
         "id": "W2-A-registry-evidence",
         "timestamp": datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
@@ -84,6 +97,11 @@ def main() -> int:
             "run_id": champion.run_id,
             "artifact_path": "model_card/model-card.md",
             "source": str(card.relative_to(ROOT)),
+        },
+        "feature_importance_artifact": {
+            "run_id": champion.run_id,
+            "artifact_path": f"feature_importance/{importance.name}",
+            "source": str(importance.relative_to(ROOT)),
         },
     }
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")

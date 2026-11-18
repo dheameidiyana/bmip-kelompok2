@@ -107,3 +107,34 @@ def test_run_batch_writes_fresh_cache(monkeypatch, tmp_path, settings):
     assert result["symbols"]["BTCUSDT"]["status"] == "ok"
     payload = json.loads(cache.read_text(encoding="utf-8"))
     assert payload["symbols"]["BTCUSDT"]["rv_60m"] == 0.01
+
+
+def test_run_batch_uses_configured_as_of(monkeypatch, tmp_path, settings):
+    cache = tmp_path / "latest_features.json"
+    monkeypatch.setenv("ML_FEATURE_CACHE", str(cache))
+    connection = FakeConnection()
+    as_of = datetime(2026, 11, 17, tzinfo=UTC)
+    seen: dict[str, datetime | None] = {}
+
+    def latest(_settings, _symbol, *, at=None):
+        seen["at"] = at
+        return {"window_start": at - timedelta(minutes=5), "rv_60m": 0.01}
+
+    monkeypatch.setattr(batch, "VolatilityPredictor", lambda _settings: FakePredictor())
+    monkeypatch.setattr(
+        batch,
+        "MlflowClient",
+        lambda: type(
+            "Client",
+            (),
+            {"get_model_version_by_alias": lambda self, *args: type("V", (), {"version": "2"})()},
+        )(),
+    )
+    monkeypatch.setattr(batch, "latest_feature_row", latest)
+    monkeypatch.setattr(batch.psycopg, "connect", lambda _dsn: connection)
+
+    result = batch.run_batch(replace(settings, bmip_as_of="2026-11-17T00:00:00Z"))
+
+    assert seen["at"] == as_of
+    assert result["as_of"] == as_of.isoformat()
+    assert result["failed"] is False
