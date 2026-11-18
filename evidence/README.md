@@ -105,23 +105,27 @@ menunjuk commit final W1-D setelah evidence ini di-commit.
 Environment: branch `slot/w2-a-dhea`, Windows / Docker Compose dev + ML overlay,
 Python 3.11.9, MLflow 3.18.0. Five symbols, 60 days of 1-minute klines, pooled
 model, champion `volatility_model` version 2. Evidence closeout: 2026-11-18;
-code under test: `eec3186` plus the closeout diff. Tag `w2-a-ok-final` menunjuk
-commit close-out; tag lama `w2-a-ok` tetap di `eec3186`.
+code under test: `afa8617` plus the final evidence diff. Tag `w2-a-ok-complete`
+menunjuk commit close-out lengkap; `w2-a-ok-final` tetap di `38f0441` dan tag
+lama `w2-a-ok` tetap di `eec3186`.
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |
 | CP1 | ml | `ml/dataset_20261118T044935Z.json` | PASS | snapshot `mart_ml@3627445140691597595`; 7.190 baris; 5 symbol |
 | CP1 | tests | `tests/T09.txt` | PASS | T-09 feature-level, 7.200 baris `mart_ml` |
-| CP2 | experiments | `experiments/E1_vs_E2.md` | PASS | E1/E2 Ridge/XGBoost; E1 promoted under H0 |
+| CP2 | experiments | `experiments/E1_vs_E2.md` | PASS | E1/E2 Ridge/XGBoost; E1 promoted under H0; top features |
 | CP2 | experiments | `experiments/mlflow_volatility_20261118T0719Z.png` | PASS | MLflow experiment `volatility`; tags, bad challenger |
+| CP2 | ml | `ml/feature_importance_20261118T143530Z.json` | PASS | model-native top features; `rv_60m` 35.60% |
 | BASELINE | experiments | `experiments/baselines.md` | PASS | persistence + EWMA `alpha=0.06`, shifted one hour |
 | BASELINE | experiments | `experiments/baselines_20261118T092655Z.json` | PASS | validation/test MAE, RMSE, R2, Spearman |
 | T-20 | ml | `ml/T20.txt` | PASS | retrain snapshot sama; delta 0.00000000%; tolerance 1% |
 | T-21 | ml | `ml/T21.json` | PASS | bad challenger v4 rejected vs champion v2; champion unchanged |
-| T-36 | ml | `ml/T36.json` | PASS | 422 malformed; 200 error out-of-range; 5 symbol `ok` with `feature_ts`; stale expected |
-| MODEL | ml | `ml/model-card.md` | PASS | intended use, baselines, out-of-scope, limitations, ethical note |
-| REGISTRY | ml | `ml/registry-metadata_20261118T110808Z.json` | PASS | snapshot/feature/trigger/git tags + model-card artifact |
+| T-36 | ml | `ml/T36.json` | PASS | 422 malformed; 200 error out-of-range; 5 symbol `ok` with `feature_ts`; stale response persisted as `status=error` |
+| MODEL | ml | `ml/model-card.md` | PASS | intended use, feature importance, baselines, out-of-scope, limitations, ethical note |
+| REGISTRY | ml | `ml/registry-metadata_20261118T154807Z.json` | PASS | snapshot/feature/trigger/git tags + model-card and feature-importance artifacts |
 | BATCH | ml | `ml/predictions_20261118T054850Z.json` | PASS | historical 5 predictions written to `serving.predictions` |
 | BATCH | ml | `ml/predictions_20261118T093616Z.json` | PASS | stale snapshot rejected; non-zero exit; cache not overwritten |
+| HEALTH | ml | `ml/predictions_health_20261118T154754Z.json` | PASS | stale `ok` rows cleaned; final `stale_ok=0` |
+| SCHEDULE | deploy | `deploy/prefect_w2a_20261118T155105_afa8617.json` | PASS | hourly `infer-volatility` active + 1 completed run; weekly `train-volatility` inactive |
 | DRIFT | ml | `ml/drift_20261118T092731Z.json` | PASS | holdout reference vs 7 production days; PSI 0.2; 7 flags |
-| CLOSEOUT | tests | `tests/w2a_closeout_20261118Z.txt` | PASS | pytest 148 + ruff clean on closeout worktree |
+| CLOSEOUT | tests | `tests/w2a_complete_20261118T155136Z.txt` | PASS | pytest 153 + ruff clean on complete worktree |

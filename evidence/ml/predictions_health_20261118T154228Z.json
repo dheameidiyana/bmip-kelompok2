@@ -1,0 +1,69 @@
+{
+  "after": {
+    "by_status": [
+      {
+        "rows": 29,
+        "stale_rows": 25,
+        "status": "error"
+      },
+      {
+        "rows": 5,
+        "stale_rows": 0,
+        "status": "ok"
+      }
+    ],
+    "stale_ok": 0
+  },
+  "before": {
+    "by_status": [
+      {
+        "rows": 24,
+        "stale_rows": 20,
+        "status": "error"
+      },
+      {
+        "rows": 10,
+        "stale_rows": 5,
+        "status": "ok"
+      }
+    ],
+    "stale_ok": 5
+  },
+  "command": "python scripts/w2a_prediction_health.py --clean",
+  "commit": "38f0441",
+  "id": "W2-A-PREDICTION-HEALTH",
+  "result": "PASS",
+  "timestamp": "2026-11-18T15:42:28.225632Z",
+  "updated_rows": [
+    {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "request_id": "batch-20261117T000000Z",
+      "symbol": "BTCUSDT",
+      "window_start": "2026-11-17T00:00:00+00:00"
+    },
+    {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "request_id": "batch-20261117T000000Z",
+      "symbol": "ETHUSDT",
+      "window_start": "2026-11-17T00:00:00+00:00"
+    },
+    {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "request_id": "batch-20261117T000000Z",
+      "symbol": "BNBUSDT",
+      "window_start": "2026-11-17T00:00:00+00:00"
+    },
+    {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "request_id": "batch-20261117T000000Z",
+      "symbol": "SOLUSDT",
+      "window_start": "2026-11-17T00:00:00+00:00"
+    },
+    {
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "request_id": "batch-20261117T000000Z",
+      "symbol": "XRPUSDT",
+      "window_start": "2026-11-17T00:00:00+00:00"
+    }
+  ]
+}

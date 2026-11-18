@@ -1,0 +1,58 @@
+{
+  "id": "W2-A-SCHEDULE",
+  "timestamp": "2026-11-18T15:51:05.668719Z",
+  "commit": "afa8617",
+  "owner": "dhea",
+  "command": "python scripts/w2a_schedule_evidence.py",
+  "result": "PASS",
+  "api_url": "http://localhost:4200/api",
+  "health": true,
+  "work_pool": {
+    "name": "local-process",
+    "type": "process",
+    "concurrency_limit": 1,
+    "status": "WorkPoolStatus.NOT_READY"
+  },
+  "deployments": [
+    {
+      "name": "infer-volatility",
+      "id": "ec3b3677-c5f2-44f7-a010-5d44de56e331",
+      "entrypoint": "src/bmip/flows/ml.py:infer_volatility_flow",
+      "work_pool": "local-process",
+      "work_queue": "default",
+      "global_concurrency_limit": 1,
+      "schedules": [
+        {
+          "cron": "5 * * * *",
+          "timezone": "UTC",
+          "active": true
+        }
+      ],
+      "run_count": 4,
+      "completed_runs": 1,
+      "failed_runs": 0,
+      "latest_completed": "cdad783d-9416-402c-9905-c82adcff7d43",
+      "latest_failed": null
+    },
+    {
+      "name": "train-volatility",
+      "id": "f2e12d19-b2ad-409a-a90a-acaa4e5d8dc5",
+      "entrypoint": "src/bmip/flows/ml.py:train_volatility_flow",
+      "work_pool": "local-process",
+      "work_queue": "default",
+      "global_concurrency_limit": 1,
+      "schedules": [
+        {
+          "cron": "0 2 * * 0",
+          "timezone": "UTC",
+          "active": false
+        }
+      ],
+      "run_count": 0,
+      "completed_runs": 0,
+      "failed_runs": 0,
+      "latest_completed": null,
+      "latest_failed": null
+    }
+  ]
+}

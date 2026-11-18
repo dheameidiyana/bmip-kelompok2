@@ -18,7 +18,9 @@
 - Drift report: generated; drift detected on seven features
 - Registry tags, model-card artifact, and feature-importance artifact: PASS
 - Hourly inference deployment: PASS (`infer-volatility`, cron `5 * * * *`,
-  active); one completed backdated replay run
+  active); one completed backdated replay run. Schedule evidence was captured
+  with no long-running worker, so the work pool is `NOT_READY` at capture even
+  though the deployment and schedule checks pass.
 - Weekly retraining deployment: present (`train-volatility`, cron `0 2 * * 0`)
   but deliberately inactive for the demo
 - Stale API rows are persisted as `status=error`; 15 existing stale `ok` rows
@@ -130,8 +132,9 @@ multi-symbol settings and secrets.
 ## Evidence
 
 - `evidence/ml/backfill_20261118T040656Z.json`
-- `evidence/ml/dataset_20261118T044935Z.json`
-- `evidence/ml/train_20261118T044935Z.json`
+- `evidence/ml/dataset_20261118T143530Z.json`
+- `evidence/ml/train_20261118T143530Z.json`
+- `evidence/ml/feature_importance_20261118T143530Z.json`
 - `evidence/experiments/E1_vs_E2.md`
 - `evidence/experiments/baselines.md`
 - `evidence/experiments/baselines_20261118T092655Z.json`
@@ -142,9 +145,11 @@ multi-symbol settings and secrets.
 - `evidence/ml/T21.json`
 - `evidence/ml/T36.json`
 - `evidence/ml/predictions_20261118T093616Z.json`
+- `evidence/ml/predictions_health_20261118T154754Z.json`
+- `evidence/deploy/prefect_w2a_20261118T155105_afa8617.json`
 - `evidence/ml/drift_20261118T092731Z.json`
-- `evidence/ml/registry-metadata_20261118T110808Z.json`
-- `evidence/tests/w2a_closeout_20261118Z.txt`
+- `evidence/ml/registry-metadata_20261118T154807Z.json`
+- `evidence/tests/w2a_complete_20261118T155136Z.txt`
 - `evidence/ml/archive/20261118T0930Z/`: pre-closeout T-21/T-36 copies
 
 ## Drift and limitations
