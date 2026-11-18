@@ -117,4 +117,4 @@ model, champion `volatility_model` version 2.
 | T-36 | ml | `ml/T36.json` | PASS | 422 malformed; 200 error out-of-range; 5 symbol `ok` v2 |
 | MODEL | ml | `ml/model-card.md` | PASS | intended use, metrics, limitations, ethical note |
 | BATCH | ml | `ml/predictions_20261118T054850Z.json` | PASS | 5 predictions written to `serving.predictions` |
-| DRIFT | ml | `ml/drift_20261118T071754Z.json` | PASS | training vs 7 recent labelled days; 4 volatility features flagged |
+| DRIFT | ml | `ml/drift_20261118T072404Z.json` | PASS | training vs 7 recent labelled days; 4 volatility features flagged |

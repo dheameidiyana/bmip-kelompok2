@@ -98,7 +98,7 @@ multi-symbol settings and secrets.
 - `evidence/ml/T21.json`
 - `evidence/ml/T36.json`
 - `evidence/ml/predictions_20261118T054850Z.json`
-- `evidence/ml/drift_20261118T071754Z.json`
+- `evidence/ml/drift_20261118T072404Z.json`
 
 ## Drift and limitations
 

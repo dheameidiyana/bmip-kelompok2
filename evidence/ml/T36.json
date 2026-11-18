@@ -64,11 +64,11 @@
     }
   ],
   "command": "python scripts/w2a_evidence.py",
-  "commit": "9972693",
+  "commit": "4384822",
   "id": "T-36",
   "notes": "The W1-D no-champion case was a W1-D placeholder. This final run replaces it with valid five-symbol payloads, malformed input, and an out-of-range feature while champion v2 is registered.",
   "owner": "dhea",
   "result": "PASS",
   "scope": "W2-A final: champion volatility_model v2",
-  "timestamp": "2026-11-18T07:17:43Z"
+  "timestamp": "2026-11-18T07:23:53Z"
 }
