@@ -1,0 +1,91 @@
+{
+  "commit": "6fbcf98",
+  "grafana": {
+    "dashboard": "BMIP \u00b7 Pipeline",
+    "panels": [
+      "Freshness (seconds)",
+      "Consumer lag",
+      "Batch duration",
+      "DQ failures (last run)",
+      "Gold rows",
+      "Scrape targets up"
+    ],
+    "uid": "bmip-pipeline"
+  },
+  "id": "CP1-W2B",
+  "logs": {
+    "error": {
+      "detail": "Symbol must be one of ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']; got 'NOTREAL'.",
+      "provoked": true,
+      "request_id": "req-w2b-20261119t1815",
+      "slug": "https://bmip.local/problems/unknown-symbol",
+      "status": 400
+    },
+    "fields_present": [
+      "message",
+      "request_id",
+      "service",
+      "severity",
+      "timestamp"
+    ],
+    "lines": 40,
+    "sample": "evidence\\logs\\sample_20261119T1815_6fbcf98.jsonl"
+  },
+  "metrics": {
+    "bmip_batch_duration_seconds": 2,
+    "bmip_consumer_lag": 1,
+    "bmip_dq_failures_total": 2,
+    "bmip_duplicate_total": 1,
+    "bmip_freshness_seconds": 4,
+    "bmip_gold_rows": 0,
+    "bmip_ingest_events_total": 1,
+    "bmip_predictions_total": 0,
+    "bmip_quarantine_total": 1
+  },
+  "owner": "vio",
+  "result": "PASS",
+  "run": "20261119T1815",
+  "targets": {
+    "active": 6,
+    "detail": [
+      {
+        "health": "up",
+        "instance": "http://api:8000/metrics",
+        "job": "api",
+        "lastScrape": "2026-11-19T18:15:08.723955617Z"
+      },
+      {
+        "health": "up",
+        "instance": "http://cadvisor:8080/metrics",
+        "job": "cadvisor",
+        "lastScrape": "2026-11-19T18:15:20.136297056Z"
+      },
+      {
+        "health": "up",
+        "instance": "http://postgres-exporter:9187/metrics",
+        "job": "postgres",
+        "lastScrape": "2026-11-19T18:15:14.983241415Z"
+      },
+      {
+        "health": "up",
+        "instance": "http://localhost:9090/metrics",
+        "job": "prometheus",
+        "lastScrape": "2026-11-19T18:15:18.667575937Z"
+      },
+      {
+        "health": "up",
+        "instance": "http://pushgateway:9091/metrics",
+        "job": "pushgateway",
+        "lastScrape": "2026-11-19T18:15:19.601182411Z"
+      },
+      {
+        "health": "up",
+        "instance": "http://host.docker.internal:9101/metrics",
+        "job": "stream",
+        "lastScrape": "2026-11-19T18:15:13.009978675Z"
+      }
+    ],
+    "up": 6
+  },
+  "timestamp": "2026-11-19T18:15:23Z"
+}

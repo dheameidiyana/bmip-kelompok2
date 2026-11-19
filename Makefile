@@ -14,7 +14,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check
 
 help:
 	@echo "BMIP targets:"
@@ -58,6 +58,12 @@ help:
 	@echo "  e2e-m1       M1 gate: bronze -> silver -> gold -> serving -> API -> dashboard"
 	@echo "  reconcile    T-37 draft: API vs serving SQL vs Iceberg"
 	@echo "  openapi      Write contracts/openapi.json from the running API"
+	@echo "  obs-up       Start Prometheus, Alertmanager, Grafana, exporters (W2-B)"
+	@echo "  obs-down     Stop the observability services"
+	@echo "  metrics-check  Check scrape targets and the nine pipeline metrics"
+	@echo "  evidence-w2b CP1/CP2 evidence: targets, dashboards, rules, log sample"
+	@echo "  drill-w2b    T-39: three alert classes fire -> deliver -> resolve"
+	@echo "  reconcile-w2b  T-37 final: dashboard vs API vs SQL for 24h and 7d"
 
 $(PYTHON):
 	$(PYTHON_BOOT) -m venv .venv
@@ -216,3 +222,23 @@ restore:
 	@exit 1
 
 evidence: doctor
+
+OBS_SERVICES := prometheus alertmanager pushgateway postgres-exporter cadvisor notify grafana
+
+obs-up:
+	$(COMPOSE_DEV) up -d $(OBS_SERVICES)
+
+obs-down:
+	$(COMPOSE_DEV) stop $(OBS_SERVICES)
+
+metrics-check: $(PYTHON)
+	$(PYTHON) scripts/w2b_metrics_check.py
+
+evidence-w2b: $(PYTHON)
+	$(PYTHON) scripts/w2b_evidence.py --steps cp1,cp2
+
+drill-w2b: $(PYTHON)
+	$(PYTHON) scripts/w2b_evidence.py --steps drill
+
+reconcile-w2b: $(PYTHON)
+	$(PYTHON) scripts/w2b_evidence.py --steps reconcile

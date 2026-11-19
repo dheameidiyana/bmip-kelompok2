@@ -1,0 +1,23 @@
+# Alertmanager routes every alert to the BMIP notifier, which writes the
+# payload to evidence/alerts/ and forwards it to Telegram when a token exists.
+# Keeping the Telegram call in one small service means the drill still produces
+# evidence on a machine without a bot token (workplan W2-B risk table).
+route:
+  receiver: bmip-notify
+  group_by: ["alertname", "alert_class"]
+  group_wait: 5s
+  group_interval: 15s
+  repeat_interval: 1h
+
+receivers:
+  - name: bmip-notify
+    webhook_configs:
+      - url: http://notify:8080/alert
+        send_resolved: true
+        max_alerts: 0
+
+inhibit_rules:
+  # One down target is enough; do not repeat every derived alert from it.
+  - source_matchers: ['alertname="BmipTargetDown"']
+    target_matchers: ['alert_class="service"']
+    equal: ["job"]

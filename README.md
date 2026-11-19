@@ -36,6 +36,14 @@ waktu, panel kualitas). `POST /v1/predict` menjawab `status: not_available`
 selama belum ada champion; training adalah W2-A. Status, keputusan, operasi,
 dan bukti ada di [docs/w1-d.md](docs/w1-d.md).
 
+W2-B berjalan di branch `slot/w2-b-vio` (base `slot/w2-a-dhea`): Prometheus
+dengan enam target, Pushgateway untuk job batch, sembilan metrik pipeline,
+log JSON enam field, dua dashboard Grafana sebagai kode, 16 alert rule dalam
+tiga kelas, routing Alertmanager → notifier → Telegram/berkas, tiga runbook,
+drill T-39, dan rekonsiliasi T-37 untuk 24 jam dan 7 hari. Detail serah terima
+ada di [docs/handoff/w2-b.md](docs/handoff/w2-b.md) dan keputusan teknisnya di
+[docs/adr/0003-w2-b-observability.md](docs/adr/0003-w2-b-observability.md).
+
 ## Stack
 
 - Sumber: Binance WebSocket (stream) + Bluesky AT Protocol (batch per jam)
@@ -54,6 +62,8 @@ dan bukti ada di [docs/w1-d.md](docs/w1-d.md).
 ```text
 contracts/        JSON Schema kontrak data
 deploy/           compose, env, policy MinIO, init PostgreSQL, Traefik
+  observability/  Prometheus, Alertmanager, rule, provisioning Grafana
+  notify/         penerima webhook Alertmanager -> Telegram/berkas
 dbt/              dbt project (silver + gold)
 src/bmip/         kode aplikasi
   common/         config, logging, kontrak, ledger

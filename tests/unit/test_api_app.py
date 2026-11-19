@@ -447,6 +447,8 @@ def test_metrics_expose_the_counters(harness):
     assert "bmip_api_requests_total" in text
     assert "bmip_api_fallback_total" in text
     assert "bmip_api_request_duration_seconds_count" in text
+    assert "bmip_api_uptime_seconds" in text
+    assert "bmip_api_info" in text
 
 
 def test_aliases_stay_in_openapi(harness):

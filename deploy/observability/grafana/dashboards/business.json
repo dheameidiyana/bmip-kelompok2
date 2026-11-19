@@ -1,0 +1,86 @@
+{
+  "uid": "bmip-business",
+  "title": "BMIP · Business",
+  "tags": ["bmip", "w2-b", "business"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": { "from": "now-30d", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Harga close (1 jam)",
+      "description": "serving.market_hourly, the same table the API falls back to.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "serving" },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 6 } },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT window_start AS \"time\", close\nFROM serving.market_hourly\nWHERE $__timeFilter(window_start) AND symbol = 'BTCUSDT'\nORDER BY window_start"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Volatilitas terealisasi (1 jam)",
+      "description": "realized_vol_1h and the 24-hour EWMA from serving.volatility.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "serving" },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 6 } },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT window_start AS \"time\", realized_vol_1h AS \"realized\", rv_ewma_24h AS \"ewma_24h\"\nFROM serving.volatility\nWHERE $__timeFilter(window_start) AND symbol = 'BTCUSDT'\nORDER BY window_start"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Sentimen per jam",
+      "description": "Empty hours are explicit: post_count = 0, shares null.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "postgres", "uid": "serving" },
+      "fieldConfig": {
+        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 10 } },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT window_start AS \"time\", mean_sentiment AS \"mean\", positive_share AS \"positive\", negative_share AS \"negative\"\nFROM serving.sentiment_hourly\nWHERE $__timeFilter(window_start)\nORDER BY window_start"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "Prediksi terbaru",
+      "description": "One row per symbol and hour from serving.predictions.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "postgres", "uid": "serving" },
+      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "rawSql": "SELECT symbol, window_start, model_version, predicted_rv_next_1h, status\nFROM serving.predictions\nWHERE $__timeFilter(window_start)\nORDER BY window_start DESC\nLIMIT 20"
+        }
+      ]
+    }
+  ]
+}

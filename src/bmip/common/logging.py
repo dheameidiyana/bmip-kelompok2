@@ -1,4 +1,13 @@
-"""Structured JSON logging shared by all BMIP services."""
+"""Structured JSON logging shared by all BMIP services (W2-B).
+
+Every line carries the six fields the workplan asks for:
+
+``timestamp``, ``severity``, ``service``, ``run_id``, ``request_id``, ``message``
+
+``run_id`` and ``request_id`` are only emitted when the caller knows them; a
+missing value is omitted rather than printed as ``null`` so a grep for
+``"request_id"`` only returns lines that actually have one.
+"""
 
 from __future__ import annotations
 
@@ -9,15 +18,23 @@ import sys
 from datetime import UTC, datetime
 from typing import Any
 
+_state: dict[str, str] = {
+    "service": os.getenv("BMIP_SERVICE", "bmip"),
+    "run_id": os.getenv("BMIP_RUN_ID", ""),
+}
+
 
 class JsonFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, Any] = {
-            "ts": datetime.now(UTC).isoformat(timespec="milliseconds"),
-            "level": record.levelname,
+            "timestamp": datetime.now(UTC).isoformat(timespec="milliseconds"),
+            "severity": record.levelname,
+            "service": _state["service"],
             "logger": record.name,
             "message": record.getMessage(),
         }
+        if _state["run_id"]:
+            payload["run_id"] = _state["run_id"]
         if record.exc_info:
             payload["exception"] = self.formatException(record.exc_info)
         for key, value in record.__dict__.items():
@@ -26,13 +43,23 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(payload, default=str, ensure_ascii=False)
 
 
-def configure_logging(level: str | None = None) -> None:
+def configure_logging(level: str | None = None, service: str | None = None) -> None:
+    if service:
+        _state["service"] = service
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(JsonFormatter())
     root = logging.getLogger()
     root.handlers.clear()
     root.addHandler(handler)
     root.setLevel((level or os.getenv("BMIP_LOG_LEVEL", "INFO")).upper())
+
+
+def set_service(service: str) -> None:
+    _state["service"] = service
+
+
+def set_run_id(run_id: str) -> None:
+    _state["run_id"] = run_id
 
 
 def get_logger(name: str) -> logging.Logger:

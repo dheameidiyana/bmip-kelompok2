@@ -1,0 +1,13 @@
+id        : CP1-W2B
+timestamp : 2026-11-19T18:15:23Z
+commit    : 6fbcf98
+command   : python scripts/w2b_evidence.py --steps cp1
+result    : PASS
+owner     : vio
+run       : 20261119T1815
+
+targets up      : 6/6
+grafana panel   : Freshness (seconds), Consumer lag, Batch duration, DQ failures (last run), Gold rows, Scrape targets up
+log sample      : evidence\logs\sample_20261119T1815_6fbcf98.jsonl (40 lines)
+log fields      : message, request_id, service, severity, timestamp
+provoked error  : {'provoked': True, 'status': 400, 'request_id': 'req-w2b-20261119t1815', 'slug': 'https://bmip.local/problems/unknown-symbol', 'detail': "Symbol must be one of ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']; got 'NOTREAL'."}

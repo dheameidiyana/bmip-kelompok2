@@ -52,7 +52,7 @@ Read-only query layer for the Bitcoin Market Intelligence Platform.
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or get_settings()
-    configure_logging(settings.log_level)
+    configure_logging(settings.log_level, service="api")
 
     app = FastAPI(
         title="BMIP Query API",

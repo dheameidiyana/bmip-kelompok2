@@ -1,0 +1,32 @@
+{
+  "business_dashboard": {
+    "panels": [
+      "Harga close (1 jam)",
+      "Volatilitas terealisasi (1 jam)",
+      "Sentimen per jam",
+      "Prediksi terbaru"
+    ],
+    "uid": "bmip-business"
+  },
+  "commit": "6fbcf98",
+  "id": "CP2-W2B",
+  "owner": "vio",
+  "result": "PASS",
+  "rules": {
+    "classes": {
+      "job-failure": 4,
+      "service": 7,
+      "stream-lag": 5
+    },
+    "file": "evidence\\alerts\\rules_20261119T1814_6fbcf98.yml",
+    "loaded": 16,
+    "missing": []
+  },
+  "run": "20261119T1814",
+  "runbooks": [
+    "docs\\runbooks\\alert-job-failure.md",
+    "docs\\runbooks\\alert-service-resource.md",
+    "docs\\runbooks\\alert-stream-freshness.md"
+  ],
+  "timestamp": "2026-11-19T18:15:00Z"
+}

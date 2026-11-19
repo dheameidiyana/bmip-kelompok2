@@ -1,0 +1,270 @@
+# 16 alert rules, three classes: job failure, stream lag/freshness, service.
+# Every rule carries severity, owner, channel, class, and a runbook link, which
+# is what the workplan asks for and what the notifier puts in the message.
+groups:
+  - name: job-failure
+    rules:
+      - alert: BmipBatchJobStale
+        expr: time() - bmip_last_success_timestamp_seconds > 7200
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+        annotations:
+          summary: "Batch job {{ $labels.job }} has not succeeded in 2 hours"
+          description: >-
+            The Pushgateway still holds the last successful run for
+            {{ $labels.job }}. Check the Prefect run and the job log before
+            re-running.
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-job-failure.md
+
+      - alert: BmipDqCriticalFailures
+        expr: bmip_dq_failures_total{severity="critical"} > 0
+        for: 1m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+        annotations:
+          summary: "Data-quality gate reported {{ $value }} critical failure(s)"
+          description: >-
+            A critical rule failed, so gold was not published. Open
+            evidence/dq/dq_report.json and fix the rule that fired.
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-job-failure.md
+
+      - alert: BmipGoldRowsMissing
+        expr: bmip_gold_rows == 0
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+        annotations:
+          summary: "Gold mart {{ $labels.table }} is empty"
+          description: >-
+            The last publish wrote zero rows to {{ $labels.table }}. Check the
+            dbt run and the gate result for that table.
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-job-failure.md
+
+      - alert: BmipPredictionsFailed
+        expr: bmip_predictions_total{status="error"} > 0
+        for: 5m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+        annotations:
+          summary: "Inference wrote {{ $value }} error row(s)"
+          description: >-
+            serving.predictions contains error rows, usually a stale feature
+            row. Check feature_ts in the batch output.
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-job-failure.md
+
+  - name: stream-lag-freshness
+    rules:
+      - alert: BmipConsumerLagHigh
+        expr: bmip_consumer_lag > 1000
+        for: 2m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Consumer lag is {{ $value }} messages"
+          description: >-
+            The processor is falling behind market.trades. Check throughput and
+            the group offset before restarting anything.
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipStreamIdle
+        expr: (up{job="stream"} == 1) and (rate(bmip_ingest_events_total[10m]) == 0)
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Stream processor is up but receiving no events"
+          description: >-
+            The metrics endpoint answers, but no trade arrived in ten minutes.
+            Check the Binance feed and the Redpanda topic.
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipSilverFreshnessBreach
+        expr: bmip_freshness_seconds{job="stream"} > 5400
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Silver market is {{ $value }}s behind its event time"
+          description: >-
+            The stream SLO is 90 minutes. Compare the newest silver bar with
+            the newest event in market.trades.
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipGoldFreshnessBreach
+        expr: bmip_freshness_seconds{layer="gold"} > 5400
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Gold is {{ $value }}s behind silver"
+          description: >-
+            The gold gate allows 90 minutes of lag behind silver. Check the
+            last transform-gold run and the publish step.
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipSilverBarAgeHigh
+        expr: bmip_silver_bar_age_seconds > 3600
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Newest silver bar is {{ $value }}s old"
+          description: >-
+            More than an hour without a new minute bar usually means the
+            consumer stopped committing offsets.
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-stream-freshness.md
+
+  - name: service-resource
+    rules:
+      - alert: BmipApiDown
+        expr: up{job="api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Query API is not being scraped"
+          description: >-
+            The API target is down. Check `docker compose ps api` and the
+            container log for the last error.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipStreamDown
+        expr: up{job="stream"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Stream processor metrics endpoint is down"
+          description: >-
+            Expected while the processor is stopped between runs. If a replay
+            should be running, start it with `make stream`.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipTargetDown
+        expr: up{job!="stream"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Scrape target {{ $labels.job }} is down"
+          description: >-
+            One of the infrastructure targets stopped answering. Check the
+            container and its port before touching the pipeline.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipApiErrorRate
+        expr: >-
+          sum(rate(bmip_api_errors_total[5m]))
+          / clamp_min(sum(rate(bmip_api_requests_total[5m])), 0.001) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "API error rate is above 5%"
+          description: >-
+            More than one request in twenty raised an unhandled error. Search
+            the API log for severity=ERROR and the request_id.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipApiLatencyHigh
+        expr: >-
+          sum(rate(bmip_api_request_duration_seconds_sum[5m]))
+          / clamp_min(sum(rate(bmip_api_request_duration_seconds_count[5m])), 0.001) > 1
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Average API latency is above 1s"
+          description: >-
+            The lake path is probably falling back to PostgreSQL too often.
+            Check bmip_api_fallback_total and MinIO health.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipContainerCpuHigh
+        expr: sum by (name) (rate(container_cpu_usage_seconds_total{name=~".+"}[5m])) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Container {{ $labels.name }} is using more than 0.8 CPU"
+          description: >-
+            Sustained CPU above the dev budget. Compare with the compose
+            `cpus:` limit before raising it.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipContainerMemoryHigh
+        expr: container_memory_working_set_bytes{name=~".+"} > 800000000
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Container {{ $labels.name }} is using more than 800 MB"
+          description: >-
+            Memory pressure on the dev profile. Check the container limit and
+            the last restart count.
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-service-resource.md

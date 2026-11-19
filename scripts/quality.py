@@ -4,6 +4,9 @@
 A critical failure exits non-zero and blocks gold promotion. ``--warning-only``
 keeps the run alive but records the override in the report so the deviation is
 visible instead of silent (workplan W1-C risk table).
+
+W2-B also pushes the failure counts to the Pushgateway so the dashboard and the
+alert rules can see a gate that just failed.
 """
 
 from __future__ import annotations
@@ -32,14 +35,7 @@ def _commit() -> str:
         return "nogit"
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="BMIP data-quality checkpoint")
-    parser.add_argument("--scope", choices=("silver", "gold", "all"), default="all")
-    parser.add_argument("--output", default="evidence/dq/dq_report.json")
-    parser.add_argument("--warning-only", action="store_true")
-    parser.add_argument("--owner", default="vio")
-    args = parser.parse_args(argv)
-
+def _run(args: argparse.Namespace, registry):
     from bmip.common.config import get_settings
     from bmip.quality.checkpoint import run_scope
 
@@ -56,6 +52,41 @@ def main(argv: list[str] | None = None) -> int:
     if not output.is_absolute():
         output = ROOT / output
     report.write(output)
+
+    warnings = sum(len(suite.warning_failures) for suite in report.suites)
+    registry.set(
+        "bmip_dq_failures_total",
+        len(report.critical_failures),
+        {"severity": "critical", "scope": args.scope},
+        help="Critical rule failures in the last checkpoint.",
+        kind="counter",
+    )
+    registry.set(
+        "bmip_dq_failures_total",
+        warnings,
+        {"severity": "warning", "scope": args.scope},
+        help="Warning rule failures in the last checkpoint.",
+        kind="counter",
+    )
+    return report, output
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="BMIP data-quality checkpoint")
+    parser.add_argument("--scope", choices=("silver", "gold", "all"), default="all")
+    parser.add_argument("--output", default="evidence/dq/dq_report.json")
+    parser.add_argument("--warning-only", action="store_true")
+    parser.add_argument("--owner", default="vio")
+    args = parser.parse_args(argv)
+
+    from bmip.observability import batch_run
+
+    try:
+        with batch_run("quality") as registry:
+            report, output = _run(args, registry)
+    except Exception as exc:  # noqa: BLE001 - the CLI turns every failure into exit 1
+        print(f"quality run failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
 
     blocked = bool(report.critical_failures) and not args.warning_only
     for suite_name, rule in report.critical_failures:
