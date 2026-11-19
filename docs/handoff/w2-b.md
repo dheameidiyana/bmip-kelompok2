@@ -178,3 +178,7 @@ dan `scripts/w2b_metrics_check.py`; tidak ada yang ditulis tangan.
   restart `notify`; tidak ada perubahan kode.
 - **Stream target on-demand.** Processor hanya hidup saat `make stream`
   dijalankan; `BmipStreamDown` memang warning.
+
+Catatan tambahan: `BmipStreamIdle` juga menyala sendiri pada 18:51 ketika replay
+selesai dan topic kosong (tercatat di `deliveries.jsonl`). Itu bukan bagian
+drill, jadi aturan keempat terbukti tanpa disuntik.
