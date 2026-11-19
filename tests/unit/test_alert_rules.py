@@ -61,8 +61,12 @@ def test_alertmanager_routes_to_the_notifier() -> None:
 
 
 def test_two_dashboards_are_provisioned() -> None:
-    pipeline = json.loads((OBS / "grafana" / "dashboards" / "pipeline.json").read_text())
-    business = json.loads((OBS / "grafana" / "dashboards" / "business.json").read_text())
+    pipeline = json.loads(
+        (OBS / "grafana" / "dashboards" / "pipeline.json").read_text(encoding="utf-8")
+    )
+    business = json.loads(
+        (OBS / "grafana" / "dashboards" / "business.json").read_text(encoding="utf-8")
+    )
 
     assert pipeline["uid"] == "bmip-pipeline"
     assert business["uid"] == "bmip-business"

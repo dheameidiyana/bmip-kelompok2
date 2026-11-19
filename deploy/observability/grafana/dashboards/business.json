@@ -1,22 +1,43 @@
 {
   "uid": "bmip-business",
-  "title": "BMIP · Business",
-  "tags": ["bmip", "w2-b", "business"],
+  "title": "BMIP - Business",
+  "tags": [
+    "bmip",
+    "w2-b",
+    "business"
+  ],
   "timezone": "utc",
   "schemaVersion": 39,
   "version": 1,
   "refresh": "1m",
-  "time": { "from": "now-30d", "to": "now" },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
   "panels": [
     {
       "id": 1,
       "type": "timeseries",
       "title": "Harga close (1 jam)",
       "description": "serving.market_hourly, the same table the API falls back to.",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
-      "datasource": { "type": "postgres", "uid": "serving" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 6 } },
+        "defaults": {
+          "unit": "none",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 6
+          }
+        },
         "overrides": []
       },
       "targets": [
@@ -32,10 +53,24 @@
       "type": "timeseries",
       "title": "Volatilitas terealisasi (1 jam)",
       "description": "realized_vol_1h and the 24-hour EWMA from serving.volatility.",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
-      "datasource": { "type": "postgres", "uid": "serving" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 6 } },
+        "defaults": {
+          "unit": "none",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 6
+          }
+        },
         "overrides": []
       },
       "targets": [
@@ -51,10 +86,24 @@
       "type": "timeseries",
       "title": "Sentimen per jam",
       "description": "Empty hours are explicit: post_count = 0, shares null.",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
-      "datasource": { "type": "postgres", "uid": "serving" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 10 } },
+        "defaults": {
+          "unit": "none",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
+        },
         "overrides": []
       },
       "targets": [
@@ -70,10 +119,25 @@
       "type": "table",
       "title": "Prediksi terbaru",
       "description": "One row per symbol and hour from serving.predictions.",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
-      "datasource": { "type": "postgres", "uid": "serving" },
-      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
-      "options": { "showHeader": true },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true
+      },
       "targets": [
         {
           "refId": "A",
