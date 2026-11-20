@@ -1,6 +1,6 @@
 {
   "command": "MINIO_SVC_PROCESS_SECRET_KEY= python -m bmip.transform.cli stream --once --no-metrics",
-  "commit": "c8577e1",
+  "commit": "c9ef99a",
   "diagnosis": "The sink cannot be built because the MinIO secret for svc-process is empty. The processor fails before it touches the broker, which is why the stack is unaffected. In production this is the 'missing secret' failure: fix .env, not the code.",
   "error_lines": 1,
   "failing_frame": "File \"C:\\Users\\HP\\Documents\\KULIAH\\SEMESTER 5\\DESAIN APLIKASI BIG DATA\\PROJECT\\bmip-kelompok2\\src\\bmip\\common\\config.py\", line 30, in _env",
@@ -9,8 +9,8 @@
   "message": "stream processor failed",
   "owner": "vio",
   "result": "PASS",
-  "run": "20261120T0205",
-  "run_id": "stream-err-20261120T0205",
-  "sample": "evidence\\logs\\error_20261120T0205_c8577e1.jsonl",
-  "timestamp": "2026-11-20T02:05:46Z"
+  "run": "20261120T0324",
+  "run_id": "stream-err-20261120T0324",
+  "sample": "evidence\\logs\\error_20261120T0324_c9ef99a.jsonl",
+  "timestamp": "2026-11-20T03:24:32Z"
 }

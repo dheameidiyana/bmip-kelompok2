@@ -64,7 +64,9 @@ Setiap sampel batch membawa label `run_id` (dari `BMIP_RUN_ID` atau
 `bmip.common.logging` menulis `timestamp`, `severity`, `service`, `logger`,
 `message`, plus `run_id` dan setiap atribut `ctx_*` sebagai nama tanpa prefix —
 `ctx_request_id` menjadi `request_id`. API memakai `run_id="api-<started>"`,
-stream memakai `stream-<started>` atau `BMIP_RUN_ID`.
+stream memakai `stream-<started>` atau `BMIP_RUN_ID`. Dashboard dan notifier
+juga memanggil `configure_logging` dengan service masing-masing, jadi keempat
+komponen menulis format yang sama.
 
 ### Grafana sebagai kode
 
@@ -85,6 +87,8 @@ stream memakai `stream-<started>` atau `BMIP_RUN_ID`.
   bila `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID` diisi.
 - Tiga runbook: `docs/runbooks/alert-job-failure.md`,
   `alert-stream-freshness.md`, `alert-service-resource.md`.
+- `runbook_url` menunjuk ke tag `w2-b-ok`, bukan `dev`, supaya tautannya hidup
+  sekarang dan tetap hidup setelah PR merge.
 
 ## Cara menjalankan
 
@@ -165,21 +169,22 @@ TELEGRAM_CHAT_ID=123456789
 
 | ID | File | Isi |
 | :-- | :-- | :-- |
-| CP1 | `evidence/observability/CP1_20261120T0152_c8577e1.json` | 6/6 target, 6 field log, 40 baris |
-| CP2 | `evidence/alerts/CP2_20261120T0152_c8577e1.json` | 16 rule, 3 kelas, 3 runbook |
-| CP2 | `evidence/alerts/rules_20261120T0152_c8577e1.yml` | salinan rule yang ter-load |
-| T-39 | `evidence/alerts/T39_20261120T0158_c8577e1.md` | timeline fire → deliver → resolve |
+| CP1 | `evidence/observability/CP1_20261120T0323_c9ef99a.json` | 6/6 target, 6 field log, 40 baris |
+| CP2 | `evidence/alerts/CP2_20261120T0323_c9ef99a.json` | 16 rule, 3 kelas, 3 runbook |
+| CP2 | `evidence/alerts/rules_20261120T0323_c9ef99a.yml` | salinan rule yang ter-load |
+| T-39 | `evidence/alerts/T39_20261120T0304_e5369f6.md` | timeline fire → deliver → resolve |
 | T-39 | `evidence/alerts/deliveries.jsonl` | delivery mentah, `run_id` terisi |
 | T-39 | `evidence/alerts/TELEGRAM_20261120T0249_3a87740.json` | bukti Telegram HTTP 200 (firing + resolved) |
-| T-37 | `evidence/dashboard/reconciliation_20261120T0205_c8577e1.json` | API vs SQL vs Iceberg |
-| LOG | `evidence/logs/sample_20261120T0152_c8577e1.jsonl` | log JSON API |
-| LOG | `evidence/logs/error_20261120T0205_c8577e1.jsonl` | satu baris ERROR |
-| LOG | `evidence/logs/diagnosis_error_20261120T0205_c8577e1.json` | diagnosis error |
-| DASH | `evidence/dashboards/grafana-pipeline_20261120T0155_c8577e1.png` | dashboard pipeline |
-| DASH | `evidence/dashboards/grafana-business_20261120T0155_c8577e1.png` | dashboard business |
-| E2E | `evidence/e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | gate integrasi |
+| T-37 | `evidence/dashboard/reconciliation_20261120T0324_c9ef99a.json` | API vs SQL vs Iceberg |
+| LOG | `evidence/logs/sample_20261120T0323_c9ef99a.jsonl` | log JSON API |
+| LOG | `evidence/logs/error_20261120T0324_c9ef99a.jsonl` | satu baris ERROR |
+| LOG | `evidence/logs/diagnosis_error_20261120T0324_c9ef99a.json` | diagnosis error |
+| DASH | `evidence/dashboards/grafana-pipeline_20261120T0324_c9ef99a.png` | dashboard pipeline |
+| DASH | `evidence/dashboards/grafana-business_20261120T0324_c9ef99a.png` | dashboard business |
+| E2E | `evidence/e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | gate integrasi W1-A |
+| M1 | `evidence/e2e/M1_20261120T0323.txt` | bronze -> silver -> gold -> serving -> API -> dashboard |
 | DQ | `evidence/dq/dq_report.json` | checkpoint 7 suite |
-| SUM | `evidence/w2b/SUMMARY_20261120T0205_c8577e1.json` | ringkasan run |
+| SUM | `evidence/w2b/SUMMARY_20261120T0324_c9ef99a.json` | ringkasan run |
 
 Semua file dihasilkan oleh `scripts/w2b_evidence.py`, `scripts/quality.py`,
 `scripts/e2e_smoke.py`, dan `scripts/w2b_metrics_check.py`; tidak ada yang

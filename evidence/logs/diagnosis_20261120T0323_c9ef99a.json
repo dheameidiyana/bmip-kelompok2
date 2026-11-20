@@ -1,9 +1,9 @@
 {
-  "commit": "c8577e1",
+  "commit": "c9ef99a",
   "error": {
     "detail": "Symbol must be one of ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']; got 'NOTREAL'.",
     "provoked": true,
-    "request_id": "req-w2b-20261120t0152",
+    "request_id": "req-w2b-20261120t0323",
     "slug": "https://bmip.local/problems/unknown-symbol",
     "status": 400
   },
@@ -17,7 +17,7 @@
   ],
   "id": "W2B-LOG",
   "lines": 40,
-  "run": "20261120T0152",
-  "sample": "evidence\\logs\\sample_20261120T0152_c8577e1.jsonl",
-  "timestamp": "2026-11-20T01:52:28Z"
+  "run": "20261120T0323",
+  "sample": "evidence\\logs\\sample_20261120T0323_c9ef99a.jsonl",
+  "timestamp": "2026-11-20T03:23:34Z"
 }

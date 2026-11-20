@@ -1,13 +1,13 @@
 id        : CP2-W2B
-timestamp : 2026-11-20T01:52:28Z
-commit    : c8577e1
+timestamp : 2026-11-20T03:23:35Z
+commit    : c9ef99a
 command   : python scripts/w2b_evidence.py --steps cp2
 result    : PASS
 owner     : vio
-run       : 20261120T0152
+run       : 20261120T0323
 
 rules loaded    : 16
 classes         : {"job-failure": 4, "service": 7, "stream-lag": 5}
 missing labels  : 0
 runbooks        : 3
-business panels : Harga close (1 jam), Volatilitas terealisasi (1 jam), Sentimen per jam, Prediksi terbaru
+business panels : , Harga close (1 jam), Volatilitas terealisasi (1 jam), Sentimen per jam, Prediksi terbaru

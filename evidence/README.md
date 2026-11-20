@@ -136,22 +136,23 @@ lama `w2-a-ok` tetap di `eec3186`.
 Environment: branch `slot/w2-b-vio`, base `slot/w2-a-dhea` (`6fbcf98`),
 Windows 11 / Docker Compose dev, Python 3.11.9, Prometheus v2.55.1,
 Alertmanager v0.27.0, Grafana 11.3.0, cAdvisor v0.49.1. Evidence 2026-11-20;
-kode yang diuji: `c8577e1` (tag `w2-b-ok`).
+kode yang diuji: `c9ef99a` (tag `w2-b-ok`).
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |
-| CP1 | observability | `observability/CP1_20261120T0152_c8577e1.json` | PASS | 6/6 target; 40 baris log; 6 field kontrak |
-| CP2 | alerts | `alerts/CP2_20261120T0152_c8577e1.json` | PASS | 16 rule, 3 kelas, 3 runbook, 5 panel business |
-| CP2 | alerts | `alerts/rules_20261120T0152_c8577e1.yml` | PASS | salinan rule yang ter-load Prometheus |
-| T-39 | alerts | `alerts/T39_20261120T0158_c8577e1.md` | PASS | 3 kelas fire -> deliver -> resolve |
+| CP1 | observability | `observability/CP1_20261120T0323_c9ef99a.json` | PASS | 6/6 target; 40 baris log; 6 field kontrak |
+| CP2 | alerts | `alerts/CP2_20261120T0323_c9ef99a.json` | PASS | 16 rule, 3 kelas, 3 runbook, 5 panel business |
+| CP2 | alerts | `alerts/rules_20261120T0323_c9ef99a.yml` | PASS | salinan rule yang ter-load Prometheus |
+| T-39 | alerts | `alerts/T39_20261120T0304_e5369f6.md` | PASS | 3 kelas fire -> deliver -> resolve |
 | T-39 | alerts | `alerts/deliveries.jsonl` | PASS | `run_id=drill-...` ikut di pesan firing dan resolved |
 | T-39 | alerts | `alerts/TELEGRAM_20261120T0249_3a87740.json` | PASS | Telegram `ok: true`, HTTP 200 untuk firing dan resolved |
-| T-37 | dashboard | `dashboard/reconciliation_20261120T0205_c8577e1.json` | PASS | API vs SQL vs Iceberg, 24 jam dan 7 hari, 0 selisih |
-| LOG | logs | `logs/sample_20261120T0152_c8577e1.jsonl` | PASS | `run_id`, `request_id`, `service`, `severity` |
-| LOG | logs | `logs/error_20261120T0205_c8577e1.jsonl` | PASS | satu baris `severity=ERROR` dengan traceback |
-| LOG | logs | `logs/diagnosis_error_20261120T0205_c8577e1.json` | PASS | frame gagal dan baris exception terakhir |
-| DASH | dashboards | `dashboards/grafana-pipeline_20261120T0155_c8577e1.png` | PASS | URL dan range tertulis di panel; 6 target hijau |
-| DASH | dashboards | `dashboards/grafana-business_20261120T0155_c8577e1.png` | PASS | harga, volatilitas, sentimen berisi; prediksi kosong |
+| T-37 | dashboard | `dashboard/reconciliation_20261120T0324_c9ef99a.json` | PASS | API vs SQL vs Iceberg, 24 jam dan 7 hari, 0 selisih |
+| LOG | logs | `logs/sample_20261120T0323_c9ef99a.jsonl` | PASS | `run_id`, `request_id`, `service`, `severity` |
+| LOG | logs | `logs/error_20261120T0324_c9ef99a.jsonl` | PASS | satu baris `severity=ERROR` dengan traceback |
+| LOG | logs | `logs/diagnosis_error_20261120T0324_c9ef99a.json` | PASS | frame gagal dan baris exception terakhir |
+| DASH | dashboards | `dashboards/grafana-pipeline_20261120T0324_c9ef99a.png` | PASS | URL dan range tertulis di panel; 6 target hijau |
+| DASH | dashboards | `dashboards/grafana-business_20261120T0324_c9ef99a.png` | PASS | harga, volatilitas, sentimen berisi; prediksi kosong |
 | E2E | e2e | `e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | PASS | health, replay, bronze, ledger, idempotensi |
+| M1 | e2e | `e2e/M1_20261120T0323.txt` | PASS | bronze -> silver -> gold -> serving -> API -> dashboard |
 | DQ | dq | `dq/dq_report.json` | PASS | 7 suite, 0 critical, 0 warning |
-| SUM | w2b | `w2b/SUMMARY_20261120T0205_c8577e1.json` | PASS | ringkasan run terakhir |
+| SUM | w2b | `w2b/SUMMARY_20261120T0324_c9ef99a.json` | PASS | ringkasan run terakhir |
