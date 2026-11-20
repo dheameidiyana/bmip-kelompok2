@@ -34,6 +34,17 @@ def _now() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+def _log(message: str, *, severity: str = "INFO", **fields: Any) -> None:
+    payload = {
+        "timestamp": _now(),
+        "severity": severity,
+        "service": "notify",
+        "message": message,
+    }
+    payload.update(fields)
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True), flush=True)
+
+
 def _append(name: str, payload: dict[str, Any]) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     line = json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n"
@@ -86,8 +97,10 @@ def handle_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
         "alerts.jsonl",
         {"received_at": _now(), "status": status, "payload": payload},
     )
+    alerts = payload.get("alerts") or []
+    _log("alert payload received", status=status, alerts=len(alerts))
     results: list[dict[str, Any]] = []
-    for alert in payload.get("alerts") or []:
+    for alert in alerts:
         text = format_message(alert, status)
         result = send_telegram(text)
         record = {
@@ -99,6 +112,15 @@ def handle_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
             "telegram": result,
         }
         _append("deliveries.jsonl", record)
+        _log(
+            "alert delivered",
+            severity="INFO" if result.get("ok") else "WARNING",
+            alert=record["alert"],
+            status=record["status"],
+            run_id=record["run_id"],
+            telegram_ok=bool(result.get("ok")),
+            telegram_skipped=bool(result.get("skipped")),
+        )
         results.append(record)
     return results
 
@@ -162,7 +184,7 @@ def main() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     server.daemon_threads = True
-    print(json.dumps({"service": "notify", "port": port, "data": str(DATA_DIR)}))
+    _log("notify started", port=port, data=str(DATA_DIR))
     server.serve_forever()
 
 

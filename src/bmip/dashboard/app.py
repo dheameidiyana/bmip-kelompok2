@@ -16,11 +16,25 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
+from bmip.common.logging import configure_logging, get_logger
 from bmip.common.symbols import DEFAULT_MARKET_SYMBOLS
 from bmip.dashboard import theme
 from bmip.dashboard.client import ApiClient, ApiError
 
 load_dotenv()
+
+
+@st.cache_resource
+def _logging() -> bool:
+    """Configure JSON logging once per Streamlit server process."""
+    configure_logging(service="dashboard")
+    get_logger("bmip.dashboard").info(
+        "dashboard started", extra={"ctx_target": os.getenv("BMIP_API_BASE_URL", "")}
+    )
+    return True
+
+
+_logging()
 
 
 def dashboard_symbols() -> tuple[str, ...]:
