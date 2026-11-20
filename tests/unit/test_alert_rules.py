@@ -74,3 +74,10 @@ def test_two_dashboards_are_provisioned() -> None:
     assert len(business["panels"]) == 4
     titles = {panel["title"] for panel in business["panels"]}
     assert {"Harga close (1 jam)", "Volatilitas terealisasi (1 jam)"} <= titles
+
+
+def test_batch_rules_carry_the_run_id_template() -> None:
+    batch = [r for r in _rules() if r["labels"]["alert_class"] == "job-failure"]
+    assert len(batch) == 4
+    for rule in batch:
+        assert rule["labels"]["run_id"] == "{{ $labels.run_id }}"

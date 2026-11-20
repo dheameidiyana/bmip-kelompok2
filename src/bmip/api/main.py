@@ -32,7 +32,7 @@ from bmip.api.routers import (
     sentiment,
 )
 from bmip.common.config import Settings, get_settings
-from bmip.common.logging import configure_logging, get_logger
+from bmip.common.logging import configure_logging, get_logger, set_run_id
 from bmip.serving.repository import ServingNotReady
 
 log = get_logger("bmip.api")
@@ -62,6 +62,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/openapi.json",
     )
     started = time.time()
+    set_run_id(f"api-{int(started)}")
     app.state.settings = settings
     app.state.instance = os.getenv("BMIP_INSTANCE", socket.gethostname())
     app.state.version = VERSION

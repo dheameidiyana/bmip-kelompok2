@@ -235,7 +235,7 @@ metrics-check: $(PYTHON)
 	$(PYTHON) scripts/w2b_metrics_check.py
 
 evidence-w2b: $(PYTHON)
-	$(PYTHON) scripts/w2b_evidence.py --steps cp1,cp2
+	$(PYTHON) scripts/w2b_evidence.py --steps cp1,cp2,logerror
 
 drill-w2b: $(PYTHON)
 	$(PYTHON) scripts/w2b_evidence.py --steps drill

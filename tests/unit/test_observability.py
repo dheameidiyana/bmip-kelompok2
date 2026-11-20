@@ -101,3 +101,27 @@ def test_batch_run_marks_failures(monkeypatch) -> None:
     assert registry.get(
         "bmip_batch_duration_seconds", {"job": "gold", "status": "failed"}
     ) >= 0
+
+
+def test_registry_applies_default_labels() -> None:
+    registry = Registry("gold", {"run_id": "gold-1"})
+    registry.set("bmip_gold_rows", 3, {"table": "mart_market"})
+
+    rendered = registry.render()
+
+    assert 'run_id="gold-1"' in rendered
+    assert 'table="mart_market"' in rendered
+
+
+def test_batch_run_labels_every_sample_with_run_id(monkeypatch) -> None:
+    monkeypatch.delenv("PUSHGATEWAY_URL", raising=False)
+    monkeypatch.delenv("BMIP_RUN_ID", raising=False)
+
+    with batch_run("gold") as registry:
+        registry.set("bmip_gold_rows", 1, {"table": "mart_market"})
+
+    sample = next(
+        item for item in registry.samples() if item.name == "bmip_gold_rows"
+    )
+    assert sample.labels["run_id"].startswith("gold-")
+    assert sample.labels["table"] == "mart_market"

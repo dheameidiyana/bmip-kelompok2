@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import time
 from datetime import datetime
 
 from bmip.common.config import Settings, get_settings
-from bmip.common.logging import configure_logging, get_logger
+from bmip.common.logging import configure_logging, get_logger, set_run_id
 from bmip.transform.metrics import MetricsServer, build_stream_metrics
 from bmip.transform.stream import MarketStreamProcessor, group_lag, replay_range
 
@@ -121,7 +123,10 @@ def _replay(args: argparse.Namespace, settings: Settings) -> int:
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    configure_logging()
+    configure_logging(service="stream")
+    set_run_id(
+        os.getenv("BMIP_RUN_ID") or f"stream-{int(time.time())}"
+    )
     args = build_parser().parse_args(argv)
     try:
         settings = get_settings()

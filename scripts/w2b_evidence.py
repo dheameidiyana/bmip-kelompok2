@@ -225,7 +225,14 @@ def cp1(run: str, commit: str) -> dict[str, Any]:
 
     logs = log_sample(run, commit)
 
-    passed = bool(len(up) >= 4 and pipeline and panels and logs["lines"] > 0)
+    fields = set(logs["fields_present"])
+    passed = bool(
+        len(up) >= 4
+        and pipeline
+        and panels
+        and logs["lines"] > 0
+        and {"run_id", "request_id", "service"} <= fields
+    )
     payload = {
         "id": "CP1-W2B",
         "timestamp": iso(),
@@ -632,11 +639,85 @@ def drill(run: str, commit: str) -> dict[str, Any]:
     return payload
 
 
+# --------------------------------------------------------------- error log
+def logerror(run: str, commit: str) -> dict[str, Any]:
+    """Capture one real ERROR line by letting the stream processor fail.
+
+    The W1-B writer still reads Iceberg through the catalog-vended IO, which is
+    unreachable from the host, so a replay fails on the first batch. That is a
+    genuine failure and exactly the kind of line an operator must diagnose.
+    """
+    env = dict(os.environ)
+    env["BMIP_RUN_ID"] = f"stream-err-{run}"
+    env["BMIP_SERVICE"] = "stream"
+    command = [
+        sys.executable,
+        "-m",
+        "bmip.transform.cli",
+        "stream",
+        "--once",
+        "--group",
+        "ohlcv-w2b-error",
+        "--idle-timeout",
+        "15",
+    ]
+    completed = subprocess.run(
+        command, cwd=ROOT, capture_output=True, text=True, env=env, timeout=300
+    )
+    raw_lines = [
+        line.strip()
+        for line in (completed.stdout + "\n" + completed.stderr).splitlines()
+        if line.strip().startswith("{")
+    ]
+    errors: list[dict[str, Any]] = []
+    for line in raw_lines:
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if payload.get("severity") == "ERROR":
+            errors.append(payload)
+
+    path = EVIDENCE / "logs" / f"error_{run}_{commit}.jsonl"
+    write_text(path, "\n".join(json.dumps(item, ensure_ascii=False) for item in errors) + "\n")
+
+    exception = (errors[0].get("exception") or "") if errors else ""
+    failing = ""
+    for line in exception.splitlines():
+        if line.strip().startswith('File "') and "bmip" in line:
+            failing = line.strip()
+    diagnosis = {
+        "id": "W2B-ERROR",
+        "timestamp": iso(),
+        "commit": commit,
+        "command": "python -m bmip.transform.cli stream --once --group ohlcv-w2b-error",
+        "result": "PASS" if errors else "FAIL",
+        "owner": OWNER,
+        "run": run,
+        "sample": str(path.relative_to(ROOT)),
+        "error_lines": len(errors),
+        "run_id": errors[0].get("run_id") if errors else None,
+        "message": errors[0].get("message") if errors else None,
+        "failing_frame": failing,
+        "last_exception_line": exception.strip().splitlines()[-1] if exception else None,
+        "diagnosis": (
+            "The stream processor fails while reading the silver Iceberg table "
+            "through the catalog-vended IO (internal minio endpoint/signer). "
+            "The fix is the host file IO used by transform.iceberg; W1-B's "
+            "silver writer still needs the same treatment (W2-D)."
+        ),
+    }
+    write_json(EVIDENCE / "logs" / f"diagnosis_error_{run}_{commit}.json", diagnosis)
+    return diagnosis
+
+
 # -------------------------------------------------------------------- main
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="W2-B evidence generator")
     parser.add_argument(
-        "--steps", default="cp1,cp2", help="comma list: cp1, cp2, reconcile, drill"
+        "--steps",
+        default="cp1,cp2",
+        help="comma list: cp1, cp2, reconcile, drill, logerror",
     )
     args = parser.parse_args(argv)
     run = stamp()
@@ -653,6 +734,8 @@ def main(argv: list[str] | None = None) -> int:
             results["reconcile"] = reconcile(run, commit)
         elif step == "drill":
             results["drill"] = drill(run, commit)
+        elif step == "logerror":
+            results["logerror"] = logerror(run, commit)
         else:
             print(f"unknown step: {step}", file=sys.stderr)
             return 2

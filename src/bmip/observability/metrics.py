@@ -19,7 +19,10 @@ import urllib.request
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from typing import Any
+
+from bmip.common.logging import set_run_id
 
 CONTENT_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 
@@ -36,9 +39,17 @@ class Sample:
 class Registry:
     """Collects samples for one process or one batch run."""
 
-    def __init__(self, service: str = "bmip") -> None:
+    def __init__(
+        self, service: str = "bmip", default_labels: dict[str, str] | None = None
+    ) -> None:
         self.service = service
+        self.default_labels = dict(default_labels or {})
         self._samples: dict[tuple[str, tuple[tuple[str, str], ...]], Sample] = {}
+
+    def _merge(self, labels: dict[str, str] | None) -> dict[str, str]:
+        merged = dict(self.default_labels)
+        merged.update(labels or {})
+        return merged
 
     def set(
         self,
@@ -49,11 +60,12 @@ class Registry:
         help: str = "",
         kind: str = "gauge",
     ) -> None:
-        key = (name, tuple(sorted((labels or {}).items())))
+        merged = self._merge(labels)
+        key = (name, tuple(sorted(merged.items())))
         self._samples[key] = Sample(
             name=name,
             value=float(value),
-            labels=dict(labels or {}),
+            labels=merged,
             help=help or name,
             kind=kind,
         )
@@ -67,13 +79,15 @@ class Registry:
         help: str = "",
         kind: str = "counter",
     ) -> None:
-        key = (name, tuple(sorted((labels or {}).items())))
+        merged = self._merge(labels)
+        key = (name, tuple(sorted(merged.items())))
         existing = self._samples.get(key)
         current = existing.value if existing else 0.0
-        self.set(name, current + value, labels, help=help, kind=kind)
+        self.set(name, current + value, merged, help=help, kind=kind)
 
     def get(self, name: str, labels: dict[str, str] | None = None) -> float:
-        key = (name, tuple(sorted((labels or {}).items())))
+        merged = self._merge(labels)
+        key = (name, tuple(sorted(merged.items())))
         sample = self._samples.get(key)
         return sample.value if sample else 0.0
 
@@ -157,14 +171,25 @@ def batch_run(
     *,
     gateway: str | None = None,
     instance: str | None = None,
+    run_id: str | None = None,
 ) -> Iterator[Registry]:
     """Time one batch run, record success/failure, and push on the way out.
+
+    Every sample carries ``run_id`` so an alert can quote the run that caused
+    it. The id comes from ``BMIP_RUN_ID`` when a scheduler set one, otherwise
+    it is generated from the job name and UTC minute.
 
     ``bmip_last_success_timestamp_seconds`` is only refreshed on success; that
     is what the job-failure alert reads, so a failing job goes stale instead of
     quietly reporting a fresh timestamp.
     """
-    registry = Registry(job)
+    identifier = (
+        run_id
+        or os.getenv("BMIP_RUN_ID")
+        or f"{job}-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
+    )
+    set_run_id(identifier)
+    registry = Registry(job, {"run_id": identifier})
     started = time.perf_counter()
     status = "ok"
     try:
