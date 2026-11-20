@@ -1,0 +1,31 @@
+{
+  "command": "pushgateway inject -> Alertmanager -> notify -> Telegram",
+  "commit": "965c4bf",
+  "firing": {
+    "alert": "BmipDqCriticalFailures",
+    "message": "[AKTIF] Gate kualitas data menemukan 1 kegagalan critical (kritis)\nkelas: job-failure | pemilik: vio | run_id: test-notif-20261120T205533\nDetail: Satu atau lebih aturan critical gagal, sehingga gold tidak dipublish.\nDampak: Gold dan serving tidak menerima data baru sampai aturan yang gagal diperbaiki.\nLangkah pertama: Buka evidence/dq/dq_report.json dan cari nama suite serta rule yang gagal.\nKode: BmipDqCriticalFailures\nrunbook: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-job-failure.md",
+    "received_at": "2026-11-20T20:57:03+00:00",
+    "run_id": "test-notif-20261120T205533",
+    "status": "firing",
+    "telegram": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "id": "T-39-NOTIF-FORMAT",
+  "owner": "vio",
+  "resolved": {
+    "alert": "BmipDqCriticalFailures",
+    "message": "[SELESAI] Gate kualitas data menemukan 1 kegagalan critical (kritis)\nkelas: job-failure | pemilik: vio | run_id: test-notif-20261120T205533\nDetail: Satu atau lebih aturan critical gagal, sehingga gold tidak dipublish.\nDampak: Gold dan serving tidak menerima data baru sampai aturan yang gagal diperbaiki.\nLangkah pertama: Buka evidence/dq/dq_report.json dan cari nama suite serta rule yang gagal.\nKode: BmipDqCriticalFailures\nrunbook: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-job-failure.md",
+    "received_at": "2026-11-20T20:57:33+00:00",
+    "run_id": "test-notif-20261120T205533",
+    "status": "resolved",
+    "telegram": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "result": "PASS",
+  "run_id": "test-notif-20261120T205533",
+  "timestamp": "2026-11-20T20:57:34Z"
+}
