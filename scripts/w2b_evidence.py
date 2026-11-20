@@ -641,15 +641,17 @@ def drill(run: str, commit: str) -> dict[str, Any]:
 
 # --------------------------------------------------------------- error log
 def logerror(run: str, commit: str) -> dict[str, Any]:
-    """Capture one real ERROR line by letting the stream processor fail.
+    """Capture one real ERROR line by breaking one required setting.
 
-    The W1-B writer still reads Iceberg through the catalog-vended IO, which is
-    unreachable from the host, so a replay fails on the first batch. That is a
-    genuine failure and exactly the kind of line an operator must diagnose.
+    The stream processor exits through ``log.exception`` when a required
+    credential is missing. That is a genuine failure path, it is deterministic,
+    and it produces the severity=ERROR line with run_id that the workplan asks
+    for. Nothing in the running stack is touched.
     """
     env = dict(os.environ)
     env["BMIP_RUN_ID"] = f"stream-err-{run}"
     env["BMIP_SERVICE"] = "stream"
+    env["MINIO_SVC_PROCESS_SECRET_KEY"] = ""
     command = [
         sys.executable,
         "-m",
@@ -659,10 +661,11 @@ def logerror(run: str, commit: str) -> dict[str, Any]:
         "--group",
         "ohlcv-w2b-error",
         "--idle-timeout",
-        "15",
+        "5",
+        "--no-metrics",
     ]
     completed = subprocess.run(
-        command, cwd=ROOT, capture_output=True, text=True, env=env, timeout=300
+        command, cwd=ROOT, capture_output=True, text=True, env=env, timeout=120
     )
     raw_lines = [
         line.strip()
@@ -679,18 +682,25 @@ def logerror(run: str, commit: str) -> dict[str, Any]:
             errors.append(payload)
 
     path = EVIDENCE / "logs" / f"error_{run}_{commit}.jsonl"
-    write_text(path, "\n".join(json.dumps(item, ensure_ascii=False) for item in errors) + "\n")
+    write_text(
+        path,
+        "\n".join(json.dumps(item, ensure_ascii=False) for item in errors) + "\n",
+    )
 
     exception = (errors[0].get("exception") or "") if errors else ""
     failing = ""
     for line in exception.splitlines():
         if line.strip().startswith('File "') and "bmip" in line:
             failing = line.strip()
+    last = exception.strip().splitlines()[-1] if exception else None
     diagnosis = {
         "id": "W2B-ERROR",
         "timestamp": iso(),
         "commit": commit,
-        "command": "python -m bmip.transform.cli stream --once --group ohlcv-w2b-error",
+        "command": (
+            "MINIO_SVC_PROCESS_SECRET_KEY= "
+            "python -m bmip.transform.cli stream --once --no-metrics"
+        ),
         "result": "PASS" if errors else "FAIL",
         "owner": OWNER,
         "run": run,
@@ -699,12 +709,12 @@ def logerror(run: str, commit: str) -> dict[str, Any]:
         "run_id": errors[0].get("run_id") if errors else None,
         "message": errors[0].get("message") if errors else None,
         "failing_frame": failing,
-        "last_exception_line": exception.strip().splitlines()[-1] if exception else None,
+        "last_exception_line": last,
         "diagnosis": (
-            "The stream processor fails while reading the silver Iceberg table "
-            "through the catalog-vended IO (internal minio endpoint/signer). "
-            "The fix is the host file IO used by transform.iceberg; W1-B's "
-            "silver writer still needs the same treatment (W2-D)."
+            "The sink cannot be built because the MinIO secret for svc-process "
+            "is empty. The processor fails before it touches the broker, which "
+            "is why the stack is unaffected. In production this is the "
+            "'missing secret' failure: fix .env, not the code."
         ),
     }
     write_json(EVIDENCE / "logs" / f"diagnosis_error_{run}_{commit}.json", diagnosis)

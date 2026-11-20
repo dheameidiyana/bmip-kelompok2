@@ -1,0 +1,16 @@
+{
+  "command": "MINIO_SVC_PROCESS_SECRET_KEY= python -m bmip.transform.cli stream --once --no-metrics",
+  "commit": "72f7403",
+  "diagnosis": "The sink cannot be built because the MinIO secret for svc-process is empty. The processor fails before it touches the broker, which is why the stack is unaffected. In production this is the 'missing secret' failure: fix .env, not the code.",
+  "error_lines": 1,
+  "failing_frame": "File \"C:\\Users\\HP\\Documents\\KULIAH\\SEMESTER 5\\DESAIN APLIKASI BIG DATA\\PROJECT\\bmip-kelompok2\\src\\bmip\\common\\config.py\", line 30, in _env",
+  "id": "W2B-ERROR",
+  "last_exception_line": "RuntimeError: missing required environment variable: MINIO_SVC_PROCESS_SECRET_KEY",
+  "message": "stream processor failed",
+  "owner": "vio",
+  "result": "PASS",
+  "run": "20261120T0125",
+  "run_id": "stream-err-20261120T0125",
+  "sample": "evidence\\logs\\error_20261120T0125_72f7403.jsonl",
+  "timestamp": "2026-11-20T01:25:43Z"
+}
