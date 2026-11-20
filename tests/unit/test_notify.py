@@ -26,7 +26,10 @@ def _alert(status: str = "firing") -> dict:
             "run_id": "run-20261119T1200",
         },
         "annotations": {
-            "summary": "Consumer lag is 5000 messages",
+            "summary": "Consumer lag 5000 pesan",
+            "description": "Processor tertinggal lebih dari 1000 pesan.",
+            "impact": "Silver dan gold akan terlambat.",
+            "first_step": "Cek lag per partisi.",
             "runbook": "docs/runbooks/alert-stream-freshness.md",
             "runbook_url": "https://example.invalid/runbook",
         },
@@ -36,9 +39,13 @@ def _alert(status: str = "firing") -> dict:
 def test_message_has_status_class_run_id_and_runbook() -> None:
     text = notify.format_message(_alert(), "firing")
 
-    assert text.startswith("[FIRING] BmipConsumerLagHigh (warning)")
-    assert "class: stream-lag" in text
+    assert text.startswith("[AKTIF] Consumer lag 5000 pesan (peringatan)")
+    assert "kelas: stream-lag" in text
+    assert "pemilik: vio" in text
     assert "run_id: run-20261119T1200" in text
+    assert "Dampak: Silver dan gold akan terlambat." in text
+    assert "Langkah pertama: Cek lag per partisi." in text
+    assert "Kode: BmipConsumerLagHigh" in text
     assert "runbook: https://example.invalid/runbook" in text
 
 
@@ -71,3 +78,15 @@ def test_payload_is_written_and_delivery_recorded(tmp_path, monkeypatch) -> None
         if line.strip()
     ]
     assert deliveries[0]["run_id"] == "run-20261119T1200"
+
+
+def test_resolved_service_alert_uses_indonesian_and_na_run_id() -> None:
+    alert = _alert("resolved")
+    alert["labels"]["alert_class"] = "service"
+    alert["labels"].pop("run_id")
+    alert["annotations"]["summary"] = "Query API tidak bisa di-scrape"
+
+    text = notify.format_message(alert, "resolved")
+
+    assert text.startswith("[SELESAI] Query API tidak bisa di-scrape (peringatan)")
+    assert "run_id: n/a (alert service)" in text

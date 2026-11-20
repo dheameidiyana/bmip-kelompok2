@@ -53,22 +53,47 @@ def _append(name: str, payload: dict[str, Any]) -> None:
             handle.write(line)
 
 
+STATUS_ID = {"firing": "AKTIF", "resolved": "SELESAI"}
+SEVERITY_ID = {"critical": "kritis", "warning": "peringatan"}
+
+
 def format_message(alert: dict[str, Any], group_status: str) -> str:
+    """Render one alert for Telegram.
+
+    The message answers five questions in order: what is wrong, how bad, who
+    owns it, what it impacts, and what to do first. The rule name stays as a
+    traceability line at the bottom.
+    """
     labels = alert.get("labels") or {}
     annotations = alert.get("annotations") or {}
-    status = (alert.get("status") or group_status or "firing").upper()
+    raw_status = str(alert.get("status") or group_status or "firing").lower()
+    status = STATUS_ID.get(raw_status, raw_status.upper())
+    raw_severity = str(labels.get("severity") or "").lower()
+    severity = SEVERITY_ID.get(raw_severity, raw_severity or "-")
     name = labels.get("alertname", "unknown")
-    severity = labels.get("severity", "unknown")
-    run_id = labels.get("run_id") or annotations.get("run_id") or "-"
+    run_id = labels.get("run_id") or annotations.get("run_id") or "n/a (alert service)"
     runbook = annotations.get("runbook_url") or annotations.get("runbook") or "-"
-    summary = annotations.get("summary") or ""
-    return (
-        f"[{status}] {name} ({severity})\n"
-        f"class: {labels.get('alert_class', '-')} | owner: {labels.get('owner', '-')}\n"
-        f"run_id: {run_id}\n"
-        f"{summary}\n"
-        f"runbook: {runbook}"
-    )
+    summary = annotations.get("summary") or name
+    detail = annotations.get("description")
+    impact = annotations.get("impact")
+    first_step = annotations.get("first_step")
+
+    lines = [
+        f"[{status}] {summary} ({severity})",
+        (
+            f"kelas: {labels.get('alert_class', '-')} | "
+            f"pemilik: {labels.get('owner', '-')} | run_id: {run_id}"
+        ),
+    ]
+    if detail:
+        lines.append(f"Detail: {detail}")
+    if impact:
+        lines.append(f"Dampak: {impact}")
+    if first_step:
+        lines.append(f"Langkah pertama: {first_step}")
+    lines.append(f"Kode: {name}")
+    lines.append(f"runbook: {runbook}")
+    return "\n".join(lines)
 
 
 def send_telegram(text: str) -> dict[str, Any]:

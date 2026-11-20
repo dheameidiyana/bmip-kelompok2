@@ -88,6 +88,10 @@ menyimpan 8 baris JSON (`service=dashboard`, termasuk `dashboard started`).
   bila `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID` diisi.
 - Tiga runbook: `docs/runbooks/alert-job-failure.md`,
   `alert-stream-freshness.md`, `alert-service-resource.md`.
+- Pesan Telegram berbahasa Indonesia dan memuat: ringkasan, kelas/pemilik/
+  `run_id`, detail, dampak, langkah pertama, kode rule, dan link runbook.
+- `BmipTargetDown` mengecualikan `api` dan `stream`, jadi satu gangguan
+  hanya menghasilkan satu pesan.
 - `runbook_url` menunjuk ke tag `w2-b-ok`, bukan `dev`, supaya tautannya hidup
   sekarang dan tetap hidup setelah PR merge.
 
@@ -122,6 +126,17 @@ URL:
 | Alertmanager | http://localhost:9093 |
 | Pushgateway | http://localhost:9091 |
 | Notifier | http://localhost:8081/healthz, `/deliveries` |
+
+Setelah mengubah rule atau notifier:
+
+```powershell
+docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml build notify
+docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml up -d --force-recreate notify
+curl -X POST http://localhost:9090/-/reload
+```
+
+Rule dibaca dari file yang di-mount, jadi cukup reload Prometheus; notifier
+perlu image baru karena kodenya ikut di dalam image.
 
 Untuk Telegram, isi dua variabel di `.env` lalu jalankan ulang container
 `notify`; tidak ada perubahan kode:

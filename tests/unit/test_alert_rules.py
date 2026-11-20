@@ -37,6 +37,9 @@ def test_every_rule_carries_owner_channel_severity_and_runbook() -> None:
         assert rule["for"], rule["alert"]
         assert rule["annotations"]["runbook_url"].startswith("https://"), rule["alert"]
         assert rule["annotations"]["runbook"].startswith("docs/runbooks/"), rule["alert"]
+        assert rule["annotations"]["impact"], rule["alert"]
+        assert rule["annotations"]["first_step"], rule["alert"]
+        assert rule["annotations"]["summary"], rule["alert"]
 
 
 def test_every_referenced_runbook_exists() -> None:
@@ -85,3 +88,8 @@ def test_batch_rules_carry_the_run_id_template() -> None:
     assert len(batch) == 4
     for rule in batch:
         assert rule["labels"]["run_id"] == "{{ $labels.run_id }}"
+
+
+def test_target_down_excludes_api_and_stream() -> None:
+    rule = next(r for r in _rules() if r["alert"] == "BmipTargetDown")
+    assert 'job!~"stream|api"' in rule["expr"]

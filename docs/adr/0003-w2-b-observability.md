@@ -35,8 +35,15 @@ per alert to Telegram when a token exists, and records the delivery result in
 
 Why: the workplan lists "Telegram bot token is not available" as a risk. With
 the notifier, the drill still produces a verifiable timeline on a machine
-without a token, and the message format (severity, class, owner, `run_id`,
-runbook link) lives in one place instead of being duplicated in YAML templates.
+without a token, and the message format lives in one place instead of being
+duplicated in YAML templates.
+
+The message is written in Indonesian and answers five questions in order:
+what is wrong (summary), how bad (kritis/peringatan), who owns it, what it
+impacts, and what to do first. The rule name appears as a `Kode:` line for
+traceability, and `run_id` is `n/a (alert service)` when the alert is not
+tied to a batch run. `BmipTargetDown` excludes `api` and `stream` so one
+outage produces one message instead of two.
 
 ### 3. Two dashboards, two datasources
 
