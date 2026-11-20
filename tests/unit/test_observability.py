@@ -125,3 +125,19 @@ def test_batch_run_labels_every_sample_with_run_id(monkeypatch) -> None:
     )
     assert sample.labels["run_id"].startswith("gold-")
     assert sample.labels["table"] == "mart_market"
+
+
+def test_last_success_has_no_run_id_label(monkeypatch) -> None:
+    monkeypatch.delenv("PUSHGATEWAY_URL", raising=False)
+    monkeypatch.delenv("BMIP_RUN_ID", raising=False)
+
+    with batch_run("quality") as registry:
+        pass
+
+    sample = next(
+        item
+        for item in registry.samples()
+        if item.name == "bmip_last_success_timestamp_seconds"
+    )
+    assert "run_id" not in sample.labels
+    assert sample.labels["job"] == "quality"

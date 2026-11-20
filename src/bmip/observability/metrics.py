@@ -59,8 +59,9 @@ class Registry:
         *,
         help: str = "",
         kind: str = "gauge",
+        use_defaults: bool = True,
     ) -> None:
-        merged = self._merge(labels)
+        merged = self._merge(labels) if use_defaults else dict(labels or {})
         key = (name, tuple(sorted(merged.items())))
         self._samples[key] = Sample(
             name=name,
@@ -86,10 +87,18 @@ class Registry:
         self.set(name, current + value, merged, help=help, kind=kind)
 
     def get(self, name: str, labels: dict[str, str] | None = None) -> float:
-        merged = self._merge(labels)
-        key = (name, tuple(sorted(merged.items())))
-        sample = self._samples.get(key)
-        return sample.value if sample else 0.0
+        """Return a sample whose labels contain the given pairs.
+
+        The lookup ignores extra labels (such as the batch ``run_id``) so a
+        caller does not have to know which defaults were applied when writing.
+        """
+        wanted = labels or {}
+        for (sample_name, _), sample in self._samples.items():
+            if sample_name != name:
+                continue
+            if all(sample.labels.get(key) == value for key, value in wanted.items()):
+                return sample.value
+        return 0.0
 
     def render(self) -> str:
         return render_samples(self._samples.values())
@@ -212,10 +221,14 @@ def batch_run(
             help="Unix timestamp when the batch run finished.",
         )
         if status == "ok":
+            # A state gauge must keep a stable label set: a per-run run_id
+            # would create a new series every time and the stale-job alert
+            # would keep evaluating the old one.
             registry.set(
                 "bmip_last_success_timestamp_seconds",
                 finished,
                 {"job": job},
                 help="Unix timestamp of the last successful batch run.",
+                use_defaults=False,
             )
         push(registry, job, gateway=gateway, instance=instance)

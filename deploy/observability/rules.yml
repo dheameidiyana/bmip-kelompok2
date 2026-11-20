@@ -5,7 +5,7 @@ groups:
   - name: job-failure
     rules:
       - alert: BmipBatchJobStale
-        expr: time() - bmip_last_success_timestamp_seconds > 7200
+        expr: time() - max by (job) (bmip_last_success_timestamp_seconds) > 7200
         for: 5m
         labels:
           severity: critical

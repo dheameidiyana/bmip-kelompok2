@@ -131,10 +131,17 @@ port proxy occasionally resets an idle keep-alive socket.
 
 ### 12. Batch metrics carry `run_id`, and the alert template forwards it
 
-`batch_run` generates `run_id` (or takes `BMIP_RUN_ID`), attaches it to every
-sample, and sets the same value for the JSON log. The four batch rules add
-`run_id: "{{ $labels.run_id }}"` to their labels, so the notifier prints the run
-that produced the failure instead of a dash.
+`batch_run` generates `run_id` (or takes `BMIP_RUN_ID`), attaches it to the
+samples that describe one run, and sets the same value for the JSON log. The
+four batch rules add `run_id: "{{ $labels.run_id }}"` to their labels, so the
+notifier prints the run that produced the failure instead of a dash.
+
+`bmip_last_success_timestamp_seconds` is the exception: it is a state gauge,
+not a run event. Giving it a per-run label created a new series on every run,
+and the stale-job rule kept evaluating the old one (firing, resolving, then
+firing again for the same job). The gauge now keeps a stable `{job}` label
+set, and the rule reads `time() - max by (job) (...)` so only the newest
+success counts.
 
 Why: the workplan asks the Telegram message to carry `run_id`. A run id that
 lives only in a log file cannot be quoted from a phone.
