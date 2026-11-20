@@ -150,6 +150,7 @@ kode yang diuji: `c9ef99a` (tag `w2-b-ok`).
 | LOG | logs | `logs/sample_20261120T0323_c9ef99a.jsonl` | PASS | `run_id`, `request_id`, `service`, `severity` |
 | LOG | logs | `logs/error_20261120T0324_c9ef99a.jsonl` | PASS | satu baris `severity=ERROR` dengan traceback |
 | LOG | logs | `logs/diagnosis_error_20261120T0324_c9ef99a.json` | PASS | frame gagal dan baris exception terakhir |
+| LOG | logs | `logs/dashboard_20261120T0334_b52ce90.jsonl` | PASS | dashboard JSON log, `service=dashboard` |
 | DASH | dashboards | `dashboards/grafana-pipeline_20261120T0324_c9ef99a.png` | PASS | URL dan range tertulis di panel; 6 target hijau |
 | DASH | dashboards | `dashboards/grafana-business_20261120T0324_c9ef99a.png` | PASS | harga, volatilitas, sentimen berisi; prediksi kosong |
 | E2E | e2e | `e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | PASS | health, replay, bronze, ledger, idempotensi |

@@ -65,8 +65,9 @@ Setiap sampel batch membawa label `run_id` (dari `BMIP_RUN_ID` atau
 `message`, plus `run_id` dan setiap atribut `ctx_*` sebagai nama tanpa prefix —
 `ctx_request_id` menjadi `request_id`. API memakai `run_id="api-<started>"`,
 stream memakai `stream-<started>` atau `BMIP_RUN_ID`. Dashboard dan notifier
-juga memanggil `configure_logging` dengan service masing-masing, jadi keempat
-komponen menulis format yang sama.
+juga memanggil `configure_logging` dengan service masing-masing. Bukti untuk
+dashboard diambil dengan menjalankan skripnya lewat `streamlit.testing` dan
+menyimpan 8 baris JSON (`service=dashboard`, termasuk `dashboard started`).
 
 ### Grafana sebagai kode
 
@@ -179,6 +180,7 @@ TELEGRAM_CHAT_ID=123456789
 | LOG | `evidence/logs/sample_20261120T0323_c9ef99a.jsonl` | log JSON API |
 | LOG | `evidence/logs/error_20261120T0324_c9ef99a.jsonl` | satu baris ERROR |
 | LOG | `evidence/logs/diagnosis_error_20261120T0324_c9ef99a.json` | diagnosis error |
+| LOG | `evidence/logs/dashboard_20261120T0334_b52ce90.jsonl` | dashboard menulis JSON (`service=dashboard`) |
 | DASH | `evidence/dashboards/grafana-pipeline_20261120T0324_c9ef99a.png` | dashboard pipeline |
 | DASH | `evidence/dashboards/grafana-business_20261120T0324_c9ef99a.png` | dashboard business |
 | E2E | `evidence/e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | gate integrasi W1-A |
