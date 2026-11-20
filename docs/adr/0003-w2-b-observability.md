@@ -129,6 +129,27 @@ cached instance, so every read fails with a connection reset. A fresh IO with
 the compose network. Catalog calls are retried twice because Docker Desktop's
 port proxy occasionally resets an idle keep-alive socket.
 
+### 12. Batch metrics carry `run_id`, and the alert template forwards it
+
+`batch_run` generates `run_id` (or takes `BMIP_RUN_ID`), attaches it to every
+sample, and sets the same value for the JSON log. The four batch rules add
+`run_id: "{{ $labels.run_id }}"` to their labels, so the notifier prints the run
+that produced the failure instead of a dash.
+
+Why: the workplan asks the Telegram message to carry `run_id`. A run id that
+lives only in a log file cannot be quoted from a phone.
+
+### 13. Dashboards print their URL and range inside the panel
+
+Each dashboard starts with a text panel containing the dashboard URL, the range
+start, and the scrape interval. Headless screenshots have no address bar and no
+system clock, so the panel is the only way the image itself can prove which
+dashboard and which window it shows.
+
+Why: §3.2 asks a screenshot to show the URL and the time. A caption added
+outside the image would be a hand-written claim; a panel is rendered by Grafana
+from the same provisioning file the stack loads.
+
 ## Consequences
 
 - A batch job that fails leaves a `status="failed"` sample and an old

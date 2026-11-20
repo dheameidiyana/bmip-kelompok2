@@ -16,6 +16,22 @@
   },
   "panels": [
     {
+      "id": 99,
+      "type": "text",
+      "title": "",
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**URL** http://localhost:3000/d/bmip-business  |  **Range start** ${__from:date:iso}  |  **Now** (grafik berakhir di sini)  |  **Scrape** 15s"
+      },
+      "transparent": true
+    },
+    {
       "id": 1,
       "type": "timeseries",
       "title": "Harga close (1 jam)",
@@ -24,7 +40,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 2
       },
       "datasource": {
         "type": "postgres",
@@ -57,7 +73,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 2
       },
       "datasource": {
         "type": "postgres",
@@ -90,7 +106,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 10
       },
       "datasource": {
         "type": "postgres",
@@ -123,7 +139,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 10
       },
       "datasource": {
         "type": "postgres",

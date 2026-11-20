@@ -4,18 +4,19 @@
 - Branch: `slot/w2-b-vio`
 - Base: `slot/w2-a-dhea` (`6fbcf98`), which already contains `dev` (`9972693`)
 - Handoff to: Anin (W2-C)
-- Last update: 2026-11-19
+- Last update: 2026-11-20
 
 ## Status
 
 - CP1: PASS
 - CP2: PASS
 - CP3: PASS
-- Tag: `w2-b-ok` (dibuat setelah commit evidence)
+- Tag: `w2-b-ok`
 
 Gate: enam target ter-scrape, dua dashboard Grafana hidup dengan data nyata,
 16 rule dalam tiga kelas ter-load, tiga kelas alert terbukti fire → deliver →
-resolve, dan T-37 cocok untuk 24 jam dan 7 hari.
+resolve dengan `run_id`, T-37 cocok untuk 24 jam dan 7 hari, dan `e2e-smoke`
+hijau.
 
 ## Angka pada handoff ini
 
@@ -25,9 +26,10 @@ resolve, dan T-37 cocok untuk 24 jam dan 7 hari.
 | Metrik pipeline | 7/9 hadir; `bmip_gold_rows` dan `bmip_predictions_total` belum ada baris |
 | Alert rule | 16 (job 4, stream 5, service 7) |
 | Dashboard | 2 (`pipeline`, `business`) |
-| Drill | 3 alert firing, 3 resolved, 6 delivery |
+| Drill | 3 alert firing, 3 resolved, 6 delivery, `run_id=drill-...` |
 | T-37 | 3 kunci, 0 selisih, 24 jam dan 7 hari |
-| Log sample | 40 baris JSON, 6 field kontrak |
+| Log | 40 baris INFO + 1 baris ERROR, 6 field kontrak |
+| E2E | PASS (`SMOKE-W1A_20261120T0150_ee4c8bf.txt`) |
 
 ## Yang sudah jalan
 
@@ -53,31 +55,30 @@ resolve, dan T-37 cocok untuk 24 jam dan 7 hari.
 | `bmip_dq_failures_total` | `scripts/quality.py` |
 | `bmip_predictions_total` | `scripts/w2a_batch.py` |
 
-Semua push bersifat best-effort: tanpa `PUSHGATEWAY_URL`, job tetap jalan dan
-tidak menulis metrik.
+Setiap sampel batch membawa label `run_id` (dari `BMIP_RUN_ID` atau
+`<job>-<UTC>`), sehingga pesan alert menyebut run yang menyebabkannya.
 
 ### Log JSON enam field
 
-`bmip.common.logging` sekarang menulis `timestamp`, `severity`, `service`,
-`logger`, `message`, plus `run_id` (kalau di-set) dan setiap atribut `ctx_*`
-sebagai nama tanpa prefix — jadi `ctx_request_id` menjadi `request_id`.
-`configure_logging(level, service=...)` dipanggil API dengan `service="api"`.
+`bmip.common.logging` menulis `timestamp`, `severity`, `service`, `logger`,
+`message`, plus `run_id` dan setiap atribut `ctx_*` sebagai nama tanpa prefix —
+`ctx_request_id` menjadi `request_id`. API memakai `run_id="api-<started>"`,
+stream memakai `stream-<started>` atau `BMIP_RUN_ID`.
 
 ### Grafana sebagai kode
 
 - `deploy/observability/grafana/provisioning/` berisi datasource Prometheus
   (uid `prometheus`) dan PostgreSQL (uid `serving`).
-- Dashboard `pipeline` (uid `bmip-pipeline`): freshness, consumer lag, batch
-  duration, DQ failures, gold rows, scrape targets.
-- Dashboard `business` (uid `bmip-business`): harga close, volatilitas
-  terealisasi, sentimen per jam, tabel prediksi — semuanya dari `serving.*`.
+- Dashboard `pipeline` (uid `bmip-pipeline`): URL + rentang waktu, freshness,
+  consumer lag, batch duration, DQ failures, gold rows, scrape targets.
+- Dashboard `business` (uid `bmip-business`): URL + rentang waktu, harga close,
+  volatilitas terealisasi, sentimen per jam, tabel prediksi.
 
 ### Alerting
 
 - 16 rule di `deploy/observability/rules.yml`, tiga kelas: `job-failure` (4),
   `stream-lag` (5), `service` (7).
-- Setiap rule punya `severity`, `owner`, `channel`, `alert_class`, dan
-  `runbook_url`.
+- Empat rule batch membawa label `run_id: "{{ $labels.run_id }}"`.
 - Alertmanager merutekan semuanya ke `notify:8080/alert`; notifier menulis
   `evidence/alerts/alerts.jsonl` + `deliveries.jsonl` dan mengirim ke Telegram
   bila `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID` diisi.
@@ -93,14 +94,17 @@ docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.
 # 2. cek target dan metrik
 python scripts/w2b_metrics_check.py
 
-# 3. CP1/CP2 evidence
-python scripts/w2b_evidence.py --steps cp1,cp2
+# 3. CP1/CP2 + contoh log ERROR
+python scripts/w2b_evidence.py --steps cp1,cp2,logerror
 
-# 4. T-39: tiga kelas alert fire -> deliver -> resolve (butuh api hidup)
+# 4. T-39: tiga kelas alert fire -> deliver -> resolve (butuh cadvisor hidup)
 python scripts/w2b_evidence.py --steps drill
 
 # 5. T-37: dashboard vs API vs SQL, 24 jam dan 7 hari
 python scripts/w2b_evidence.py --steps reconcile
+
+# 6. gate integrasi
+python scripts/e2e_smoke.py
 ```
 
 URL:
@@ -114,7 +118,7 @@ URL:
 | Notifier | http://localhost:8081/healthz, `/deliveries` |
 
 Untuk Telegram, isi dua variabel di `.env` lalu jalankan ulang container
-`notify`; tidak ada perubahan konfigurasi lain:
+`notify`; tidak ada perubahan kode:
 
 ```text
 TELEGRAM_BOT_TOKEN=123456:ABC...
@@ -125,21 +129,37 @@ TELEGRAM_CHAT_ID=123456789
 
 | Gejala | Penyebab | Workaround |
 | :-- | :-- | :-- |
-| Target `stream` DOWN | processor hanya hidup saat `make stream` | jalankan replay; alert `BmipStreamDown` memang warning |
-| cAdvisor gagal start di Windows | mount host tidak lengkap di Docker Desktop | catat sebagai keterbatasan; metrik container tidak lengkap |
-| Grafana tidak bisa menulis | bind mount provisioning read-only | provisioning memang read-only; ubah file lalu restart |
-| Alert tidak sampai ke Telegram | token kosong | notifier tetap menulis `deliveries.jsonl` (`skipped: true`) |
+| Target `stream` DOWN | processor hanya hidup saat `make stream` | jalankan replay; `BmipStreamDown` memang warning |
+| API butuh ~7 menit saat start | entrypoint `bmip.ml.api` mencoba champion MLflow yang tidak hidup | tunggu, atau jalankan overlay `compose.ml.yml` |
+| `build_gold` gagal di dbt | DuckDB crash `0xC0000409` saat membaca Iceberg di mesin ini | metrik gold tidak terisi; lihat gap |
+| Dashboard business kosong | rentang waktu default di luar window replay | pakai `now-30d` (sudah jadi default) |
+| Alert tidak sampai ke Telegram | `TELEGRAM_CHAT_ID` kosong | notifier menulis `deliveries.jsonl` (`skipped: true`) |
 | `BmipTargetDown` untuk stream | sengaja dikecualikan (`job!="stream"`) | gunakan `BmipStreamDown` |
+
+## Gap yang harus dibaca W2-C
+
+- **Telegram belum terkirim.** Token sudah ada di `.env`, chat id belum, jadi
+  notifier masih mode berkas (`skipped: true`). Kirim satu pesan ke bot,
+  ambil chat id dari `getUpdates`, isi `TELEGRAM_CHAT_ID`, restart `notify`.
+- **`bmip_gold_rows` belum punya baris.** `build_gold.py` gagal di langkah dbt
+  pada mesin ini (DuckDB crash `0xC0000409` saat membaca Iceberg), jadi publish
+  tidak selesai. Metrik dan panelnya sudah terpasang.
+- **`bmip_predictions_total` belum ada baris.** Container MLflow (W2-A) crash
+  di child process, jadi `scripts/w2a_batch.py` tidak bisa jalan.
+- **Panel dan alert model drift (Should) belum ada.** W2-A menaruh drift di
+  berkas JSON dan menunda `serving.drift_metrics`; tidak ada metrik Prometheus
+  yang bisa dipakai tanpa mengubah skrip W2-A.
+- **PR + review** dilakukan Lois di akhir rantai (kesepakatan tim).
 
 ## Langkah berikutnya untuk Anin (W2-C)
 
 1. Baca `docs/adr/0003-w2-b-observability.md` sebelum mengubah rule atau
    datasource.
 2. Jangan mengubah nama metrik: dashboard dan 16 rule memakai nama itu.
-3. Kalau menambah target scrape, tambahkan juga alert untuk target itu dan
-   perbarui `tests/unit/test_alert_rules.py`.
+3. Kalau menambah target scrape, tambahkan alert-nya dan perbarui
+   `tests/unit/test_alert_rules.py`.
 4. `T-37` memakai `serving.market_hourly` sebagai kaki "dashboard"; kalau
-   skema serving berubah, perbarui `scripts/w2b_evidence.py` sekaligus.
+   skema serving berubah, perbarui `scripts/w2b_evidence.py`.
 5. Setelah W2-C selesai, Lois (W2-D) yang membuat PR ke `dev`. Jangan rebase
    `slot/w2-b-vio` setelah Anin menariknya.
 
@@ -147,38 +167,21 @@ TELEGRAM_CHAT_ID=123456789
 
 | ID | File | Isi |
 | :-- | :-- | :-- |
-| CP1 | `evidence/observability/CP1_20261119T1815_6fbcf98.json` | 6/6 target, 6 panel, log sample |
-| CP2 | `evidence/alerts/CP2_20261119T1814_6fbcf98.json` | 16 rule, 3 kelas, 3 runbook |
-| CP2 | `evidence/alerts/rules_20261119T1814_6fbcf98.yml` | salinan rule yang ter-load |
-| T-39 | `evidence/alerts/T39_20261119T1820_6fbcf98.md` | timeline fire ? deliver ? resolve |
-| T-39 | `evidence/alerts/deliveries.jsonl` | 6 delivery mentah dari notifier |
-| T-37 | `evidence/dashboard/reconciliation_20261119T1815_6fbcf98.json` | API vs SQL vs Iceberg, 24 jam + 7 hari |
-| LOG | `evidence/logs/sample_20261119T1815_6fbcf98.jsonl` | log JSON API |
-| LOG | `evidence/logs/diagnosis_20261119T1815_6fbcf98.json` | diagnosis satu error 400 |
-| DASH | `evidence/dashboards/grafana-pipeline_20261119T1836_6fbcf98.png` | dashboard pipeline |
-| DASH | `evidence/dashboards/grafana-business_20261119T1838_6fbcf98.png` | dashboard business |
+| CP1 | `evidence/observability/CP1_20261120T0152_c8577e1.json` | 6/6 target, 6 field log, 40 baris |
+| CP2 | `evidence/alerts/CP2_20261120T0152_c8577e1.json` | 16 rule, 3 kelas, 3 runbook |
+| CP2 | `evidence/alerts/rules_20261120T0152_c8577e1.yml` | salinan rule yang ter-load |
+| T-39 | `evidence/alerts/T39_20261120T0158_c8577e1.md` | timeline fire → deliver → resolve |
+| T-39 | `evidence/alerts/deliveries.jsonl` | delivery mentah, `run_id` terisi |
+| T-37 | `evidence/dashboard/reconciliation_20261120T0205_c8577e1.json` | API vs SQL vs Iceberg |
+| LOG | `evidence/logs/sample_20261120T0152_c8577e1.jsonl` | log JSON API |
+| LOG | `evidence/logs/error_20261120T0205_c8577e1.jsonl` | satu baris ERROR |
+| LOG | `evidence/logs/diagnosis_error_20261120T0205_c8577e1.json` | diagnosis error |
+| DASH | `evidence/dashboards/grafana-pipeline_20261120T0155_c8577e1.png` | dashboard pipeline |
+| DASH | `evidence/dashboards/grafana-business_20261120T0155_c8577e1.png` | dashboard business |
+| E2E | `evidence/e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | gate integrasi |
 | DQ | `evidence/dq/dq_report.json` | checkpoint 7 suite |
-| SUM | `evidence/w2b/SUMMARY_20261119T1820_6fbcf98.json` | ringkasan run |
+| SUM | `evidence/w2b/SUMMARY_20261120T0205_c8577e1.json` | ringkasan run |
 
 Semua file dihasilkan oleh `scripts/w2b_evidence.py`, `scripts/quality.py`,
-dan `scripts/w2b_metrics_check.py`; tidak ada yang ditulis tangan.
-
-## Gap yang harus dibaca W2-C
-
-- **`bmip_gold_rows` belum punya baris.** `build_gold.py` gagal di langkah dbt
-  pada mesin ini (DuckDB crash `0xC0000409` saat membaca Iceberg), jadi publish
-  tidak selesai. Metrik dan panelnya sudah terpasang dan akan terisi pada run
-  dbt yang sukses. `bmip_batch_duration_seconds{job="gold",status="failed"}`
-  mencatat kegagalan itu, bukan menyembunyikannya.
-- **`bmip_predictions_total` belum ada baris.** Butuh satu run
-  `scripts/w2a_batch.py` dengan MLflow hidup; panel "Prediksi terbaru" kosong
-  sampai itu dijalankan.
-- **Telegram dalam mode berkas.** `TELEGRAM_BOT_TOKEN` kosong, jadi notifier
-  menulis `deliveries.jsonl` dengan `skipped: true`. Isi token di `.env` lalu
-  restart `notify`; tidak ada perubahan kode.
-- **Stream target on-demand.** Processor hanya hidup saat `make stream`
-  dijalankan; `BmipStreamDown` memang warning.
-
-Catatan tambahan: `BmipStreamIdle` juga menyala sendiri pada 18:51 ketika replay
-selesai dan topic kosong (tercatat di `deliveries.jsonl`). Itu bukan bagian
-drill, jadi aturan keempat terbukti tanpa disuntik.
+`scripts/e2e_smoke.py`, dan `scripts/w2b_metrics_check.py`; tidak ada yang
+ditulis tangan.

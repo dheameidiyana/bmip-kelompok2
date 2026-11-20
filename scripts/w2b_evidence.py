@@ -541,12 +541,14 @@ def drill(run: str, commit: str) -> dict[str, Any]:
 
     # Fault 1 (job failure) and 2 (stream lag) are metric injections; fault 3
     # (service) stops the API container, which is a real outage.
+    drill_run = f"drill-{run}"
     push(
         "drill",
         "# TYPE bmip_dq_failures_total counter\n"
-        'bmip_dq_failures_total{severity="critical",scope="drill"} 1\n'
+        f'bmip_dq_failures_total{{severity="critical",scope="drill",'
+        f'run_id="{drill_run}"}} 1\n'
         "# TYPE bmip_consumer_lag gauge\n"
-        "bmip_consumer_lag 5000\n",
+        f'bmip_consumer_lag{{run_id="{drill_run}"}} 5000\n',
     )
     timeline.append({"at": iso(), "event": "inject job-failure and stream-lag metrics"})
     docker("stop", "cadvisor")

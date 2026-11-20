@@ -130,24 +130,27 @@ lama `w2-a-ok` tetap di `eec3186`.
 | DRIFT | ml | `ml/drift_20261118T092731Z.json` | PASS | holdout reference vs 7 production days; PSI 0.2; 7 flags |
 | CLOSEOUT | tests | `tests/w2a_complete_20261118T155136Z.txt` | PASS | pytest 153 + ruff clean on complete worktree |
 
+
 ### W2-B
 
 Environment: branch `slot/w2-b-vio`, base `slot/w2-a-dhea` (`6fbcf98`),
 Windows 11 / Docker Compose dev, Python 3.11.9, Prometheus v2.55.1,
-Alertmanager v0.27.0, Grafana 11.3.0, cAdvisor v0.49.1. Evidence diambil
-2026-11-19 malam; kode yang diuji: `6fbcf98`.
+Alertmanager v0.27.0, Grafana 11.3.0, cAdvisor v0.49.1. Evidence 2026-11-20;
+kode yang diuji: `c8577e1` (tag `w2-b-ok`).
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |
-| CP1 | observability | `observability/CP1_20261119T1815_6fbcf98.json` | PASS | 6/6 target up, 6 panel hidup, log JSON + `request_id` |
-| CP2 | alerts | `alerts/CP2_20261119T1814_6fbcf98.json` | PASS | 16 rule, 3 kelas, 3 runbook, dashboard business 4 panel |
-| CP2 | alerts | `alerts/rules_20261119T1814_6fbcf98.yml` | PASS | salinan rule yang ter-load Prometheus |
-| T-39 | alerts | `alerts/T39_20261119T1820_6fbcf98.md` | PASS | job failure, stream lag, service/resource: fire -> deliver -> resolve |
-| T-39 | alerts | `alerts/deliveries.jsonl` | PASS | 6 pengiriman (3 firing, 3 resolved) dengan `run_id` dan hasil Telegram |
-| T-37 | dashboard | `dashboard/reconciliation_20261119T1815_6fbcf98.json` | PASS | API vs `serving.market_hourly` vs `gold.mart_market`, 24 jam dan 7 hari, 0 selisih |
-| LOG | logs | `logs/sample_20261119T1815_6fbcf98.jsonl` | PASS | 40 baris log API, field kontrak lengkap |
-| LOG | logs | `logs/diagnosis_20261119T1815_6fbcf98.json` | PASS | satu error 400 yang diprovokasi, `request_id` tertaut |
-| DASH | dashboards | `dashboards/grafana-pipeline_20261119T1836_6fbcf98.png` | PASS | freshness, lag, batch, DQ, gold rows, 6 target hijau |
-| DASH | dashboards | `dashboards/grafana-business_20261119T1838_6fbcf98.png` | PASS | harga, volatilitas, sentimen dari `serving.*`; prediksi belum ada baris |
-| DQ | dq | `dq/dq_report.json` | PASS | 7 suite, 0 critical, 0 warning (run 19 Nov) |
-| SUM | w2b | `w2b/SUMMARY_20261119T1820_6fbcf98.json` | PASS | ringkasan run drill terakhir |
+| CP1 | observability | `observability/CP1_20261120T0152_c8577e1.json` | PASS | 6/6 target; 40 baris log; 6 field kontrak |
+| CP2 | alerts | `alerts/CP2_20261120T0152_c8577e1.json` | PASS | 16 rule, 3 kelas, 3 runbook, 5 panel business |
+| CP2 | alerts | `alerts/rules_20261120T0152_c8577e1.yml` | PASS | salinan rule yang ter-load Prometheus |
+| T-39 | alerts | `alerts/T39_20261120T0158_c8577e1.md` | PASS | 3 kelas fire -> deliver -> resolve |
+| T-39 | alerts | `alerts/deliveries.jsonl` | PASS | `run_id=drill-...` ikut di pesan firing dan resolved |
+| T-37 | dashboard | `dashboard/reconciliation_20261120T0205_c8577e1.json` | PASS | API vs SQL vs Iceberg, 24 jam dan 7 hari, 0 selisih |
+| LOG | logs | `logs/sample_20261120T0152_c8577e1.jsonl` | PASS | `run_id`, `request_id`, `service`, `severity` |
+| LOG | logs | `logs/error_20261120T0205_c8577e1.jsonl` | PASS | satu baris `severity=ERROR` dengan traceback |
+| LOG | logs | `logs/diagnosis_error_20261120T0205_c8577e1.json` | PASS | frame gagal dan baris exception terakhir |
+| DASH | dashboards | `dashboards/grafana-pipeline_20261120T0155_c8577e1.png` | PASS | URL dan range tertulis di panel; 6 target hijau |
+| DASH | dashboards | `dashboards/grafana-business_20261120T0155_c8577e1.png` | PASS | harga, volatilitas, sentimen berisi; prediksi kosong |
+| E2E | e2e | `e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | PASS | health, replay, bronze, ledger, idempotensi |
+| DQ | dq | `dq/dq_report.json` | PASS | 7 suite, 0 critical, 0 warning |
+| SUM | w2b | `w2b/SUMMARY_20261120T0205_c8577e1.json` | PASS | ringkasan run terakhir |

@@ -71,9 +71,13 @@ def test_two_dashboards_are_provisioned() -> None:
     assert pipeline["uid"] == "bmip-pipeline"
     assert business["uid"] == "bmip-business"
     assert len(pipeline["panels"]) >= 5
-    assert len(business["panels"]) == 4
-    titles = {panel["title"] for panel in business["panels"]}
-    assert {"Harga close (1 jam)", "Volatilitas terealisasi (1 jam)"} <= titles
+    titles = {panel.get("title") for panel in business["panels"]}
+    assert {
+        "Harga close (1 jam)",
+        "Volatilitas terealisasi (1 jam)",
+        "Sentimen per jam",
+        "Prediksi terbaru",
+    } <= titles
 
 
 def test_batch_rules_carry_the_run_id_template() -> None:

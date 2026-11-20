@@ -8,7 +8,7 @@
     ],
     "uid": "bmip-business"
   },
-  "commit": "6fbcf98",
+  "commit": "c8577e1",
   "id": "CP2-W2B",
   "owner": "vio",
   "result": "PASS",
@@ -18,15 +18,15 @@
       "service": 7,
       "stream-lag": 5
     },
-    "file": "evidence\\alerts\\rules_20261119T1814_6fbcf98.yml",
+    "file": "evidence\\alerts\\rules_20261120T0152_c8577e1.yml",
     "loaded": 16,
     "missing": []
   },
-  "run": "20261119T1814",
+  "run": "20261120T0152",
   "runbooks": [
     "docs\\runbooks\\alert-job-failure.md",
     "docs\\runbooks\\alert-service-resource.md",
     "docs\\runbooks\\alert-stream-freshness.md"
   ],
-  "timestamp": "2026-11-19T18:15:00Z"
+  "timestamp": "2026-11-20T01:52:28Z"
 }

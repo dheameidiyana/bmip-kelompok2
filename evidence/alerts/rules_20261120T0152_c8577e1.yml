@@ -12,6 +12,7 @@ groups:
           owner: vio
           channel: telegram
           alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
         annotations:
           summary: "Batch job {{ $labels.job }} has not succeeded in 2 hours"
           description: >-
@@ -29,6 +30,7 @@ groups:
           owner: vio
           channel: telegram
           alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
         annotations:
           summary: "Data-quality gate reported {{ $value }} critical failure(s)"
           description: >-
@@ -45,6 +47,7 @@ groups:
           owner: vio
           channel: telegram
           alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
         annotations:
           summary: "Gold mart {{ $labels.table }} is empty"
           description: >-
@@ -61,6 +64,7 @@ groups:
           owner: vio
           channel: telegram
           alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
         annotations:
           summary: "Inference wrote {{ $value }} error row(s)"
           description: >-

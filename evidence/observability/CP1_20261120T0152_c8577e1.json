@@ -1,7 +1,7 @@
 {
-  "commit": "6fbcf98",
+  "commit": "c8577e1",
   "grafana": {
-    "dashboard": "BMIP \u00b7 Pipeline",
+    "dashboard": "BMIP - Pipeline",
     "panels": [
       "Freshness (seconds)",
       "Consumer lag",
@@ -17,19 +17,20 @@
     "error": {
       "detail": "Symbol must be one of ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']; got 'NOTREAL'.",
       "provoked": true,
-      "request_id": "req-w2b-20261119t1815",
+      "request_id": "req-w2b-20261120t0152",
       "slug": "https://bmip.local/problems/unknown-symbol",
       "status": 400
     },
     "fields_present": [
       "message",
       "request_id",
+      "run_id",
       "service",
       "severity",
       "timestamp"
     ],
     "lines": 40,
-    "sample": "evidence\\logs\\sample_20261119T1815_6fbcf98.jsonl"
+    "sample": "evidence\\logs\\sample_20261120T0152_c8577e1.jsonl"
   },
   "metrics": {
     "bmip_batch_duration_seconds": 2,
@@ -44,7 +45,7 @@
   },
   "owner": "vio",
   "result": "PASS",
-  "run": "20261119T1815",
+  "run": "20261120T0152",
   "targets": {
     "active": 6,
     "detail": [
@@ -52,40 +53,40 @@
         "health": "up",
         "instance": "http://api:8000/metrics",
         "job": "api",
-        "lastScrape": "2026-11-19T18:15:08.723955617Z"
+        "lastScrape": "2026-11-20T01:52:21.448945642Z"
       },
       {
         "health": "up",
         "instance": "http://cadvisor:8080/metrics",
         "job": "cadvisor",
-        "lastScrape": "2026-11-19T18:15:20.136297056Z"
+        "lastScrape": "2026-11-20T01:52:17.890014777Z"
       },
       {
         "health": "up",
         "instance": "http://postgres-exporter:9187/metrics",
         "job": "postgres",
-        "lastScrape": "2026-11-19T18:15:14.983241415Z"
+        "lastScrape": "2026-11-20T01:52:12.739231681Z"
       },
       {
         "health": "up",
         "instance": "http://localhost:9090/metrics",
         "job": "prometheus",
-        "lastScrape": "2026-11-19T18:15:18.667575937Z"
+        "lastScrape": "2026-11-20T01:52:16.396208421Z"
       },
       {
         "health": "up",
         "instance": "http://pushgateway:9091/metrics",
         "job": "pushgateway",
-        "lastScrape": "2026-11-19T18:15:19.601182411Z"
+        "lastScrape": "2026-11-20T01:52:17.354021681Z"
       },
       {
         "health": "up",
         "instance": "http://host.docker.internal:9101/metrics",
         "job": "stream",
-        "lastScrape": "2026-11-19T18:15:13.009978675Z"
+        "lastScrape": "2026-11-20T01:52:25.758012278Z"
       }
     ],
     "up": 6
   },
-  "timestamp": "2026-11-19T18:15:23Z"
+  "timestamp": "2026-11-20T01:52:28Z"
 }
