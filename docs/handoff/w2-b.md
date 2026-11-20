@@ -15,8 +15,8 @@
 
 Gate: enam target ter-scrape, dua dashboard Grafana hidup dengan data nyata,
 16 rule dalam tiga kelas ter-load, tiga kelas alert terbukti fire → deliver →
-resolve dengan `run_id`, T-37 cocok untuk 24 jam dan 7 hari, dan `e2e-smoke`
-hijau.
+resolve dengan `run_id`, T-37 cocok untuk 24 jam dan 7 hari, `e2e-smoke`
+hijau, dan pesan Telegram terkirim (HTTP 200 untuk firing dan resolved).
 
 ## Angka pada handoff ini
 
@@ -30,6 +30,7 @@ hijau.
 | T-37 | 3 kunci, 0 selisih, 24 jam dan 7 hari |
 | Log | 40 baris INFO + 1 baris ERROR, 6 field kontrak |
 | E2E | PASS (`SMOKE-W1A_20261120T0150_ee4c8bf.txt`) |
+| Telegram | 2 pesan terkirim (firing + resolved), `ok: true`, HTTP 200 |
 
 ## Yang sudah jalan
 
@@ -138,9 +139,6 @@ TELEGRAM_CHAT_ID=123456789
 
 ## Gap yang harus dibaca W2-C
 
-- **Telegram belum terkirim.** Token sudah ada di `.env`, chat id belum, jadi
-  notifier masih mode berkas (`skipped: true`). Kirim satu pesan ke bot,
-  ambil chat id dari `getUpdates`, isi `TELEGRAM_CHAT_ID`, restart `notify`.
 - **`bmip_gold_rows` belum punya baris.** `build_gold.py` gagal di langkah dbt
   pada mesin ini (DuckDB crash `0xC0000409` saat membaca Iceberg), jadi publish
   tidak selesai. Metrik dan panelnya sudah terpasang.
@@ -172,6 +170,7 @@ TELEGRAM_CHAT_ID=123456789
 | CP2 | `evidence/alerts/rules_20261120T0152_c8577e1.yml` | salinan rule yang ter-load |
 | T-39 | `evidence/alerts/T39_20261120T0158_c8577e1.md` | timeline fire → deliver → resolve |
 | T-39 | `evidence/alerts/deliveries.jsonl` | delivery mentah, `run_id` terisi |
+| T-39 | `evidence/alerts/TELEGRAM_20261120T0249_3a87740.json` | bukti Telegram HTTP 200 (firing + resolved) |
 | T-37 | `evidence/dashboard/reconciliation_20261120T0205_c8577e1.json` | API vs SQL vs Iceberg |
 | LOG | `evidence/logs/sample_20261120T0152_c8577e1.jsonl` | log JSON API |
 | LOG | `evidence/logs/error_20261120T0205_c8577e1.jsonl` | satu baris ERROR |

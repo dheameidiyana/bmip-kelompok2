@@ -1,0 +1,31 @@
+{
+  "command": "pushgateway inject -> Alertmanager -> notify -> Telegram",
+  "commit": "3a87740",
+  "firing": {
+    "alert": "BmipDqCriticalFailures",
+    "message": "[FIRING] BmipDqCriticalFailures (critical)\nclass: job-failure | owner: vio\nrun_id: tg-proof-20261120T024731\nData-quality gate reported 1 critical failure(s)\nrunbook: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-job-failure.md",
+    "received_at": "2026-11-20T02:48:55+00:00",
+    "run_id": "tg-proof-20261120T024731",
+    "status": "firing",
+    "telegram": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "id": "T-39-TELEGRAM",
+  "owner": "vio",
+  "resolved": {
+    "alert": "BmipDqCriticalFailures",
+    "message": "[RESOLVED] BmipDqCriticalFailures (critical)\nclass: job-failure | owner: vio\nrun_id: tg-proof-20261120T024731\nData-quality gate reported 1 critical failure(s)\nrunbook: https://github.com/dheameidiyana/bmip-kelompok2/blob/dev/docs/runbooks/alert-job-failure.md",
+    "received_at": "2026-11-20T02:49:24+00:00",
+    "run_id": "tg-proof-20261120T024731",
+    "status": "resolved",
+    "telegram": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "result": "PASS",
+  "run_id": "tg-proof-20261120T024731",
+  "timestamp": "2026-11-20T02:49:27Z"
+}

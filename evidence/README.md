@@ -145,6 +145,7 @@ kode yang diuji: `c8577e1` (tag `w2-b-ok`).
 | CP2 | alerts | `alerts/rules_20261120T0152_c8577e1.yml` | PASS | salinan rule yang ter-load Prometheus |
 | T-39 | alerts | `alerts/T39_20261120T0158_c8577e1.md` | PASS | 3 kelas fire -> deliver -> resolve |
 | T-39 | alerts | `alerts/deliveries.jsonl` | PASS | `run_id=drill-...` ikut di pesan firing dan resolved |
+| T-39 | alerts | `alerts/TELEGRAM_20261120T0249_3a87740.json` | PASS | Telegram `ok: true`, HTTP 200 untuk firing dan resolved |
 | T-37 | dashboard | `dashboard/reconciliation_20261120T0205_c8577e1.json` | PASS | API vs SQL vs Iceberg, 24 jam dan 7 hari, 0 selisih |
 | LOG | logs | `logs/sample_20261120T0152_c8577e1.jsonl` | PASS | `run_id`, `request_id`, `service`, `severity` |
 | LOG | logs | `logs/error_20261120T0205_c8577e1.jsonl` | PASS | satu baris `severity=ERROR` dengan traceback |
