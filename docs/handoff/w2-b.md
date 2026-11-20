@@ -191,7 +191,8 @@ TELEGRAM_CHAT_ID=123456789
 | T-39 | `evidence/alerts/T39_20261120T0304_e5369f6.md` | timeline fire → deliver → resolve |
 | T-39 | `evidence/alerts/deliveries.jsonl` | delivery mentah, `run_id` terisi |
 | T-39 | `evidence/alerts/TELEGRAM_20261120T0249_3a87740.json` | bukti Telegram HTTP 200 (firing + resolved) |
-| T-39 | `evidence/alerts/telegram_20261120.png` | screenshot chat bot: pesan benar-benar diterima |
+| T-39 | `evidence/alerts/telegram_20261121.png` | screenshot pesan Indonesia (AKTIF + SELESAI) |
+| T-39 | `evidence/alerts/telegram_20261120.png` | format lama sebelum perbaikan (arsip) |
 | T-37 | `evidence/dashboard/reconciliation_20261120T0324_c9ef99a.json` | API vs SQL vs Iceberg |
 | LOG | `evidence/logs/sample_20261120T0323_c9ef99a.jsonl` | log JSON API |
 | LOG | `evidence/logs/error_20261120T0324_c9ef99a.jsonl` | satu baris ERROR |
