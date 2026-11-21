@@ -18,6 +18,9 @@ Gate: lineage from dbt/Prefect/stream is visible in Marquez, the catalogue has
 `401/200/403/202/200` with an audit row for every attempt, and the security
 scans are clean or explicitly marked partial with a reason.
 
+Evidence header `commit: e7823c5` is the `w2-b-ok` base tag; the W2-C feature
+code is `85549b1`, and tag `w2-c-ok` points at the final evidence commit.
+
 ## Yang sudah jalan
 
 ### Lineage

@@ -165,7 +165,7 @@ kode yang diuji: `c9ef99a` (tag `w2-b-ok`).
 
 Environment: branch `slot/w2-c-anin`, base tag `w2-b-ok` (`e7823c5`),
 Windows 11 / Docker Compose dev, Python 3.11.9, Marquez 0.51.1,
-Traefik v3.7.18. Evidence 2026-11-21; kode yang diuji: `e7823c5`.
+Traefik v3.7.18. Evidence 2026-11-21; kode fitur W2-C: `85549b1`.
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |
@@ -181,6 +181,7 @@ Traefik v3.7.18. Evidence 2026-11-21; kode yang diuji: `e7823c5`.
 | T-38 | security | `security/rbac-matrix.md` | PASS | 401/200/403/202/200 + audit rows |
 | SECRETS | security | `security/gitleaks.txt` | PASS | 0 finding setelah allowlist evidence PII |
 | PORT | security | `security/port-scan.txt` | PASS | hanya 80/443 di luar loopback |
-| TLS | security | `security/tls.txt` | PASS | CA, SAN, redirect, whoami HTTPS |
+| TLS | security | `security/tls.txt` | PASS | CA, SAN, redirect, HTTPS routes |
+| ACL | security | `security/tailscale-acl.json` | PASS | ACL hash + `tailscale status` |
 | SUM | w2c | `w2c/SUMMARY_20261121T101848_e7823c5.json` | PASS | ringkasan run |
 
