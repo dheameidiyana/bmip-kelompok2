@@ -2,7 +2,7 @@
 
 - Owner: Vio
 - Branch: `slot/w2-b-vio`
-- Base: `slot/w2-a-dhea` (`6fbcf98`), which already contains `dev` (`9972693`)
+- Base: `slot/w2-a-dhea` (`6fbcf98`, plus `af1734e` merged: MLflow `--workers 1`), which already contains `dev` (`9972693`)
 - Handoff to: Anin (W2-C)
 - Last update: 2026-11-20
 
@@ -162,8 +162,11 @@ TELEGRAM_CHAT_ID=123456789
 - **`bmip_gold_rows` belum punya baris.** `build_gold.py` gagal di langkah dbt
   pada mesin ini (DuckDB crash `0xC0000409` saat membaca Iceberg), jadi publish
   tidak selesai. Metrik dan panelnya sudah terpasang.
-- **`bmip_predictions_total` belum ada baris.** Container MLflow (W2-A) crash
-  di child process, jadi `scripts/w2a_batch.py` tidak bisa jalan.
+- **`bmip_predictions_total` belum ada baris.** Fix W2-A `--workers 1`
+  (`af1734e`) sudah di-merge dan server MLflow sekarang sehat (`/health` 200).
+  Tetapi registry di mesin ini kosong (hanya experiment `Default`), jadi
+  `scripts/w2a_batch.py` tidak punya champion. Perlu restore registry/artefak
+  atau retrain sebelum prediksi bisa dihasilkan.
 - **Panel dan alert model drift (Should) belum ada.** W2-A menaruh drift di
   berkas JSON dan menunda `serving.drift_metrics`; tidak ada metrik Prometheus
   yang bisa dipakai tanpa mengubah skrip W2-A.
@@ -204,6 +207,7 @@ TELEGRAM_CHAT_ID=123456789
 | M1 | `evidence/e2e/M1_20261120T0323.txt` | bronze -> silver -> gold -> serving -> API -> dashboard |
 | DQ | `evidence/dq/dq_report.json` | checkpoint 7 suite |
 | SUM | `evidence/w2b/SUMMARY_20261120T0324_c9ef99a.json` | ringkasan run |
+| ML | `evidence/deploy/mlflow-health_20261121T0532_a6b33fc.json` | MLflow sehat dengan 1 worker; registry kosong |
 
 Semua file dihasilkan oleh `scripts/w2b_evidence.py`, `scripts/quality.py`,
 `scripts/e2e_smoke.py`, dan `scripts/w2b_metrics_check.py`; tidak ada yang

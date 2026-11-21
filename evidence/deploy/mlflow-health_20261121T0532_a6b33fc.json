@@ -1,0 +1,20 @@
+{
+  "champion": null,
+  "command": "docker compose ... -f deploy/compose.ml.yml up -d mlflow; GET /health",
+  "commit": "a6b33fc",
+  "consequence": "Server MLflow sehat dengan satu worker, tetapi registry di mesin ini kosong (hanya experiment Default). Batch inference tidak bisa jalan sampai champion tersedia; metrik predictions_total tetap kosong.",
+  "experiments": [
+    "Default"
+  ],
+  "health_body": {
+    "raw": "OK"
+  },
+  "health_status": 200,
+  "id": "W2A-MLFLOW-WORKERS",
+  "owner": "vio",
+  "registered_models": [],
+  "result": "PASS",
+  "source_commit": "af1734e (W2-A, --workers 1)",
+  "timestamp": "2026-11-21T05:32:30Z",
+  "workers": 1
+}

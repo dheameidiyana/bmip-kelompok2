@@ -159,3 +159,4 @@ kode yang diuji: `c9ef99a` (tag `w2-b-ok`).
 | M1 | e2e | `e2e/M1_20261120T0323.txt` | PASS | bronze -> silver -> gold -> serving -> API -> dashboard |
 | DQ | dq | `dq/dq_report.json` | PASS | 7 suite, 0 critical, 0 warning |
 | SUM | w2b | `w2b/SUMMARY_20261120T0324_c9ef99a.json` | PASS | ringkasan run terakhir |
+| ML | deploy | `deploy/mlflow-health_20261121T0532_a6b33fc.json` | PASS | MLflow sehat (1 worker); registry kosong, prediksi belum bisa |
