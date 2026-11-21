@@ -1,4 +1,4 @@
-# Evidence Index
+﻿# Evidence Index
 
 Setiap klaim pada demo harus punya file bukti di direktori ini.
 
@@ -89,15 +89,15 @@ menunjuk commit final W1-D setelah evidence ini di-commit.
 | --- | --- | --- | --- | --- |
 | CP1 | api | `api/smoke_20261114T0239.txt` | PASS | health, 10 endpoint, baris market, freshness, request id |
 | ROUTES | api | `api/routes_20261114T0239.txt` | PASS | 14 route kanonik + 5 alias; `contracts/openapi.json` ditulis |
-| T-13 | security | `security/api-401.txt` | PASS | tanpa key / key salah → 401 problem+json; `/api` tetap publik |
+| T-13 | security | `security/api-401.txt` | PASS | tanpa key / key salah â†’ 401 problem+json; `/api` tetap publik |
 | T-14 | tests | `tests/T14.txt` | PASS | 2 halaman live (limit=1) dan 11 halaman atas 1.002 baris, 0 duplikat |
-| T-15 | tests | `tests/T15.txt` | PASS | MinIO stop → 200 `X-Data-Stale: true`; pulih → `false` |
+| T-15 | tests | `tests/T15.txt` | PASS | MinIO stop â†’ 200 `X-Data-Stale: true`; pulih â†’ `false` |
 | T-34 | api | `api/T34.json` | PASS | symbol, range, limit, cursor, datetime, missing range |
 | T-36 | ml | `ml/T36.json` | PASS | W1-D contract; final W2-A run supersedes this row (see W2-A block) |
 | IDEM | serving | `serving/loader-idempotence_20261114T0239.json` | PASS | dua load, counts + logical hash identik |
 | T-37 | dashboard | `dashboard/reconciliation-draft.json` | PASS | API vs serving vs gold, 2/2 baris, 0 selisih (draft) |
 | DQ | dq | `dq/dq_report_w1d_20261114T0255.json` | PASS | checkpoint GX run W1-D (`a58f5d7`); `dq_report.json` kanonik tetap milik W1-C |
-| M1 | e2e | `e2e/M1_20261114T0405.txt` | PASS | bronze → silver → gold → serving → API → dashboard |
+| M1 | e2e | `e2e/M1_20261114T0405.txt` | PASS | bronze â†’ silver â†’ gold â†’ serving â†’ API â†’ dashboard |
 | DASH | dashboards | `dashboards/streamlit_20261114T0405.png` | PASS | 4 metrik, 2 filter, "belum ada model", Poppins, palet hitam-abu-putih-navy-pink, sidebar bisa ditutup/dibuka |
 
 ### W2-A
@@ -160,3 +160,27 @@ kode yang diuji: `c9ef99a` (tag `w2-b-ok`).
 | DQ | dq | `dq/dq_report.json` | PASS | 7 suite, 0 critical, 0 warning |
 | SUM | w2b | `w2b/SUMMARY_20261120T0324_c9ef99a.json` | PASS | ringkasan run terakhir |
 | ML | deploy | `deploy/mlflow-health_20261121T0532_a6b33fc.json` | PASS | MLflow sehat (1 worker); registry kosong, prediksi belum bisa |
+
+### W2-C
+
+Environment: branch `slot/w2-c-anin`, base tag `w2-b-ok` (`e7823c5`),
+Windows 11 / Docker Compose dev, Python 3.11.9, Marquez 0.51.1,
+Traefik v3.7.18. Evidence 2026-11-21; kode yang diuji: `e7823c5`.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | lineage | `lineage/CP1_20261121T101507.md` | PASS | Marquez sehat; event dbt dengan `run_id` |
+| CP1 | lineage | `lineage/first-event_20261121T101507.png` | PASS | screenshot Marquez setelah event dbt |
+| CP1 | lineage | `lineage/events_20261121T101507.jsonl` | PASS | event mentah OpenLineage |
+| CP2 | catalog | `catalog/CP2_20261121T101633.md` | PASS | 11 registry + 11 serving rows |
+| CP2 | catalog | `catalog/registry_20261121T101633.csv` | PASS | owner, klasifikasi, retensi, saran otomatis |
+| CP2 | catalog | `catalog/catalog_20261121T101633.png` | PASS | portal katalog hidup |
+| T-30 | lineage | `lineage/T30.md` | PASS | bronze -> silver -> gold -> serving -> API |
+| T-13 | security | `security/api-401.txt` | PASS | tanpa key -> 401 |
+| T-22 | security | `security/pii-scan.txt` | PASS | tidak ada kolom PII terstruktur di silver |
+| T-38 | security | `security/rbac-matrix.md` | PASS | 401/200/403/202/200 + audit rows |
+| SECRETS | security | `security/gitleaks.txt` | PASS | 0 finding setelah allowlist evidence PII |
+| PORT | security | `security/port-scan.txt` | PASS | hanya 80/443 di luar loopback |
+| TLS | security | `security/tls.txt` | PASS | CA, SAN, redirect, whoami HTTPS |
+| SUM | w2c | `w2c/SUMMARY_20261121T101848_e7823c5.json` | PASS | ringkasan run |
+

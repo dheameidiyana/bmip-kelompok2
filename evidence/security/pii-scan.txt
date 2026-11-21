@@ -1,0 +1,14 @@
+id        : T-22
+timestamp : 2026-11-21T10:07:15.541107+00:00
+commit    : e7823c5
+command   : python scripts/w2c_scan.py --pii
+result    : PASS
+owner     : anin
+
+silver.market_trades: 10 columns, 200 sampled
+silver.market_ohlcv_1m: 14 columns, 61 sampled
+silver.social_post: 15 columns, 2 sampled
+silver.social_sentiment: 12 columns, 2 sampled
+
+Forbidden structured columns: none
+Free-text mentions are informational; ARCHITECTURE 17.6 keeps post_text internal-only.
