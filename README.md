@@ -44,6 +44,14 @@ drill T-39, dan rekonsiliasi T-37 untuk 24 jam dan 7 hari. Detail serah terima
 ada di [docs/handoff/w2-b.md](docs/handoff/w2-b.md) dan keputusan teknisnya di
 [docs/adr/0003-w2-b-observability.md](docs/adr/0003-w2-b-observability.md).
 
+W2-C berjalan di branch `slot/w2-c-anin` (base `w2-b-ok`): lineage OpenLineage
+ke Marquez dari dbt, Prefect, dan stream processor; katalog 11 dataset di
+`ops.dataset_registry` dengan portal Streamlit; Traefik TLS dan route per
+hostname; ACL Tailscale deny-by-default; RBAC `viewer/operator/admin` dengan
+audit log; serta scan gitleaks, PII, port, dan TLS. Detail ada di
+[docs/handoff/w2-c.md](docs/handoff/w2-c.md) dan keputusan di
+[docs/adr/0004-w2-c-lineage-catalog-security.md](docs/adr/0004-w2-c-lineage-catalog-security.md).
+
 ## Stack
 
 - Sumber: Binance WebSocket (stream) + Bluesky AT Protocol (batch per jam)
@@ -107,12 +115,14 @@ Port host dev:
 
 | Service | Port |
 | --- | --- |
-| Traefik | 8080 (HTTP), 8082 (ping) |
+| Traefik | 80/443 (TLS), 8080 (HTTP dev), 8082 (ping) |
 | Query API | 8000 |
 | Dashboard | 8501 |
+| Catalog | 8502 |
+| Marquez API / web | 5002 / 3002 |
 | MinIO | 9000 (S3), 9001 (console) |
 | Lakekeeper | 8181 |
-| PostgreSQL core | 5433 |
+| PostgreSQL core / governance | 5433 / 5435 |
 | Redpanda | 19092 (Kafka), 9644 (admin) |
 
 Perintah operasional:
@@ -130,6 +140,12 @@ Perintah operasional:
 .\scripts\make.ps1 evidence-api # CP1/CP2: smoke, routes, T-13, T-34, T-36
 .\scripts\make.ps1 evidence-api-faults # T-14/T-15/T-37 + idempotensi (stop MinIO sebentar)
 .\scripts\make.ps1 e2e-m1       # gate M1: bronze -> silver -> gold -> serving -> API -> dashboard
+.\scripts\make.ps1 governance-up # Marquez + postgres-gov (profil governance)
+.\scripts\make.ps1 governance   # migrasi ops, seed registry, seed key RBAC
+.\scripts\make.ps1 certs users  # CA lokal + users.htpasswd untuk Traefik
+.\scripts\make.ps1 catalog-dev  # portal katalog di 8502
+.\scripts\make.ps1 evidence-w2c # CP1/CP2 W2-C
+.\scripts\make.ps1 scan-w2c     # PII, port, gitleaks, TLS, RBAC
 .\scripts\make.ps1 ci           # compose config + lint + test
 ```
 
@@ -139,16 +155,26 @@ Harvester sosial per jam (Ctrl+C berhenti bersih):
 .venv\Scripts\python.exe -m bmip.ingestion.cli social --live --interval 3600
 ```
 
-`make secrets` tidak menimpa `.env` yang sudah ada. Hapus `.env` manual jika
-ingin merotasi seluruh secret lokal. Detail keputusan dan deviasi ada di
-`docs/adr/0001-w1-a-foundation.md`, status serah terima ada di
+`make secrets` tidak menimpa `.env` yang sudah ada; ia hanya menambahkan key
+baru dari `.env.example` (`--merge`) tanpa merotasi secret lama. Hapus `.env`
+manual jika ingin merotasi seluruh secret lokal. Detail keputusan dan deviasi
+ada di `docs/adr/0001-w1-a-foundation.md`, status serah terima ada di
 `docs/handoff/w1-a.md`.
 
 ## Query API dan dashboard
 
-API hanya membaca: `/v1/*` memerlukan `X-API-Key` (nilai `BMIP_API_KEY` di
-`.env`), sedangkan `/api` dan `/health/*` publik untuk healthcheck dan gate lama.
-Dashboard berjalan di `http://localhost:8501` dan hanya memanggil API.
+API hanya membaca: `/v1/*` memerlukan `X-API-Key`, sedangkan `/api` dan
+`/health/*` publik untuk healthcheck dan gate lama. Tiga role tersedia:
+`viewer` (baca), `operator` (queue backfill), `admin` (reload katalog dan
+rotasi key). Key lama `BMIP_API_KEY` tetap berlaku sebagai `viewer`; key baru
+`BMIP_VIEWER_KEY`, `BMIP_OPERATOR_KEY`, dan `BMIP_ADMIN_KEY` dibuat oleh
+`python scripts/w2c_seed_keys.py`.
+
+Dashboard berjalan di `http://localhost:8501`, katalog di
+`http://localhost:8502`, dan Marquez di `http://localhost:3002`. Dengan
+`make certs users`, ketiganya juga tersedia sebagai
+`https://app.bmip.local`, `https://catalog.bmip.local`, dan
+`https://marquez.bmip.local` (lihat `docs/runbooks/traefik-tls.md`).
 
 ```powershell
 $key = (Select-String -Path .env -Pattern '^BMIP_API_KEY=').Line.Split('=',2)[1]
