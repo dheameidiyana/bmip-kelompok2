@@ -22,8 +22,11 @@ from bmip.api.deps import require_api_key
 from bmip.api.errors import ApiProblem, problem_response
 from bmip.api.lake import build_lake
 from bmip.api.routers import (
+    admin,
+    auth,
     dataset,
     freshness,
+    lineage,
     market,
     meta,
     model,
@@ -85,12 +88,25 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(meta.public_router)
     app.include_router(meta.v1_router, dependencies=[Depends(require_api_key)])
-    for module in (market, sentiment, freshness, dataset, quality, model, predict):
+    for module in (
+        market,
+        sentiment,
+        freshness,
+        dataset,
+        quality,
+        model,
+        predict,
+        auth,
+        lineage,
+    ):
         app.include_router(
             module.router, prefix="/v1", dependencies=[Depends(require_api_key)]
         )
     app.include_router(
         dataset.catalog_router, prefix="/v1", dependencies=[Depends(require_api_key)]
+    )
+    app.include_router(
+        admin.router, prefix="/v1", dependencies=[Depends(require_api_key)]
     )
     return app
 
@@ -126,6 +142,24 @@ def _register_middleware(app: FastAPI) -> None:
                 "ctx_instance": request.app.state.instance,
             },
         )
+        if request.url.path.startswith("/v1"):
+            try:
+                from bmip.api import audit
+
+                audit.record(
+                    request.app.state.settings,
+                    actor=getattr(request.state, "actor", "anonymous"),
+                    role=getattr(request.state, "role", "anonymous"),
+                    action=audit.action_for(request.method, request.url.path),
+                    target=request.url.path,
+                    method=request.method,
+                    path=request.url.path,
+                    status=response.status_code,
+                    request_id=request_id,
+                    detail={},
+                )
+            except Exception:  # noqa: BLE001 - audit must never break a response
+                log.warning("audit hook failed", extra={"ctx_request_id": request_id})
         return response
 
 

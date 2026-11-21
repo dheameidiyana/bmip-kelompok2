@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from fastapi import FastAPI
 
 from bmip.api.main import create_app as create_base_app
@@ -15,6 +17,11 @@ log = get_logger(__name__)
 def create_app() -> FastAPI:
     app = create_base_app()
     settings = get_settings()
+    tracking = os.getenv("MLFLOW_TRACKING_URI", "").strip()
+    if not tracking:
+        log.info("champion predictor disabled: MLFLOW_TRACKING_URI is empty")
+        app.state.predictor = None
+        return app
     try:
         app.state.predictor = VolatilityPredictor(settings)
         log.info("champion predictor loaded")

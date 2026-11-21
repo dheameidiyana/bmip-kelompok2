@@ -12,6 +12,7 @@ from prefect import flow, task
 
 from bmip.common.config import get_settings
 from bmip.common.logging import configure_logging
+from bmip.lineage import dataset_ref, lineage_run
 from bmip.ml.batch import run_batch
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -54,10 +55,25 @@ def train_volatility_task() -> dict[str, Any]:
 @flow(name="infer-volatility", log_prints=True)
 def infer_volatility_flow() -> dict[str, Any]:
     configure_logging()
-    return infer_volatility_task()
+    with lineage_run(
+        "infer-volatility",
+        inputs=[
+            dataset_ref("gold", "mart_ml"),
+            dataset_ref("serving", "market_hourly"),
+        ],
+        outputs=[dataset_ref("serving", "predictions")],
+        namespace="bmip_ml",
+    ):
+        return infer_volatility_task()
 
 
 @flow(name="train-volatility", log_prints=True)
 def train_volatility_flow() -> dict[str, Any]:
     configure_logging()
-    return train_volatility_task()
+    with lineage_run(
+        "train-volatility",
+        inputs=[dataset_ref("gold", "mart_ml")],
+        outputs=[dataset_ref("serving", "model_metrics")],
+        namespace="bmip_ml",
+    ):
+        return train_volatility_task()

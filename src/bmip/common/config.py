@@ -108,6 +108,10 @@ class Settings:
     bmip_as_of: str = ""
     dq_report_path: str = "evidence/dq/dq_report.json"
     dataset_registry_path: str = "catalog/datasets.yml"
+    openlineage_url: str = ""
+    openlineage_spool_dir: str = "evidence/lineage/spool"
+    marquez_url: str = "http://localhost:5002"
+    api_key_salt: str = ""
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -219,6 +223,12 @@ class Settings:
             dataset_registry_path=os.getenv(
                 "DATASET_REGISTRY_PATH", "catalog/datasets.yml"
             ),
+            openlineage_url=os.getenv("OPENLINEAGE_URL", ""),
+            openlineage_spool_dir=os.getenv(
+                "OPENLINEAGE_SPOOL_DIR", "evidence/lineage/spool"
+            ),
+            marquez_url=os.getenv("MARQUEZ_URL", "http://localhost:5002"),
+            api_key_salt=os.getenv("BMIP_API_KEY_HASH_SALT", ""),
         )
 
     def minio_credentials(self, service: str) -> tuple[str, str]:

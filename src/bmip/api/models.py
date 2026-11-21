@@ -139,6 +139,7 @@ class DatasetOut(BaseModel):
     license: str | None = None
     contains_pii: bool = False
     tags: list[str] = Field(default_factory=list)
+    auto_classification: str | None = None
 
 
 class DatasetPage(BaseModel):
@@ -200,6 +201,48 @@ class PredictOut(BaseModel):
     model_name: str | None = None
     model_version: str | None = None
     detail: str | None = None
+    meta: Meta
+
+
+class WhoAmIOut(BaseModel):
+    actor: str
+    role: str
+    key_id: str | None = None
+    meta: Meta
+
+
+class LineageOut(BaseModel):
+    dataset_id: str
+    upstream: list[str] = Field(default_factory=list)
+    downstream: list[str] = Field(default_factory=list)
+    source: str = "ops.lineage_edges"
+    meta: Meta
+
+
+class BackfillRequest(BaseModel):
+    start: datetime
+    end: datetime
+    detail: dict[str, Any] = Field(default_factory=dict)
+
+
+class BackfillOut(BaseModel):
+    request_id: str
+    status: str
+    start: datetime
+    end: datetime
+    meta: Meta
+
+
+class CatalogReloadOut(BaseModel):
+    datasets: int
+    meta: Meta
+
+
+class KeyRotateOut(BaseModel):
+    key_id: str
+    role: str
+    owner: str
+    key: str
     meta: Meta
 
 

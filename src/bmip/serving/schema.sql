@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS serving.catalog_datasets (
     license          text,
     contains_pii     boolean     NOT NULL DEFAULT false,
     tags             text[],
+    auto_classification text,
     schema_json      jsonb,
     updated_at       timestamptz NOT NULL DEFAULT now()
 );

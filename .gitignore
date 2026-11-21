@@ -5,6 +5,7 @@
 deploy/env/*.env
 !deploy/env/*.env.example
 deploy/**/certs/
+deploy/traefik/users.htpasswd
 *.pem
 *.key
 

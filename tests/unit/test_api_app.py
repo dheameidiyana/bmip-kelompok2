@@ -101,7 +101,17 @@ class FakeRepository:
     def freshness_one(self, metric):
         return self.freshness()[0]
 
-    def datasets(self, *, q=None, domain=None, layer=None, owner=None, limit=100, cursor=None):
+    def datasets(
+        self,
+        *,
+        q=None,
+        domain=None,
+        layer=None,
+        owner=None,
+        classification=None,
+        limit=100,
+        cursor=None,
+    ):
         row = {
             "id": "gold.mart_market",
             "name": "Market mart",

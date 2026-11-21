@@ -11,6 +11,7 @@ from datetime import datetime
 
 from bmip.common.config import Settings, get_settings
 from bmip.common.logging import configure_logging, get_logger, set_run_id
+from bmip.lineage import dataset_ref, lineage_run
 from bmip.transform.metrics import MetricsServer, build_stream_metrics
 from bmip.transform.stream import MarketStreamProcessor, group_lag, replay_range
 
@@ -70,20 +71,29 @@ def _stream(args: argparse.Namespace, settings: Settings) -> int:
         sink=sink,
     )
     try:
-        result = processor.run(
-            follow=not args.once,
-            max_records=args.max_records,
-            idle_timeout=(
-                settings.stream_idle_exit_seconds
-                if args.idle_timeout is None
-                else args.idle_timeout
-            ),
-            startup_delay=(
-                settings.stream_startup_delay_seconds
-                if args.startup_delay is None
-                else args.startup_delay
-            ),
-        )
+        with lineage_run(
+            "market-stream",
+            inputs=[dataset_ref("bronze", "market_trade_raw")],
+            outputs=[
+                dataset_ref("silver", "market_trades"),
+                dataset_ref("silver", "market_ohlcv_1m"),
+            ],
+            namespace="bmip_stream",
+        ):
+            result = processor.run(
+                follow=not args.once,
+                max_records=args.max_records,
+                idle_timeout=(
+                    settings.stream_idle_exit_seconds
+                    if args.idle_timeout is None
+                    else args.idle_timeout
+                ),
+                startup_delay=(
+                    settings.stream_startup_delay_seconds
+                    if args.startup_delay is None
+                    else args.startup_delay
+                ),
+            )
     finally:
         if server is not None:
             server.stop()

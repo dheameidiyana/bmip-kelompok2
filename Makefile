@@ -14,7 +14,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c
 
 help:
 	@echo "BMIP targets:"
@@ -64,6 +64,14 @@ help:
 	@echo "  evidence-w2b CP1/CP2 evidence: targets, dashboards, rules, log sample"
 	@echo "  drill-w2b    T-39: three alert classes fire -> deliver -> resolve"
 	@echo "  reconcile-w2b  T-37 final: dashboard vs API vs SQL for 24h and 7d"
+	@echo "  certs        Create the local CA and wildcard Traefik certificate"
+	@echo "  users        Write Traefik users.htpasswd from BMIP_UI_USERS"
+	@echo "  governance   Apply ops schema, seed the registry, and seed RBAC keys"
+	@echo "  governance-up  Start postgres-gov, Marquez API, and Marquez web"
+	@echo "  catalog-dev  Run the catalog portal on port 8502"
+	@echo "  evidence-w2c CP1/CP2 lineage and catalog evidence"
+	@echo "  trace-w2c    T-30 trace one payload hash through every layer"
+	@echo "  scan-w2c     PII, port, gitleaks, TLS, RBAC, and ACL evidence"
 
 $(PYTHON):
 	$(PYTHON_BOOT) -m venv .venv
@@ -73,9 +81,35 @@ $(PYTHON):
 setup: $(PYTHON)
 
 secrets: $(PYTHON)
-	@$(PYTHON) scripts/gen_env.py
+	@$(PYTHON) scripts/gen_env.py --merge
 
-dev-up: secrets
+certs: $(PYTHON)
+	@$(PYTHON) scripts/gen_certs.py
+
+users: $(PYTHON)
+	@$(PYTHON) scripts/gen_htpasswd.py
+
+governance: $(PYTHON)
+	@$(PYTHON) scripts/w2c_migrate.py
+	@$(PYTHON) scripts/w2c_seed_registry.py
+	@$(PYTHON) scripts/w2c_seed_keys.py
+
+governance-up: certs users
+	$(COMPOSE_DEV) --profile governance up -d postgres-gov marquez marquez-web
+
+catalog-dev: $(PYTHON)
+	$(PYTHON) -m streamlit run src/bmip/catalog/app.py --server.port 8502
+
+evidence-w2c: $(PYTHON)
+	$(PYTHON) scripts/w2c_evidence.py
+
+trace-w2c: $(PYTHON)
+	$(PYTHON) scripts/w2c_trace.py
+
+scan-w2c: $(PYTHON)
+	$(PYTHON) scripts/w2c_scan.py
+
+dev-up: secrets certs users
 	$(COMPOSE_DEV) up -d --build
 	$(PYTHON) scripts/doctor.py --wait --services-only --timeout 300
 	$(MAKE) bootstrap

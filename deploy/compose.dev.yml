@@ -1,15 +1,17 @@
 services:
   traefik:
     ports:
-      - "8080:8000"
-      - "8082:8082"
+      - "${BMIP_EDGE_BIND_ADDRESS:-0.0.0.0}:80:80"
+      - "${BMIP_EDGE_BIND_ADDRESS:-0.0.0.0}:443:443"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8080:8000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8082:8082"
     mem_limit: 256m
     cpus: 0.50
 
   redpanda:
     ports:
-      - "19092:19092"
-      - "9644:9644"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:19092:19092"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9644:9644"
     networks:
       - edge
       - data
@@ -18,17 +20,23 @@ services:
 
   postgres-core:
     ports:
-      - "5433:5432"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:5433:5432"
     networks:
       - edge
       - data
     mem_limit: 512m
     cpus: 1.00
 
+  postgres-gov:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:5435:5432"
+    mem_limit: 256m
+    cpus: 0.50
+
   minio:
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9000:9000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9001:9001"
     networks:
       - edge
       - data
@@ -37,7 +45,7 @@ services:
 
   postgres-ml:
     ports:
-      - "5434:5432"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:5434:5432"
     networks:
       - edge
       - data
@@ -46,7 +54,7 @@ services:
 
   prefect-server:
     ports:
-      - "4200:4200"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:4200:4200"
     mem_limit: 1024m
     cpus: 1.50
 
@@ -64,7 +72,7 @@ services:
 
   lakekeeper:
     ports:
-      - "8181:8181"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8181:8181"
     networks:
       - edge
       - data
@@ -77,19 +85,37 @@ services:
 
   api:
     ports:
-      - "8000:8000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8000:8000"
     mem_limit: 768m
     cpus: 1.00
 
   dashboard:
     ports:
-      - "8501:8501"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8501:8501"
     mem_limit: 384m
+    cpus: 0.50
+
+  catalog:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8502:8502"
+    mem_limit: 384m
+    cpus: 0.50
+
+  marquez:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:5002:5000"
+    mem_limit: 768m
+    cpus: 1.00
+
+  marquez-web:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:3002:3000"
+    mem_limit: 256m
     cpus: 0.50
 
   prometheus:
     ports:
-      - "9090:9090"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9090:9090"
     networks:
       - edge
     mem_limit: 512m
@@ -97,7 +123,7 @@ services:
 
   alertmanager:
     ports:
-      - "9093:9093"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9093:9093"
     networks:
       - edge
     mem_limit: 128m
@@ -105,7 +131,7 @@ services:
 
   pushgateway:
     ports:
-      - "9091:9091"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9091:9091"
     networks:
       - edge
     mem_limit: 128m
@@ -113,7 +139,7 @@ services:
 
   postgres-exporter:
     ports:
-      - "9187:9187"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:9187:9187"
     networks:
       - edge
     mem_limit: 128m
@@ -121,7 +147,7 @@ services:
 
   cadvisor:
     ports:
-      - "8088:8080"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8088:8080"
     networks:
       - edge
     mem_limit: 256m
@@ -129,7 +155,7 @@ services:
 
   notify:
     ports:
-      - "8081:8080"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8081:8080"
     networks:
       - edge
     mem_limit: 128m
@@ -137,6 +163,6 @@ services:
 
   grafana:
     ports:
-      - "3000:3000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:3000:3000"
     mem_limit: 512m
     cpus: 0.50
