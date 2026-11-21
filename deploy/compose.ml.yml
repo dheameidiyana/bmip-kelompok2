@@ -33,6 +33,7 @@ services:
         mlflow server \
           --host 0.0.0.0 \
           --port 5000 \
+          --workers 1 \
           --backend-store-uri "postgresql://${PREFECT_DB_USER:-prefect}:${PREFECT_DB_PASSWORD}@postgres-ml:5432/mlflow" \
           --serve-artifacts \
           --artifacts-destination "s3://artifacts/mlflow" \
