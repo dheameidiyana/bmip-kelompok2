@@ -72,6 +72,8 @@ help:
 	@echo "  evidence-w2c CP1/CP2 lineage and catalog evidence"
 	@echo "  trace-w2c    T-30 trace one payload hash through every layer"
 	@echo "  scan-w2c     PII, port, gitleaks, TLS, RBAC, and ACL evidence"
+	@echo "  backup       Back up PostgreSQL databases and write a recovery manifest"
+	@echo "  restore      Run the T-19 restore drill from the latest manifest"
 
 $(PYTHON):
 	$(PYTHON_BOOT) -m venv .venv
@@ -247,13 +249,11 @@ benchmark:
 	@echo "[stub] benchmark: implemented in W2-D"
 	@exit 1
 
-backup:
-	@echo "[stub] backup: implemented in W2-D"
-	@exit 1
+backup: $(PYTHON)
+	$(PYTHON) scripts/w2d_backup.py
 
-restore:
-	@echo "[stub] restore: implemented in W2-D"
-	@exit 1
+restore: $(PYTHON)
+	$(PYTHON) scripts/w2d_restore.py
 
 evidence: doctor
 
