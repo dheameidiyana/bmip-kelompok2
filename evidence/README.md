@@ -185,3 +185,41 @@ Traefik v3.7.18. Evidence 2026-11-21; kode fitur W2-C: `85549b1`.
 | ACL | security | `security/tailscale-acl.json` | PASS | ACL hash + `tailscale status` |
 | SUM | w2c | `w2c/SUMMARY_20261121T101848_e7823c5.json` | PASS | ringkasan run |
 
+
+### W2-D
+
+Environment: branch `slot/w2-d-lois`, base tag `w2-c-ok` (`b3ffb46`), commit
+`6187d41`. Windows 11 / Docker Desktop 29.2.1, Python 3.11.9, MLflow 3.18.0 on
+the host. Dataset snapshot is sparse: `gold.mart_ml` has 42 rows / 16 dates but
+only 9 rows / 2 valid event dates after filtering; sentiment covers four dates.
+Tag `w2-d-ok` is not created yet; it must point to the final evidence commit.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | recovery | `recovery/manifest_20261121T163617Z.json` | PASS | 7.338 rows from 5 databases, SHA-256 + row counts |
+| CP1 | deploy | `deploy/health_20261124T0534_6187d41.md` | PASS | final 20-container health after Docker recovery |
+| T-19 | recovery | `recovery/T19.txt` | PASS | restore drill returns identical business rows |
+| T-40 | recovery | `recovery/T40.json` | PASS | 19 services restarted; business tables identical; offsets identical |
+| FAULT | faults | `faults/stream-kill_20261123T182353.json` | PASS | kill stream, 0 duplicates, RTO 88.52 s |
+| FAULT | faults | `faults/minio-kill_20261123T182601.json` | PASS | API `X-Data-Stale`, RTO 42.0 s |
+| T-41 | tests | `tests/coverage.json` | PASS | 51.30% coverage, 186 tests, gate 40% |
+| T-41 | tests | `tests/T41_20261124T050900Z.txt` | PASS | command + totals for the coverage gate |
+| T-42 | benchmark | `benchmark/matrix.csv` | PARTIAL | 16 rows: 13 core + 3 throughput; API and throughput pass, ML/DQ partial |
+| T-42 | benchmark | `benchmark/summary.md` | PARTIAL | bottleneck conclusion + partial blockers |
+| T-42 | benchmark | `benchmark/resources.csv` | PASS | 20 container samples from cAdvisor/docker stats |
+| T-25 | deploy | `deploy/clean-clone.log` | PARTIAL | clean clone install/lint/compose pass; stack + dashboard not demonstrated |
+
+Benchmark highlights:
+
+- API latest p95: 52.592 / 100.452 / 86.607 ms (target <300 ms).
+- API range 14d p95: 550.198 / 357.258 / 361.301 ms (target <2 s).
+- DQ runtime: 60.061 s, partial; one critical `gold_market:gold-market-lag`
+  because the latest event date is far behind wall clock.
+- Training: 28.526 s, partial; `dataset needs at least three event dates`.
+- Inference: 100/100 `not_available`, p95 113.733 ms; no champion in registry.
+- cAdvisor host: CPU 0.000%, memory 2.682 GiB.
+- B2: full scan 724.375 ms vs partition-pruned 48.905 ms (42 vs 5 rows);
+  partial because the dataset is too small to be representative.
+- Throughput replay: 600.000 messages per run, 0 errors, 0 duplicates,
+  999.999 / 999.996 / 999.998 trade/s, p95 3.682 / 3.265 / 4.395 ms.
+  Run 3 was rerun clean after the Docker restart; all three runs are consistent.

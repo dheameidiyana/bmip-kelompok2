@@ -78,7 +78,7 @@ help:
 $(PYTHON):
 	$(PYTHON_BOOT) -m venv .venv
 	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install -e ".[dev]"
+	$(PYTHON) -m pip install -e ".[dev,ml,dashboard]"
 
 setup: $(PYTHON)
 
@@ -241,13 +241,12 @@ reconcile: $(PYTHON)
 openapi: $(PYTHON)
 	$(PYTHON) scripts/api_evidence.py --steps routes
 
-test-cov:
-	@echo "[stub] test-cov: implemented in W2-D"
-	@exit 1
+test-cov: $(PYTHON)
+	@mkdir -p evidence/tests
+	$(PYTHON) -m pytest --cov=bmip --cov-report=term --cov-report=json:evidence/tests/coverage.json --cov-fail-under=40
 
-benchmark:
-	@echo "[stub] benchmark: implemented in W2-D"
-	@exit 1
+benchmark: $(PYTHON)
+	$(PYTHON) scripts/w2d_benchmark.py
 
 backup: $(PYTHON)
 	$(PYTHON) scripts/w2d_backup.py
@@ -256,6 +255,7 @@ restore: $(PYTHON)
 	$(PYTHON) scripts/w2d_restore.py
 
 evidence: doctor
+	$(PYTHON) scripts/w2d_evidence_check.py
 
 OBS_SERVICES := prometheus alertmanager pushgateway postgres-exporter cadvisor notify grafana
 

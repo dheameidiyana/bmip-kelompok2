@@ -80,6 +80,7 @@ def sum_lag(high_low: list[tuple[int, int]]) -> int:
 def _consumer_config(settings: Settings, group: str, client_id: str) -> dict[str, Any]:
     return {
         "bootstrap.servers": settings.redpanda_brokers,
+        "broker.address.family": "v4",
         "group.id": group,
         "client.id": client_id,
         "auto.offset.reset": "earliest",

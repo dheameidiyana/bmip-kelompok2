@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 COPY pyproject.toml README.md ./
 COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip wheel --wheel-dir /wheels ".[ml]"
+    pip wheel --no-cache-dir --retries 10 --timeout 120 --wheel-dir /wheels ".[ml]"
 
 FROM python:3.11-slim AS runtime
 

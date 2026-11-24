@@ -1,0 +1,94 @@
+id        : W2D-FAULT-STREAM
+timestamp : 2026-11-23T18:23:53Z
+commit    : 6187d41
+command   : python scripts/w2d_faults.py --only stream
+result    : PASS
+owner     : lois
+
+topic              : market.w2d-fault-20261123T182353
+group              : w2d-fault-20261123T182353
+unique_trades      : 50
+published_messages : 100
+silver_rows        : 50
+silver_unique      : 50
+silver_duplicates  : 0
+missing_ids        : []
+final_lag          : 0
+kill_exit_code     : 1
+coordination_wait  : 45.2
+restart_exit_code  : 0
+rto_seconds        : 88.52
+error              : None
+
+=== payload ===
+{
+  "id": "W2D-FAULT-STREAM",
+  "scenario": "kill stream processor",
+  "timestamp": "2026-11-23T18:23:53Z",
+  "commit": "6187d41",
+  "owner": "lois",
+  "topic": "market.w2d-fault-20261123T182353",
+  "group": "w2d-fault-20261123T182353",
+  "unique_trades": 50,
+  "published_messages": 100,
+  "command": "python scripts/w2d_faults.py --only stream",
+  "result": "PASS",
+  "consumer_started_at": "2026-11-23T18:23:56Z",
+  "published": 100,
+  "published_at": "2026-11-23T18:24:06Z",
+  "killed_at": "2026-11-23T18:24:07Z",
+  "kill_exit_code": 1,
+  "kill_seconds": 0.0,
+  "group_after_kill": {
+    "group_name": "w2d-fault-20261123T182353",
+    "coordinator_partition": "__consumer_offsets/2",
+    "state": "Empty",
+    "balancer": "",
+    "members": 0,
+    "coordinator_node": 0,
+    "total_lag": 0,
+    "partitions": [],
+    "members_details": []
+  },
+  "coordination_wait_seconds": 45.2,
+  "restarted_at": "2026-11-23T18:24:52Z",
+  "drained_at": "2026-11-23T18:25:35Z",
+  "restart_exit_code": 0,
+  "restart_seconds": 43.31,
+  "rto_seconds": 88.52,
+  "restart_result": {
+    "group": "w2d-fault-20261123T182353",
+    "topic": "market.w2d-fault-20261123T182353",
+    "processed": 100,
+    "events_total": 100,
+    "duplicates": 50,
+    "quarantined": 0,
+    "late_events": 0,
+    "ohlcv_rows": 1,
+    "commits": 1,
+    "lag": 0,
+    "watermark": "2026-11-23T18:21:38Z",
+    "last_event_ts": "2026-11-23T18:23:38Z",
+    "metrics": {
+      "bmip_ingest_events_total": 100.0,
+      "bmip_duplicate_total": 50.0,
+      "bmip_quarantine_total": 0.0,
+      "bmip_late_events_total": 0.0,
+      "bmip_consumer_lag": 0.0,
+      "bmip_batch_size": 100.0,
+      "bmip_commit_total": 1.0,
+      "bmip_ohlcv_rows_total": 1.0,
+      "bmip_stream_poll_total": 1.0,
+      "bmip_freshness_seconds": 15.0,
+      "bmip_silver_bar_age_seconds": 86.711598,
+      "bmip_last_event_timestamp_seconds": 1795458218.0
+    }
+  },
+  "restart_output_tail": "{\"timestamp\": \"2026-11-23T18:24:57.291+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:24:57.412+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:24:57.445+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:09.893+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"httpx\", \"message\": \"HTTP Request: POST http://localhost:5002/api/v1/lineage \\\"HTTP/1.1 201 Created\\\"\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:10.071+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:13.884+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:16.141+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:19.908+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:19.990+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"pyiceberg.io\", \"message\": \"Loaded FileIO: pyiceberg.io.fsspec.FsspecFileIO\", \"run_id\": \"stream-1795458292\"}\n{\"timestamp\": \"2026-11-23T18:25:35.024+00:00\", \"severity\": \"INFO\", \"service\": \"stream\", \"logger\": \"httpx\", \"message\": \"HTTP Request: POST http://localhost:5002/api/v1/lineage \\\"HTTP/1.1 201 Created\\\"\", \"run_id\": \"stream-1795458292\"}\n{\n  \"stream\": {\n    \"group\": \"w2d-fault-20261123T182353\",\n    \"topic\": \"market.w2d-fault-20261123T182353\",\n    \"processed\": 100,\n    \"events_total\": 100,\n    \"duplicates\": 50,\n    \"quarantined\": 0,\n    \"late_events\": 0,\n    \"ohlcv_rows\": 1,\n    \"commits\": 1,\n    \"lag\": 0,\n    \"watermark\": \"2026-11-23T18:21:38Z\",\n    \"last_event_ts\": \"2026-11-23T18:23:38Z\",\n    \"metrics\": {\n      \"bmip_ingest_events_total\": 100.0,\n      \"bmip_duplicate_total\": 50.0,\n      \"bmip_quarantine_total\": 0.0,\n      \"bmip_late_events_total\": 0.0,\n      \"bmip_consumer_lag\": 0.0,\n      \"bmip_batch_size\": 100.0,\n      \"bmip_commit_total\": 1.0,\n      \"bmip_ohlcv_rows_total\": 1.0,\n      \"bmip_stream_poll_total\": 1.0,\n      \"bmip_freshness_seconds\": 15.0,\n      \"bmip_silver_bar_age_seconds\": 86.711598,\n      \"bmip_last_event_timestamp_seconds\": 1795458218.0\n    }\n  }\n}\n",
+  "final_lag": 0,
+  "silver_rows": 50,
+  "silver_unique": 50,
+  "silver_duplicates": 0,
+  "missing_ids": [],
+  "event_date": "2026-11-23"
+}

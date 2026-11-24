@@ -16,7 +16,12 @@ RETENTION_MS = 7 * 24 * 60 * 60 * 1000
 
 
 def ensure_topic(brokers: str, topic: str, partitions: int = 3) -> None:
-    admin = AdminClient({"bootstrap.servers": brokers})
+    admin = AdminClient(
+        {
+            "bootstrap.servers": brokers,
+            "broker.address.family": "v4",
+        }
+    )
     metadata = admin.list_topics(timeout=10)
     if topic in metadata.topics:
         return
@@ -48,6 +53,7 @@ def publish_market_trades(
     producer = Producer(
         {
             "bootstrap.servers": brokers,
+            "broker.address.family": "v4",
             "acks": "all",
             "enable.idempotence": True,
             "message.timeout.ms": 15000,

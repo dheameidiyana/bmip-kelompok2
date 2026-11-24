@@ -47,11 +47,16 @@ def datasets_for(scope: str = "all") -> tuple[str, ...]:
     return ALL_DATASETS
 
 
-def load_dataset(settings: Settings, identifier: str, columns: tuple[str, ...] | None = None):
+def load_dataset(
+    settings: Settings,
+    identifier: str,
+    columns: tuple[str, ...] | None = None,
+    service: str = "ml",
+):
     from bmip.transform.iceberg import load_rest_catalog, table_with_host_io
 
-    catalog = load_rest_catalog(settings)
-    table = table_with_host_io(catalog, settings, identifier)
+    catalog = load_rest_catalog(settings, service)
+    table = table_with_host_io(catalog, settings, identifier, service)
     scan = table.scan(selected_fields=columns) if columns else table.scan()
     return to_frame(scan.to_arrow().to_pylist())
 

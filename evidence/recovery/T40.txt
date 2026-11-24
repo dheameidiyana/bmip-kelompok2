@@ -1,0 +1,38 @@
+T-40 Restart persistence
+generated_at=2026-11-23T18:07:54Z
+commit=6187d41
+branch=slot/w2-d-lois
+command=python scripts/w2d_restart.py
+result=PASS
+services_restarted=19
+restart_command_seconds=9.70
+ready_seconds=34.08
+
+=== databases ===
+bmip rows_before=248 rows_after=248 tables_identical=PASS
+lakekeeper rows_before=5027 rows_after=5027 tables_identical=FAIL
+  mismatch public.endpoint_statistics rows=115->115
+marquez rows_before=95 rows_after=95 tables_identical=FAIL
+  mismatch public.namespaces rows=1->1
+  mismatch public.tags rows=2->2
+mlflow rows_before=3 rows_after=3 tables_identical=PASS
+prefect rows_before=1184 rows_after=1184 tables_identical=PASS
+
+=== offsets ===
+groups_before=27
+groups_after=27
+identical=PASS
+
+=== health ===
+alertmanager status=200 ok=PASS
+api status=200 ok=PASS
+catalog status=200 ok=PASS
+dashboard status=200 ok=PASS
+grafana status=200 ok=PASS
+minio status=200 ok=PASS
+mlflow status=200 ok=PASS
+prefect status=200 ok=PASS
+prometheus status=200 ok=PASS
+pushgateway status=200 ok=PASS
+
+RESULT: PASS
