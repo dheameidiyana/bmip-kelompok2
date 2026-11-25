@@ -234,9 +234,9 @@ Benchmark highlights:
 
 ### C3-A
 
-Environment: branch `slot/c3-a-anin`, base `dev` (`3155aa5`), commit `b7c5bcd`.
-Windows 11 / Docker Desktop 29.2.1, Python 3.11.9, Traefik 3.7.18,
-Toxiproxy 2.12.0, Trivy 0.76.2.
+Environment: branch `slot/c3-a-anin`, base `dev` (`3155aa5`), code commit
+`b7c5bcd`, evidence/tag commit `0043fb1`. Windows 11 / Docker Desktop 29.2.1,
+Python 3.11.9, Traefik 3.7.18, Toxiproxy 2.12.0, Trivy 0.76.2.
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |

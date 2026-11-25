@@ -72,7 +72,7 @@ T-42 penuh tetap PARTIAL sampai C3-D. Detail ada di
 [docs/w2-d-recap.md](docs/w2-d-recap.md) dan
 [docs/handoff/w2-d.md](docs/handoff/w2-d.md).
 
-C3-A berjalan di branch `slot/c3-a-anin`: `api-2` read-only, Traefik load
+C3-A selesai di branch `slot/c3-a-anin`: `api-2` read-only, Traefik load
 balancer `wrr`, circuit breaker, HSTS, retry/rate limit, Toxiproxy, Trivy,
 port/TLS/429/audit evidence, tiga runbook, dan T-16/T-17/T-18. Detail ada di
 [docs/handoff/c3-a.md](docs/handoff/c3-a.md).
