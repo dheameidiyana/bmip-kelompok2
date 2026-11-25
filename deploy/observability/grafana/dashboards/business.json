@@ -14,6 +14,56 @@
     "from": "now-30d",
     "to": "now"
   },
+  "templating": {
+    "list": [
+      {
+        "name": "symbol",
+        "label": "Symbol",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "serving"
+        },
+        "query": "SELECT DISTINCT symbol FROM serving.market_hourly ORDER BY symbol",
+        "definition": "SELECT DISTINCT symbol FROM serving.market_hourly ORDER BY symbol",
+        "refresh": 1,
+        "includeAll": false,
+        "multi": false,
+        "current": {
+          "selected": true,
+          "text": "BTCUSDT",
+          "value": "BTCUSDT"
+        },
+        "options": [
+          {
+            "selected": true,
+            "text": "BTCUSDT",
+            "value": "BTCUSDT"
+          },
+          {
+            "selected": false,
+            "text": "ETHUSDT",
+            "value": "ETHUSDT"
+          },
+          {
+            "selected": false,
+            "text": "BNBUSDT",
+            "value": "BNBUSDT"
+          },
+          {
+            "selected": false,
+            "text": "SOLUSDT",
+            "value": "SOLUSDT"
+          },
+          {
+            "selected": false,
+            "text": "XRPUSDT",
+            "value": "XRPUSDT"
+          }
+        ]
+      }
+    ]
+  },
   "panels": [
     {
       "id": 99,
@@ -60,7 +110,7 @@
         {
           "refId": "A",
           "format": "time_series",
-          "rawSql": "SELECT window_start AS \"time\", close\nFROM serving.market_hourly\nWHERE $__timeFilter(window_start) AND symbol = 'BTCUSDT'\nORDER BY window_start"
+          "rawSql": "SELECT window_start AS \"time\", close\nFROM serving.market_hourly\nWHERE $__timeFilter(window_start) AND symbol = '$symbol'\nORDER BY window_start"
         }
       ]
     },
@@ -93,7 +143,7 @@
         {
           "refId": "A",
           "format": "time_series",
-          "rawSql": "SELECT window_start AS \"time\", realized_vol_1h AS \"realized\", rv_ewma_24h AS \"ewma_24h\"\nFROM serving.volatility\nWHERE $__timeFilter(window_start) AND symbol = 'BTCUSDT'\nORDER BY window_start"
+          "rawSql": "SELECT window_start AS \"time\", realized_vol_1h AS \"realized\", rv_ewma_24h AS \"ewma_24h\"\nFROM serving.volatility\nWHERE $__timeFilter(window_start) AND symbol = '$symbol'\nORDER BY window_start"
         }
       ]
     },

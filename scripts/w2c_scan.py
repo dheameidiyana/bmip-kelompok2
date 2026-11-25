@@ -206,10 +206,9 @@ def ports() -> dict[str, Any]:
 
 def gitleaks() -> dict[str, Any]:
     binary = shutil.which("gitleaks") or str(ROOT / "tools" / "gitleaks.exe")
-    report = SEC / "gitleaks.json"
-    lines = [_header("SECRETS", "gitleaks detect --source .", "PASS")]
+    lines = [_header("SECRETS", "gitleaks git + gitleaks dir", "PASS")]
     if not Path(binary).exists():
-        lines[0] = _header("SECRETS", "gitleaks detect --source .", "BLOCKED")
+        lines[0] = _header("SECRETS", "gitleaks git + gitleaks dir", "BLOCKED")
         lines.append("gitleaks is not installed. Install it with:")
         lines.append("  winget install Gitleaks.Gitleaks")
         lines.append("or download a release into tools/gitleaks.exe (gitignored).")
@@ -220,38 +219,48 @@ def gitleaks() -> dict[str, Any]:
             "blocked": True,
             "evidence": str(path.relative_to(ROOT)),
         }
-    report.parent.mkdir(parents=True, exist_ok=True)
-    completed = subprocess.run(
-        [
-            binary,
-            "detect",
-            "--source",
-            ".",
-            "--config",
-            ".gitleaks.toml",
-            "--redact",
-            "--report-format",
-            "json",
-            "--report-path",
-            str(report),
-        ],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+
     findings = 0
-    if report.exists():
-        try:
-            findings = len(json.loads(report.read_text(encoding="utf-8")) or [])
-        except (ValueError, OSError):
-            findings = 0
+    exits: list[str] = []
+    targets = [("git", ".")] + [
+        ("dir", name)
+        for name in ("src", "scripts", "deploy", "docs", "evidence", "tests", "contracts")
+        if (ROOT / name).exists()
+    ]
+    for mode, target in targets:
+        report = SEC / f"gitleaks-{mode}-{Path(target).name or 'root'}.json"
+        report.parent.mkdir(parents=True, exist_ok=True)
+        completed = subprocess.run(
+            [
+                binary,
+                mode,
+                target,
+                "--config",
+                ".gitleaks.toml",
+                "--redact",
+                "--report-format",
+                "json",
+                "--report-path",
+                str(report),
+            ],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        exits.append(f"{mode} {target} exit={completed.returncode}")
+        if report.exists():
+            try:
+                findings += len(json.loads(report.read_text(encoding="utf-8")) or [])
+            except (ValueError, OSError):
+                pass
+        if completed.stderr:
+            lines.append(completed.stderr.strip()[-2000:])
+
     result = "PASS" if findings == 0 else "FAIL"
-    lines[0] = _header("SECRETS", "gitleaks detect --source .", result)
-    lines.append(f"gitleaks exit code: {completed.returncode}")
+    lines[0] = _header("SECRETS", "gitleaks git + gitleaks dir", result)
+    lines.extend(exits)
     lines.append(f"findings: {findings}")
-    if completed.stderr:
-        lines.append(completed.stderr.strip()[-2000:])
     path = _write("security", "gitleaks.txt", "\n".join(lines) + "\n")
     return {"step": "gitleaks", "passed": findings == 0, "evidence": str(path.relative_to(ROOT))}
 
@@ -430,7 +439,13 @@ def tailscale() -> dict[str, Any]:
         )
         status["exit_code"] = completed.returncode
         if completed.returncode == 0 and completed.stdout.strip():
-            status["status"] = json.loads(completed.stdout)
+            payload = json.loads(completed.stdout)
+            status["backend_state"] = payload.get("BackendState")
+            status["tailscale_version"] = payload.get("Version")
+            status["peer_count"] = len(payload.get("Peer") or {})
+            status["note"] = (
+                "peer identities, node keys, DNS names, and addresses are redacted"
+            )
     except (OSError, subprocess.SubprocessError, ValueError) as exc:
         status["error"] = f"{type(exc).__name__}: {exc}"
     path = _write(
@@ -438,12 +453,13 @@ def tailscale() -> dict[str, Any]:
         "tailscale-acl.json",
         json.dumps(status, indent=2, default=str) + "\n",
     )
-    running = "status" in status
+    running = status.get("backend_state") == "Running"
     return {
         "step": "tailscale",
         "passed": running,
         "partial": not running,
         "evidence": str(path.relative_to(ROOT)),
+        "peer_count": status.get("peer_count"),
     }
 
 

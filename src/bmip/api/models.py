@@ -2,7 +2,8 @@
 
 Naming rule: workplan routes are canonical, ARCHITECTURE route names are kept
 as aliases. ``symbol`` defaults to BTCUSDT but is always validated against the
-allowlist in ``Settings.market_symbols``.
+allowlist in ``Settings.market_symbols`` (default: BTCUSDT, ETHUSDT, BNBUSDT,
+SOLUSDT, XRPUSDT; override with ``MARKET_SYMBOLS``).
 """
 
 from __future__ import annotations

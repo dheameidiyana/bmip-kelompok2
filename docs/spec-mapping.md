@@ -13,6 +13,10 @@
 > `ARCHITECTURE.md` section 2.1, 2.2, 2.5, dan daftar komponen pada
 > `workplan.md`. Setiap baris yang tidak dapat dipetakan secara pasti ditandai
 > `partial` atau `unknown`; tidak ada klaim pass tanpa file bukti.
+>
+> Lingkup market yang diimplementasikan adalah lima Binance spot pair
+> (`BTCUSDT`, `ETHUSDT`, `BNBUSDT`, `SOLUSDT`, `XRPUSDT`) melalui
+> `MARKET_SYMBOLS`. Model W2-A dilatih pooled dengan fitur one-hot symbol.
 
 ## 1. Functional requirements F-01..F-20
 
@@ -32,7 +36,7 @@
 | F-12 | Serving PostgreSQL dan query rentang DuckDB/Iceberg | `src/bmip/serving/`, `src/bmip/api/routers/market.py` | `evidence/serving/loader-idempotence_20261114T0239.json`, `evidence/api/T34.json` | PASS |
 | F-13 | Dashboard Streamlit dan Grafana | `src/bmip/dashboard/`, `deploy/grafana/` | `evidence/dashboards/streamlit_20261114T0405.png`, `evidence/dashboards/grafana-pipeline_20261120T0324_c9ef99a.png`, `evidence/dashboards/grafana-business_20261120T0324_c9ef99a.png` | PASS untuk visualisasi; prediksi tampil kosong saat registry kosong |
 | F-14 | Analisis sentimen | `src/bmip/transform/sentiment.py`, `dbt/models/silver/silver_social_sentiment.sql` | `evidence/tests/T10.txt`, `evidence/dq/mart-counts_20261113T2223.csv` | PASS |
-| F-15 | Training, registry, inference, drift, retraining | `src/bmip/ml/`, `scripts/w2a_train.py`, `scripts/w2a_drift.py` | `evidence/ml/train_20261118T143530Z.json`, `evidence/ml/registry-metadata_20261118T154807Z.json`, `evidence/ml/T20.txt`, `evidence/ml/T21.json`, `evidence/ml/drift_20261118T092731Z.json` | PARTIAL: evidence W2-A pass; registry saat freeze kosong dan retrain sekarang gagal karena kurang dari tiga event date berlabel |
+| F-15 | Training, registry, inference, drift, retraining | `src/bmip/ml/`, `scripts/w2a_train.py`, `scripts/w2a_drift.py` | `evidence/ml/train_20261118T143530Z.json`, `evidence/ml/registry-metadata_20261118T154807Z.json`, `evidence/ml/T20.txt`, `evidence/ml/T21.json`, `evidence/ml/drift_20261118T092731Z.json` | PARTIAL: evidence W2-A pass untuk model pooled lima symbol; registry saat freeze kosong dan retrain sekarang gagal karena kurang dari tiga event date berlabel |
 | F-16 | Observability, metrics, structured logs, alerting | `src/bmip/observability/`, `deploy/prometheus/`, `deploy/alertmanager/` | `evidence/observability/CP1_20261120T0323_c9ef99a.json`, `evidence/alerts/CP2_20261120T0323_c9ef99a.json`, `evidence/alerts/T39_20261120T0304_e5369f6.md` | PASS |
 | F-17 | Security: auth API, RBAC, TLS, secret/PII scan, ACL | `src/bmip/api/security.py`, `deploy/traefik/`, `scripts/w2c_scan.py` | `evidence/security/api-401.txt`, `evidence/security/rbac-matrix.md`, `evidence/security/tls.txt`, `evidence/security/gitleaks.txt`, `evidence/security/pii-scan.txt`, `evidence/security/tailscale-acl.json` | PASS |
 | F-18 | Governance, catalog, lineage | `src/bmip/catalog/`, `scripts/w2c_*`, `dbt` OpenLineage | `evidence/catalog/CP2_20261121T101633.md`, `evidence/catalog/registry_20261121T101633.csv`, `evidence/lineage/CP1_20261121T101507.md`, `evidence/lineage/T30.md` | PASS |

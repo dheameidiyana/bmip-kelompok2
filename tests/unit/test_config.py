@@ -14,7 +14,31 @@ def test_settings_from_env(monkeypatch):
     assert settings.env in {"dev", "ci"}
     assert settings.market_topic == "market.trades"
     assert settings.social_max_pages == 50
-    assert settings.postgres_dsn.endswith("/bmip")
+    assert settings.postgres_dsn.startswith("postgresql://")
+    assert "/bmip" in settings.postgres_dsn
+    assert "connect_timeout=5" in settings.postgres_dsn
+
+
+def test_postgres_dsn_keeps_existing_connect_timeout(monkeypatch):
+    monkeypatch.setenv("POSTGRES_PASSWORD", "pw")
+    monkeypatch.setenv(
+        "POSTGRES_CORE_DSN",
+        "postgresql://bmip:pw@localhost:5433/bmip?connect_timeout=9",
+    )
+
+    settings = Settings.from_env()
+
+    assert settings.postgres_dsn.count("connect_timeout=") == 1
+    assert "connect_timeout=9" in settings.postgres_dsn
+
+
+def test_market_symbols_from_env(monkeypatch):
+    monkeypatch.setenv("POSTGRES_PASSWORD", "pw")
+    monkeypatch.setenv("MARKET_SYMBOLS", "btcusdt, ethusdt,xrpusdt")
+
+    settings = Settings.from_env()
+
+    assert settings.market_symbols == ("BTCUSDT", "ETHUSDT", "XRPUSDT")
 
 
 def test_stream_settings_defaults(monkeypatch):

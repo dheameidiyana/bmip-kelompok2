@@ -28,6 +28,7 @@ def read_dlq(
     consumer = Consumer(
         {
             "bootstrap.servers": settings.redpanda_brokers,
+            "broker.address.family": "v4",
             "group.id": f"dlq-reader-{uuid.uuid4().hex[:12]}",
             "auto.offset.reset": "earliest",
             "enable.auto.commit": False,
@@ -73,6 +74,7 @@ class DlqPublisher:
         producer = Producer(
             {
                 "bootstrap.servers": self.settings.redpanda_brokers,
+                "broker.address.family": "v4",
                 "acks": "all",
                 "enable.idempotence": True,
                 "message.timeout.ms": 15000,

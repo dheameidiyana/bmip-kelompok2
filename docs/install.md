@@ -40,12 +40,24 @@ secret acak; perintah ini tidak merotasi `.env` yang sudah ada.
 
 ```powershell
 .\scripts\make.ps1 dev-up
+.\scripts\make.ps1 governance-up
+.\scripts\make.ps1 governance
 .\scripts\make.ps1 doctor
 ```
 
 `dev-up` menjalankan compose dasar + dev, menunggu health, bootstrap MinIO dan
-Lakekeeper, lalu menulis evidence health. Jika ingin memakai MLflow di host,
-gunakan override `deploy/compose.host-ml.yml` agar API tetap bisa menghubungi
+Lakekeeper, lalu menulis evidence health. `governance-up` menyalakan
+`postgres-gov` + Marquez + Marquez web (profil `governance`), sedangkan
+`governance` menjalankan migrasi `ops`, seed registry 11 dataset, dan seed API
+key RBAC. Tanpa dua langkah itu, lineage UI, katalog database, dan key
+viewer/operator/admin tidak tersedia.
+
+Market memakai lima pair default:
+`BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT`. Ubah `MARKET_SYMBOLS` di `.env`
+sebelum `dev-up` jika ingin cakupan lain; `MARKET_SYMBOL` hanya default legacy.
+
+Jika ingin memakai MLflow di host, gunakan override
+`deploy/compose.host-ml.yml` agar API tetap bisa menghubungi
 `host.docker.internal:5000`.
 
 ## 4. MLflow host (opsional tetapi diperlukan untuk inference)
@@ -82,6 +94,8 @@ Hasil yang diharapkan:
 - `quality` menulis `evidence/dq/dq_report.json`.
 - `serving` mengisi `serving.market_hourly` dan `serving.sentiment_hourly`.
 - `evidence-api` menulis smoke/routes dan T-34.
+- API menerima kelima symbol default (`BTCUSDT`, `ETHUSDT`, `BNBUSDT`,
+  `SOLUSDT`, `XRPUSDT`); symbol di luar allowlist mengembalikan `400`.
 
 ## 6. Dashboard, catalog, dan observability
 
@@ -94,7 +108,8 @@ Hasil yang diharapkan:
 
 Dashboard membaca API pada `BMIP_API_URL` dan memakai `X-API-Key` dari `.env`.
 Jika dashboard kosong, cek API health terlebih dahulu, bukan langsung mengubah
-query.
+query. Katalog harus menampilkan 11 dataset; Marquez harus hidup di
+`http://localhost:3002` setelah `governance-up` dan `governance`.
 
 ## 7. Test dan benchmark
 
@@ -102,6 +117,7 @@ query.
 .\scripts\make.ps1 lint
 .\scripts\make.ps1 test
 .\scripts\make.ps1 test-cov        # coverage >= 40%, tulis evidence/tests/coverage.json
+.\scripts\make.ps1 evidence-check  # manifest + link + tracked evidence
 .\scripts\make.ps1 benchmark
 .\scripts\make.ps1 backup
 .\scripts\make.ps1 restore

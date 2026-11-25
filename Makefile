@@ -14,7 +14,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check
 
 help:
 	@echo "BMIP targets:"
@@ -49,6 +49,7 @@ help:
 	@echo "  evidence-w1c Write T03/T09/T10/T11/T12/T31/T32/T33 evidence (W1-C)"
 	@echo "  e2e-smoke    W1-A smoke: health + replay + bronze + ledger"
 	@echo "  evidence     Collect the health evidence file"
+	@echo "  evidence-check Verify manifest, links, and tracked evidence (CI)"
 	@echo "  serving      Load gold into the serving schema (W1-D)"
 	@echo "  serving-counts  Print serving table counts"
 	@echo "  api-dev      Run the Query API on the host (uvicorn, port 8000)"
@@ -256,6 +257,9 @@ restore: $(PYTHON)
 
 evidence: doctor
 	$(PYTHON) scripts/w2d_evidence_check.py
+
+evidence-check: $(PYTHON)
+	$(PYTHON) scripts/w2d_evidence_check.py --check
 
 OBS_SERVICES := prometheus alertmanager pushgateway postgres-exporter cadvisor notify grafana
 

@@ -2,11 +2,17 @@
 
 Platform data end-to-end untuk menjawab satu pertanyaan:
 
-> Apakah sentimen publik di Bluesky menambah nilai prediksi volatilitas Bitcoin
-> jangka pendek, di luar data market Binance?
+> Apakah sentimen publik di Bluesky menambah nilai prediksi volatilitas
+> jangka pendek pada lima Binance spot pair (BTC, ETH, BNB, SOL, XRP), di luar
+> data market Binance?
 
 Proyek kelompok TBP Advanced Data Platform Engineering. Arsitektur lengkap ada di
 [ARCHITECTURE.md](ARCHITECTURE.md), pembagian kerja ada di [workplan.md](workplan.md).
+
+Pipeline market memakai `MARKET_SYMBOLS` dengan default lima pair:
+`BTCUSDT`, `ETHUSDT`, `BNBUSDT`, `SOLUSDT`, `XRPUSDT`. Nama produk tetap BMIP
+karena Bitcoin adalah pair utama, tetapi ingestion, API, dan model dilatih untuk
+lima pair tersebut.
 
 ## Status
 
@@ -36,7 +42,13 @@ waktu, panel kualitas). `POST /v1/predict` menjawab `status: not_available`
 selama belum ada champion; training adalah W2-A. Status, keputusan, operasi,
 dan bukti ada di [docs/w1-d.md](docs/w1-d.md).
 
-W2-B berjalan di branch `slot/w2-b-vio` (base `slot/w2-a-dhea`): Prometheus
+W2-A selesai di branch `slot/w2-a-dhea` (base `slot/w1-d-anin`): ML loop dengan
+snapshot `mart_ml`, split kronologis, baseline persistence/EWMA, E1/E2, MLflow
+registry, batch inference, drift report, dan model card. Model dilatih pooled
+untuk lima symbol dengan fitur one-hot symbol; detail ada di
+[docs/handoff/w2-a.md](docs/handoff/w2-a.md).
+
+W2-B selesai di branch `slot/w2-b-vio` (base `slot/w2-a-dhea`): Prometheus
 dengan enam target, Pushgateway untuk job batch, sembilan metrik pipeline,
 log JSON enam field, dua dashboard Grafana sebagai kode, 16 alert rule dalam
 tiga kelas, routing Alertmanager → notifier → Telegram/berkas, tiga runbook,
@@ -44,7 +56,7 @@ drill T-39, dan rekonsiliasi T-37 untuk 24 jam dan 7 hari. Detail serah terima
 ada di [docs/handoff/w2-b.md](docs/handoff/w2-b.md) dan keputusan teknisnya di
 [docs/adr/0003-w2-b-observability.md](docs/adr/0003-w2-b-observability.md).
 
-W2-C berjalan di branch `slot/w2-c-anin` (base `w2-b-ok`): lineage OpenLineage
+W2-C selesai di branch `slot/w2-c-anin` (base `w2-b-ok`): lineage OpenLineage
 ke Marquez dari dbt, Prefect, dan stream processor; katalog 11 dataset di
 `ops.dataset_registry` dengan portal Streamlit; Traefik TLS dan route per
 hostname; ACL Tailscale deny-by-default; RBAC `viewer/operator/admin` dengan
@@ -52,18 +64,26 @@ audit log; serta scan gitleaks, PII, port, dan TLS. Detail ada di
 [docs/handoff/w2-c.md](docs/handoff/w2-c.md) dan keputusan di
 [docs/adr/0004-w2-c-lineage-catalog-security.md](docs/adr/0004-w2-c-lineage-catalog-security.md).
 
+W2-D selesai di branch `slot/w2-d-lois` (base `w2-c-ok`): backup/restore T-19,
+restart persistence T-40, fault injection stream dan MinIO, benchmark T-42,
+coverage gate T-41 51,35%, evidence checker, `docs/install.md`, dan
+`docs/spec-mapping.md`. T-25 clean clone dan T-42 penuh tetap dicatat sebagai
+PARTIAL sampai ditutup di C3-D. Detail ada di
+[docs/w2-d-recap.md](docs/w2-d-recap.md) dan
+[docs/handoff/w2-d.md](docs/handoff/w2-d.md).
+
 ## Stack
 
-- Sumber: Binance WebSocket (stream) + Bluesky AT Protocol (batch per jam)
+- Sumber: Binance WebSocket lima pair (stream) + Bluesky AT Protocol (batch per jam)
 - Broker: Redpanda
 - Lakehouse: MinIO + Apache Iceberg + Lakekeeper
 - Transformasi: Polars, DuckDB, dbt-duckdb
 - Orkestrasi: Prefect 3
 - Quality: Great Expectations
 - Serving: FastAPI + PostgreSQL
-- ML: scikit-learn/XGBoost, MLflow, Feast
-- Observability: Prometheus, Grafana, Loki
-- Deployment: Docker Compose (`dev`, `two-node`, `three-node`, `four-node`)
+- ML: scikit-learn/XGBoost, MLflow (Feast di C3-B)
+- Observability: Prometheus, Grafana (Loki di C3-C)
+- Deployment: Docker Compose (`dev`, `two-node`; `three-node`/`four-node` di C3-C)
 
 ## Struktur repo
 
@@ -109,6 +129,7 @@ Setara di Linux/macOS:
 
 ```bash
 make setup && make secrets && make dev-up && make doctor
+make governance-up && make governance   # Marquez, registry, dan API key RBAC
 ```
 
 Port host dev:
@@ -146,6 +167,8 @@ Perintah operasional:
 .\scripts\make.ps1 catalog-dev  # portal katalog di 8502
 .\scripts\make.ps1 evidence-w2c # CP1/CP2 W2-C
 .\scripts\make.ps1 scan-w2c     # PII, port, gitleaks, TLS, RBAC
+.\scripts\make.ps1 evidence-check # verifikasi manifest dan link tanpa menulis manifest
+.\scripts\make.ps1 evidence     # health + manifest baru (butuh stack hidup)
 .\scripts\make.ps1 ci           # compose config + lint + test
 ```
 
@@ -201,6 +224,11 @@ Respons memuat `meta.freshness` (`ok`/`warn`/`stale`/`unknown`) dan header
 | `slot/w1-b-lois` | Pekerjaan W1-B (aktual: `feat/silver-lois`) |
 | `slot/w1-c-vio` | Pekerjaan W1-C |
 | `slot/w1-d-anin` | Pekerjaan W1-D |
+| `slot/w2-a-dhea` | Pekerjaan W2-A |
+| `slot/w2-b-vio` | Pekerjaan W2-B |
+| `slot/w2-c-anin` | Pekerjaan W2-C |
+| `slot/w2-d-lois` | Pekerjaan W2-D |
+| `fix/w2-closeout` | Perbaikan evidence, gitleaks, dan dokumentasi 5 symbol |
 
 Alur: branch slot -> PR ke `dev` (review minimal 1 orang) -> PR `dev` ke `main` saat
 gate -> tag slot (contoh `w1-a-ok`).

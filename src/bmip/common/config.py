@@ -47,6 +47,15 @@ def _symbols() -> tuple[str, ...]:
     return symbols or DEFAULT_MARKET_SYMBOLS
 
 
+def _with_connect_timeout(dsn: str, seconds: int = 5) -> str:
+    """Bound host-side PostgreSQL connects; Windows localhost can hang otherwise."""
+    if "connect_timeout=" in dsn:
+        return dsn
+    separator = "&" if "?" in dsn else "?"
+    return f"{dsn}{separator}connect_timeout={seconds}"
+
+
+
 @dataclass(frozen=True)
 class Settings:
     env: str
@@ -121,6 +130,7 @@ class Settings:
         if not dsn:
             password = _env("POSTGRES_PASSWORD")
             dsn = f"postgresql://{quote(user)}:{quote(password)}@localhost:5433/{database}"
+        dsn = _with_connect_timeout(dsn)
         return cls(
             env=os.getenv("BMIP_ENV", "dev"),
             node=os.getenv("BMIP_NODE", "n1"),

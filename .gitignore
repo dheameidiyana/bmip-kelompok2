@@ -20,6 +20,7 @@ __pycache__/
 .mypy_cache/
 .coverage
 coverage.json
+!evidence/tests/coverage.json
 htmlcov/
 
 # Local data and runtime
@@ -27,16 +28,18 @@ htmlcov/
 dbt/target/
 dbt/logs/
 dbt/.user.yml
-data/
-logs/
+/data/
+/logs/
 # evidence keeps its own log samples; only runtime logs are ignored
 !evidence/logs/
 !evidence/logs/**
-backups/
+/backups/
 tools/
 *.duckdb
 *.duckdb.wal
 *.log
+!evidence/**/*.log
+!evidence/verification/**
 
 # OS and editors
 .DS_Store

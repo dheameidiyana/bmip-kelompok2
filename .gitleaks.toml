@@ -11,3 +11,8 @@ useDefault = true
 [[allowlists]]
 description = "W1-C PII evidence contains pseudonymized hashes, not credentials"
 paths = ['''evidence/security/pii-columns_[0-9T]+\.txt''']
+
+[[allowlists]]
+description = "Historical tailscale status evidence before redaction: node public keys and device names, not credentials"
+commits = ["74957001d0d5cd9e8ab8f545ca26e0096b1919d0"]
+paths = ['''evidence/security/tailscale-acl\.json''']

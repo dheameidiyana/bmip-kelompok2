@@ -68,9 +68,9 @@ Conventions used in this document:
 
 The platform answers one integrated question that needs both batch and streaming data:
 
-> **Does public social sentiment add predictive value for short-horizon Bitcoin realized volatility, beyond what market data alone provides, and can the platform deliver the underlying data products with measurable freshness, quality, and lineage?**
+> **Does public social sentiment add predictive value for short-horizon realized volatility of five Binance spot pairs (BTC, ETH, BNB, SOL, XRP), beyond what market data alone provides, and can the platform deliver the underlying data products with measurable freshness, quality, and lineage?**
 
-The platform ingests hourly social posts (Bluesky, batch) and real-time Bitcoin trades (Binance, stream), builds a medallion lakehouse, trains a lightweight volatility model, serves ten query endpoints and one dashboard, and proves every step with lineage, quality checks, alerts, and recovery tests.
+The platform ingests hourly social posts (Bluesky, batch) and real-time trades for five Binance spot pairs (Binance, stream), builds a medallion lakehouse, trains one pooled lightweight volatility model, serves query endpoints and one dashboard, and proves every step with lineage, quality checks, alerts, and recovery tests.
 
 ### 1.2 What the platform is
 
@@ -204,7 +204,7 @@ The project is complete when all of the following are demonstrable:
 
 ### 3.1 Business question
 
-> **Does public social sentiment add predictive value for short-horizon Bitcoin realized volatility, beyond what market data alone provides, and can the platform deliver the underlying data products with measurable freshness, quality, and lineage?**
+> **Does public social sentiment add predictive value for short-horizon realized volatility of five Binance spot pairs (BTC, ETH, BNB, SOL, XRP), beyond what market data alone provides, and can the platform deliver the underlying data products with measurable freshness, quality, and lineage?**
 
 This is one integrated use case, not a collection of demos. Every component exists to move a social post or a trade from its source to one of three decisions:
 
@@ -832,7 +832,7 @@ Data limitations that must appear in the final report:
 
 - Bluesky is not X. The volume of crypto-related posts is smaller, and the user base differs. Sentiment findings may not generalize to X.
 - The sentiment history is short at the start. The model is trained on the available overlap and re-evaluated as history grows.
-- Binance data is exchange-specific. It is a proxy for global Bitcoin market activity, not the whole market.
+- Binance data is exchange-specific. It is a proxy for global crypto market activity across five spot pairs, not the whole market.
 - Public posts can be deleted. The platform respects deletion by URI on the next harvest, but derived aggregates may retain the effect until the next rebuild.
 - The platform uses real source data. Synthetic or generated records are not used to satisfy a requirement; test fixtures are clearly labelled and are never presented as production evidence.
 
@@ -1567,7 +1567,7 @@ For ad-hoc SQL by the team or the lecturer, a separate Jupyter container with re
 | Item | Definition |
 |---|---|
 | Task | Regression, next-hour realized volatility |
-| Entity | `BTCUSDT` (extensible to more symbols) |
+| Entity | Five Binance spot pairs: `BTCUSDT`, `ETHUSDT`, `BNBUSDT`, `SOLUSDT`, `XRPUSDT` |
 | Frequency | Hourly |
 | Feature window | `[T - 60m, T)` |
 | Label | `rv_next_1h = std(log_return_1m)` over `(T, T + 1h]`, scaled by `sqrt(60)` if annualized values are preferred |
@@ -3230,10 +3230,11 @@ Rules:
 | `POSTGRES_ML_DSN` | `postgresql://...` | prefect, mlflow, feast | ML metadata |
 | `POSTGRES_GOV_DSN` | `postgresql://...` | marquez | Lineage metadata |
 | `REDPANDA_BROKERS` | `redpanda:9092` | producer, processor | Internal broker address |
-| `MARKET_SYMBOL` | `BTCUSDT` | producer, processor | Allowlist |
+| `MARKET_SYMBOLS` | `BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT` | producer, processor, api, dashboard | Allowlist lima pair |
+| `MARKET_SYMBOL` | `BTCUSDT` | producer, processor | Legacy single-symbol default; `MARKET_SYMBOLS` wins |
 | `MARKET_FEED` | `binance_ws` | producer | `binance_ws`, `binance_vision`, `static` |
 | `SOCIAL_FEED` | `bluesky` | harvester | `bluesky`, `static` |
-| `SOCIAL_QUERY` | `bitcoin OR btc OR crypto` | harvester | Keyword set |
+| `SOCIAL_QUERY` | `bitcoin OR btc OR ethereum OR eth OR solana OR sol OR xrp OR bnb OR crypto` | harvester | Keyword set |
 | `SOCIAL_MAX_PAGES` | `50` | harvester | Rate-limit guard |
 | `BMIP_API_KEY_HASH_SALT` | from secret | api | API key hashing |
 | `PII_HASH_SALT` | from secret | silver transform | DID pseudonymization |
@@ -3292,7 +3293,7 @@ The full JSON Schemas are in `contracts/`. The essential shape is below.
   "type": "object",
   "required": ["symbol", "trade_id", "event_ts", "price", "qty", "is_buyer_maker", "ingest_ts", "source", "schema_version"],
   "properties": {
-    "symbol": { "type": "string", "enum": ["BTCUSDT"] },
+    "symbol": { "type": "string", "enum": ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT"] },
     "trade_id": { "type": "integer", "minimum": 1 },
     "event_ts": { "type": "string", "format": "date-time" },
     "price": { "type": "number", "exclusiveMinimum": 0 },

@@ -24,6 +24,7 @@ Dokumen ini adalah satu-satunya acuan pembagian kerja. Setiap orang tahu kapan w
 3. **Deadline bersifat keras.** CP3 tidak boleh digeser. Kalau pekerjaan belum selesai di CP3, yang diserahkan adalah versi yang jalan \+ daftar gap di handoff. Menggeser deadline berarti memakan window orang berikutnya.  
 4. **Handoff terverifikasi.** Dua jam pertama setiap slot dipakai untuk membaca handoff, menjalankan gate, dan mereview PR slot sebelumnya. Sisanya untuk pekerjaan sendiri.  
 5. **Satu tag per slot.** Setelah gate hijau, penulis membuat tag slot: `w{minggu}-{slot}-ok` untuk Siklus 1–2 (contoh `w1-a-ok`) dan `c3-{slot}-ok` untuk Siklus 3 (contoh `c3-a-ok`). Slot berikutnya selalu mulai dari tag terakhir yang hijau.
+6. **Lingkup market lima pair.** `MARKET_SYMBOLS` default `BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT`. `MARKET_SYMBOL` hanya legacy/default; semua producer, processor, API, dashboard, dan model memakai allowlist lima pair.
 
 ### 1.2 Kapasitas
 
@@ -208,7 +209,7 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 2. Compose profil `dev`: traefik, redpanda, minio, postgres-core, lakekeeper, api (placeholder). Named volume, health check, restart policy, resource limit, non-root user.  
 3. MinIO: bucket warehouse \+ artifact \+ backup, user per service. Lakekeeper: warehouse \+ namespace `bronze`, `silver`, `gold` \+ schema `ops` di PostgreSQL.  
 4. Kontrak data v1: `trade.v1` (`symbol`, `trade_id`, `price`, `qty`, `event_ts`, `ingest_ts`, `payload_hash`), `social_post.v1` (`post_uri`, `created_at`, `text`, `author_did`, `ingest_ts`, `payload_hash`). Validator pydantic \+ JSON Schema.  
-5. Producer Binance: WebSocket `aggTrade`, reconnect \+ backoff, `acks=all` ke topic `market.trades`, fallback `BinanceVisionReplayFeed` untuk mode replay tanpa mengubah pipeline.  
+5. Producer Binance: WebSocket `aggTrade` untuk `MARKET_SYMBOLS` (default lima pair: BTC, ETH, BNB, SOL, XRP), reconnect \+ backoff, `acks=all` ke topic `market.trades`, fallback `BinanceVisionReplayFeed` untuk mode replay tanpa mengubah pipeline.  
 6. Harvester Bluesky: `app.bsky.feed.searchPosts` per jam, cursor, backoff, cache lokal, mode replay dari file.  
 7. Penulis bronze PyIceberg: append-only, partisi `event_date`, kolom `event_ts`, `ingest_ts`, `payload_hash`, `batch_id`.  
 8. Ledger `ops.batch_runs`: `batch_id`, `source`, `window_start`, `window_end`, `row_count`, `checksum`, `status`.
@@ -467,7 +468,7 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 
 **Lingkup Must**
 
-1. Dataset snapshot: baca `mart_ml` pada snapshot ID tetap; simpan `dataset_id`, rentang waktu, jumlah baris, SHA fitur.  
+1. Dataset snapshot: baca `mart_ml` pada snapshot ID tetap; simpan `dataset_id`, rentang waktu, jumlah baris, SHA fitur, dan cakupan lima symbol (BTC, ETH, BNB, SOL, XRP).  
 2. Split kronologis (train/validation/holdout) tanpa shuffle; seed `42`; T-09 ulang pada level fitur.  
 3. Baseline: persistence (volatilitas jam sebelumnya) dan EWMA.  
 4. E1 (fitur market) dan E2 (market \+ sentimen), model Ridge dan XGBoost kecil, hyperparameter identik antar eksperimen.  

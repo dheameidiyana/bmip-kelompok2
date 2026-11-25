@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import re
@@ -47,6 +48,29 @@ def _commit() -> str:
         return "nogit"
 
 
+def _is_git() -> bool:
+    return (ROOT / ".git").exists()
+
+
+def _tracked(paths: Iterable[str]) -> set[str]:
+    """Return the subset of repository-relative paths tracked by git."""
+    if not _is_git():
+        return set(paths)
+    try:
+        completed = subprocess.run(
+            ["git", "ls-files", "--", *paths],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return set()
+    if completed.returncode != 0:
+        return set()
+    return {line.strip() for line in completed.stdout.splitlines() if line.strip()}
+
+
 def _links(path: Path) -> Iterable[Path]:
     text = path.read_text(encoding="utf-8")
     for target in LINK_RE.findall(text):
@@ -59,7 +83,15 @@ def _links(path: Path) -> Iterable[Path]:
         yield (path.parent / target).resolve()
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="verify only; never write a manifest (used by CI)",
+    )
+    args = parser.parse_args(argv)
+
     missing = [item for item in REQUIRED if not (ROOT / item).is_file()]
     broken: list[dict[str, str]] = []
     for index in INDEXES:
@@ -91,37 +123,62 @@ def main() -> int:
             }
         )
 
+    evidence_paths = [item["path"] for item in files]
+    tracked = _tracked(evidence_paths)
+    untracked_evidence = sorted(set(evidence_paths) - tracked)
+    required_untracked = [item for item in REQUIRED if item in untracked_evidence]
+
+    result = (
+        "PASS"
+        if not missing
+        and not broken
+        and not untracked_evidence
+        and not required_untracked
+        else "FAIL"
+    )
+
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     commit = _commit()
     manifest = {
         "timestamp": stamp,
         "commit": commit,
-        "result": "PASS" if not missing and not broken else "FAIL",
+        "result": result,
         "required_missing": missing,
+        "required_untracked": required_untracked,
         "broken_links": broken,
+        "untracked_evidence": untracked_evidence,
         "file_count": len(files),
         "files": files,
     }
-    out = EVIDENCE / f"evidence-manifest_{stamp}_{commit}.json"
-    out.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    out: Path | None = None
+    if not args.check:
+        out = EVIDENCE / f"evidence-manifest_{stamp}_{commit}.json"
+        out.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     print(
         json.dumps(
             {
-                "manifest": str(out.relative_to(ROOT)),
-                "result": manifest["result"],
+                "manifest": str(out.relative_to(ROOT)) if out else None,
+                "result": result,
                 "files": len(files),
                 "required_missing": len(missing),
+                "required_untracked": len(required_untracked),
                 "broken_links": len(broken),
+                "untracked_evidence": len(untracked_evidence),
             },
             indent=2,
         )
     )
     for item in missing:
         print(f"missing: {item}")
+    for item in required_untracked:
+        print(f"untracked required: {item}")
     for item in broken:
         print(f"broken: {item['index']} -> {item['target']}")
-    return 0 if manifest["result"] == "PASS" else 1
+    for item in untracked_evidence:
+        print(f"untracked evidence: {item}")
+    return 0 if result == "PASS" else 1
 
 
 if __name__ == "__main__":
