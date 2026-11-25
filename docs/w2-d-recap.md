@@ -199,12 +199,15 @@ Catatan penting: install awal gagal karena mirror pip lokal tidak menyediakan
 
 ## 8. Evidence final
 
-- Manifest PASS: `evidence/evidence-manifest_20261124T061230Z_6187d41.json`
-- File yang diperiksa: **170**
+- Manifest close-out: `evidence/evidence-manifest_20261125T*.json`
+- File yang diperiksa: **156**
 - Required missing: **0**
+- Required untracked: **0**
 - Broken link: **0**
-- Health final: `evidence/deploy/health_20261124T0534_6187d41.md`
-- Stack saat rekap: 20 container, API `200`, MLflow `200`
+- Health clean clone: `evidence/deploy/health_20261125T0259_f4d7e9f.md`
+- T-25: `evidence/deploy/clean-clone.log` (PASS dengan deviasi)
+- Manifest lama `evidence-manifest_20261124T061230Z_6187d41.json` adalah
+  **superseded**: ia menyertakan 21 file yang tidak pernah masuk git.
 
 ## 9. Keputusan yang sudah diambil
 
