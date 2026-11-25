@@ -1,0 +1,18 @@
+id        : T-41
+timestamp : 2026-11-24T05:09:00Z
+commit    : 6187d41
+command   : python -m pytest --cov=bmip --cov-report=term --cov-report=json:evidence/tests/coverage.json --cov-fail-under=40
+result    : PASS
+owner     : lois
+
+Coverage gate: 40% required, 51.30% achieved.
+Tests: 186 passed, 1 warning in 207.88s.
+
+Statement count : 5983
+Missed statements: 2914
+Coverage         : 51.30%
+
+JSON detail: evidence/tests/coverage.json
+Note: `make test-cov` is now wired to the same command. GNU Make is not
+installed on this host, so the command was executed directly with the same
+arguments.

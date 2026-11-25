@@ -1,0 +1,29 @@
+{
+  "command": "python scripts/w2b_evidence.py --steps reconcile",
+  "commit": "c9ef99a",
+  "id": "T-37",
+  "legs": {
+    "api": "GET /v1/market/volatility/range",
+    "gold": "gold.mart_market via Iceberg",
+    "serving": "serving.market_hourly (the Grafana datasource)"
+  },
+  "owner": "vio",
+  "result": "PASS",
+  "run": "20261120T0324",
+  "timestamp": "2026-11-20T03:24:31Z",
+  "tolerance": "relative 1e-9 on realized_vol_1h; every key must exist in API and serving",
+  "windows": {
+    "24h": {
+      "keys": 3,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "passed": true
+    },
+    "7d": {
+      "keys": 3,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "passed": true
+    }
+  }
+}

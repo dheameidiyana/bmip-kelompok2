@@ -19,7 +19,7 @@
   "properties": {
     "symbol": {
       "type": "string",
-      "enum": ["BTCUSDT"]
+      "enum": ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT"]
     },
     "trade_id": {
       "type": "integer",

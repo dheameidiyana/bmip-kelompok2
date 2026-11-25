@@ -1,0 +1,8 @@
+services:
+  api:
+    environment:
+      MLFLOW_TRACKING_URI: http://host.docker.internal:5000
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      ML_FEATURE_CACHE: /app/data/ml/latest_features.json
+    volumes:
+      - ../data/ml:/app/data/ml:ro

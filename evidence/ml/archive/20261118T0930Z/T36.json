@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "case": "malformed feature",
+      "pass": true,
+      "status": 422,
+      "type": "https://bmip.local/problems/validation-error"
+    },
+    {
+      "case": "out-of-range feature",
+      "pass": true,
+      "status": 200,
+      "status_field": "error"
+    },
+    {
+      "case": "valid payload BTCUSDT",
+      "model_name": "volatility_model",
+      "model_version": "2",
+      "pass": true,
+      "predicted_rv_next_1h": 0.0005755128222517669,
+      "status": 200,
+      "status_field": "ok",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "case": "valid payload ETHUSDT",
+      "model_name": "volatility_model",
+      "model_version": "2",
+      "pass": true,
+      "predicted_rv_next_1h": 0.0006108006346039474,
+      "status": 200,
+      "status_field": "ok",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "case": "valid payload BNBUSDT",
+      "model_name": "volatility_model",
+      "model_version": "2",
+      "pass": true,
+      "predicted_rv_next_1h": 0.0005148305208422244,
+      "status": 200,
+      "status_field": "ok",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "case": "valid payload SOLUSDT",
+      "model_name": "volatility_model",
+      "model_version": "2",
+      "pass": true,
+      "predicted_rv_next_1h": 0.0007835619617253542,
+      "status": 200,
+      "status_field": "ok",
+      "symbol": "SOLUSDT"
+    },
+    {
+      "case": "valid payload XRPUSDT",
+      "model_name": "volatility_model",
+      "model_version": "2",
+      "pass": true,
+      "predicted_rv_next_1h": 0.0007904220838099718,
+      "status": 200,
+      "status_field": "ok",
+      "symbol": "XRPUSDT"
+    }
+  ],
+  "command": "python scripts/w2a_evidence.py",
+  "commit": "4384822",
+  "id": "T-36",
+  "notes": "The W1-D no-champion case was a W1-D placeholder. This final run replaces it with valid five-symbol payloads, malformed input, and an out-of-range feature while champion v2 is registered.",
+  "owner": "dhea",
+  "result": "PASS",
+  "scope": "W2-A final: champion volatility_model v2",
+  "timestamp": "2026-11-18T07:23:53Z"
+}

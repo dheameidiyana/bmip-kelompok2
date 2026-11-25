@@ -76,12 +76,12 @@ def test_parse_trade_rejects_bad_price_and_symbol() -> None:
     assert error == "invalid_price"
 
     trade, error = parse_trade(
-        _raw(2, symbol="ETHUSDT"),
+        _raw(2, symbol="NOPEUSDT"),
         allowed_symbols={"BTCUSDT"},
         now=BASE,
     )
     assert trade is None
-    assert error == "unsupported_symbol:ETHUSDT"
+    assert error == "unsupported_symbol:NOPEUSDT"
 
 
 def test_parse_trade_rejects_future_event() -> None:

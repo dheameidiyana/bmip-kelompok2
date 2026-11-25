@@ -20,6 +20,7 @@ RANDOM_KEYS = {
     "LAKEKEEPER_DB_PASSWORD",
     "LAKEKEEPER_PG_ENCRYPTION_KEY",
     "POSTGRES_PASSWORD",
+    "POSTGRES_GOV_PASSWORD",
     "PREFECT_DB_PASSWORD",
     "PII_HASH_SALT",
     "BMIP_API_KEY",
@@ -62,13 +63,54 @@ def render(source: str) -> str:
     return "\n".join(lines) + "\n"
 
 
+def merge(source: str, target: Path) -> list[str]:
+    """Append keys that the example has and the existing .env does not.
+
+    Existing values are never changed, so postgres/MinIO volumes stay valid.
+    """
+    existing = target.read_text(encoding="utf-8")
+    seen = {
+        line.split("=", 1)[0]
+        for line in existing.splitlines()
+        if line and not line.startswith("#") and "=" in line
+    }
+    additions: list[str] = []
+    for raw in source.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = raw.split("=", 1)
+        if key in seen:
+            continue
+        additions.append(f"{key}={_new_value(key) if _is_random_key(key) else value}")
+    if additions:
+        target.write_text(
+            existing.rstrip("\n") + "\n" + "\n".join(additions) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+    return additions
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--force", action="store_true", help="overwrite an existing .env")
+    parser.add_argument(
+        "--merge",
+        action="store_true",
+        help="append missing keys from .env.example without rotating secrets",
+    )
     args = parser.parse_args()
 
     if TARGET.exists() and not args.force:
-        print(f"{TARGET.name} already exists; keeping it (use --force to regenerate)")
+        if args.merge:
+            additions = merge(EXAMPLE.read_text(encoding="utf-8"), TARGET)
+            print(
+                f"merged {len(additions)} new key(s) into {TARGET.name}; "
+                "existing values kept"
+            )
+        else:
+            print(f"{TARGET.name} already exists; keeping it (use --force to regenerate)")
         return 0
 
     TARGET.write_text(render(EXAMPLE.read_text(encoding="utf-8")), encoding="utf-8", newline="\n")

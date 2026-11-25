@@ -1,0 +1,166 @@
+T-19 Backup and restore drill
+generated_at=2026-11-21T16:37:36.403697+00:00
+manifest=evidence/recovery/manifest_20261121T163617Z.json
+backup_stamp=20261121T163617Z
+git_commit=b3ffb46e708a7e4b99dba1dd15136aa8a8fdefb4
+git_branch=slot/w2-d-lois
+
+database=bmip service=postgres-core scratch=bmip_t19_bmip
+  dump_sha256=dec6fa1a2975cd3c0cbef8ff6713e4f839f30d17ab07037c83d1bd1916b9b82c
+  full_restore=PASS checked=17 expected_rows=221 actual_rows=221
+  ops.api_keys rows=3 checksum=676df81dfb89ad0cd4834c4d03f5d9a1
+  ops.audit_log rows=27 checksum=4ce284eb0d08adc365648260f0e5d9fe
+  ops.backfill_requests rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  ops.batch_runs rows=10 checksum=e52c43271c1b83004348b2bfb7529086
+  ops.dataset_registry rows=11 checksum=ea227cb3a6c2680467bb04ac0681adfc
+  ops.lineage_edges rows=9 checksum=927d600eb38c39095aa5abd529298118
+  ops.social_watermark rows=1 checksum=ed77d8b47cfb9c784fac2031f322c007
+  serving.catalog_datasets rows=11 checksum=590fbd426b8c747402b32a661a3a6bee
+  serving.dq_results rows=29 checksum=91ac24fb2ea2eaca5dba8fc55b41bdfe
+  serving.dq_runs rows=1 checksum=d9460aa453ada5bceda03bce35723e6d
+  serving.freshness rows=4 checksum=7fa9c59713f8b8ce7abafee85635e023
+  serving.market_hourly rows=42 checksum=6ad30da18fecec1888bf4ac8fddcd85b
+  serving.market_latest rows=1 checksum=1296ad8ab24ce07b580e2ccce95482eb
+  serving.model_decisions rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  serving.model_metrics rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  serving.predictions rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  serving.sentiment_hourly rows=72 checksum=272612e1a35677d49792a613e2838057
+  schema_drill schema=serving PASS checked=10 expected_rows=160 actual_rows=160
+
+database=lakekeeper service=postgres-core scratch=bmip_t19_lakekeeper
+  dump_sha256=140649db32acd11bda98d8bb88ad8126776de4d3ef0643ca68e0ef0836ccfc9c
+  full_restore=PASS checked=52 expected_rows=5020 actual_rows=5020
+  public._sqlx_migrations rows=77 checksum=1a99018a83e33f897f126a2625d244bc
+  public.cache_change_log rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.current_view_metadata_version rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.endpoint_statistics rows=111 checksum=39819ada34000e6c11c78bdb2e90ed6d
+  public.generic_table rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.generic_table_properties rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.grant_assignment rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.idempotency_record rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.namespace rows=4 checksum=fec0e26683096f2c41087ce353fab977
+  public.partition_statistics rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.project rows=1 checksum=901ec2deeb1e22b6bc7a86a6419ab3b2
+  public.role rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.role_assignment rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.role_assignment_sync rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.role_members_sync rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.role_membership rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.schema_field rows=157 checksum=ecb3d1faaa45f1af68cad8ea3e95a313
+  public.secret rows=1 checksum=dca467c6f3fd11025ab4c6f785b88437
+  public.server rows=1 checksum=8422477e7f623ad342043b8b5f4bf660
+  public.table rows=10 checksum=cecd5569669d8146523441a4dc0a3340
+  public.table_current_schema rows=10 checksum=28b309e3fd6a394bdf014e67dac0c5f2
+  public.table_default_partition_spec rows=10 checksum=28b309e3fd6a394bdf014e67dac0c5f2
+  public.table_default_sort_order rows=10 checksum=28b309e3fd6a394bdf014e67dac0c5f2
+  public.table_encryption_keys rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.table_metadata_log rows=282 checksum=13f355efa4851866e6147f3e56d0afd0
+  public.table_partition_spec rows=10 checksum=a91d53d41a4ca06c6a34d4f36c36cbd5
+  public.table_properties rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.table_refs rows=10 checksum=fcf248cc1853d7a2f951eb070d470800
+  public.table_schema rows=10 checksum=6dc62f594de21f0c3e728be11517a2a1
+  public.table_snapshot rows=2455 checksum=5f4da64c1721ded2ca03813d404957a4
+  public.table_snapshot_log rows=1677 checksum=fe135f1f578de2941824de58879e5ca7
+  public.table_sort_order rows=10 checksum=0ac7cd020bdc721f57bc330435671b18
+  public.table_statistics rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.tabular rows=10 checksum=c93d622dcd76602bfcfa468be28678d1
+  public.tabular_field rows=157 checksum=020a76b71e92e5efdbb328fb4f0a4ccc
+  public.tag rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.tag_allowed_value rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.tag_definition rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.task rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.task_config rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.task_log rows=2 checksum=6275cd09cd355759b5ea7cf71630b692
+  public.task_schedule rows=1 checksum=d8bc8a30ad8e13f9e6fef0834e49659b
+  public.users rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.view rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.view_properties rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.view_representation rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.view_schema rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.view_version rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.view_version_log rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.warehouse rows=1 checksum=c92fd9ce7d446c1b87fe72b97ac75326
+  public.warehouse_statistics rows=1 checksum=a423337b13bd1fe2afb1c90b895f52b2
+  public.warehouse_statistics_history rows=2 checksum=17516e66c6d03f1f2954e3d79a6a8df7
+
+database=prefect service=postgres-ml scratch=bmip_t19_prefect
+  dump_sha256=1e1b5b2aab418ed68a0f53e557777ada08bee6c08e4fc607a2fe614a8bc1528c
+  full_restore=PASS checked=37 expected_rows=2002 actual_rows=2002
+  public.agent rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.alembic_version rows=1 checksum=a7c29fb23c128d3508b5d177fcfac668
+  public.artifact rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.artifact_collection rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.automation rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.automation_bucket rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.automation_event_follower rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.automation_held_event rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.automation_related_resource rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.block_document rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.block_document_reference rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.block_schema rows=65 checksum=e68d8de5319cdb720e32e12d51b42b8c
+  public.block_schema_reference rows=26 checksum=01701c8691467b705d7edfb16b2a5dfc
+  public.block_type rows=55 checksum=44e2963624f39eda93075849dbe7f1a8
+  public.composite_trigger_child_firing rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.concurrency_limit rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.concurrency_limit_v2 rows=2 checksum=c5f10e20b2b3ff62d3a0fe827a516a0e
+  public.configuration rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.csrf_token rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.deployment rows=2 checksum=d779f6a64a69e454263783f7857c9819
+  public.deployment_schedule rows=2 checksum=5c003ca093dc2d231b361b12e481e74c
+  public.deployment_version rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.event_resources rows=1369 checksum=a8faf8951cb1558a0c055475dfb1821c
+  public.events rows=205 checksum=4a96a614dc8308f8a1d677eab5639f36
+  public.flow rows=2 checksum=57bf26a14b6fe3a885138b583761ffd9
+  public.flow_run rows=31 checksum=c207946b919bc2f231587f7835923878
+  public.flow_run_input rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.flow_run_state rows=95 checksum=bb40e51b0ef0729f5bd649ebb3087b9f
+  public.log rows=96 checksum=680733970df22f2bad522f4a16387dae
+  public.saved_search rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.task_run rows=10 checksum=add9992fa6a76798e53d547462596511
+  public.task_run_state rows=30 checksum=98795bf31f6e728e178d5de75a15d087
+  public.task_run_state_cache rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.variable rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.work_pool rows=1 checksum=d620575b5ac46b6045fa7e641eb52d43
+  public.work_queue rows=1 checksum=759f9a8c160833f870c7ad1b15966e81
+  public.worker rows=9 checksum=a81bd2238d07f9cd6d8ba99b2778bb07
+
+database=mlflow service=postgres-ml scratch=bmip_t19_mlflow
+  dump_sha256=40fa42bdae5f8f7b09735c419b4c9f7b323bf6f7afb24a6c41c98951ce6b39c8
+  full_restore=PASS checked=0 expected_rows=0 actual_rows=0
+
+database=marquez service=postgres-gov scratch=bmip_t19_marquez
+  dump_sha256=65bd9d292c5a3aeb950e8153160f15485154b4ae33719d5530e9accaff61c5ed
+  full_restore=PASS checked=31 expected_rows=95 actual_rows=95
+  public.column_lineage rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_facets rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_fields rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_fields_tag_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_schema_versions rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_schema_versions_field_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_symlinks rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_versions rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.dataset_versions_field_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.datasets rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.datasets_tag_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.facet_migration_lock rows=1 checksum=8d15c9da5c738e4f756a6053760b0a7f
+  public.flyway_schema_history rows=91 checksum=36d7c0767baddbefd538c1e46b3ab911
+  public.job_facets rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.job_versions rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.job_versions_io_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.jobs rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.jobs_fqn rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.jobs_tag_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.lineage_events rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.namespace_ownerships rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.namespaces rows=1 checksum=5195d8d81eab8b34c6a6900d66b4e8d5
+  public.owners rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.run_args rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.run_facets rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.run_states rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.runs rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.runs_input_mapping rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.sources rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.stream_versions rows=0 checksum=d41d8cd98f00b204e9800998ecf8427e
+  public.tags rows=2 checksum=bab1424111f31099bbc246e6097e3a44
+
+RESULT: PASS

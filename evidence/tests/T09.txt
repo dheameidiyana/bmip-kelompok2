@@ -1,17 +1,17 @@
-id        : T-09
-timestamp : 2026-11-13T22:24:19.319061Z
-commit    : 3742fe9
-command   : scripts/w1c_evidence.py (t09_no_leakage)
-result    : PASS
-owner     : vio
-run       : 20261113T2223
+dataset_id       : mart_ml@3627445140691597595
+snapshot_id      : 3627445140691597595
+sha256           : 1b1434dfffa55afe5ec163a4a26dc4bff6383e0e9050e7c8561e3404936f6ede
+rows             : 7190
+counts           : {'BNBUSDT': 1438, 'BTCUSDT': 1438, 'ETHUSDT': 1438, 'SOLUSDT': 1438, 'XRPUSDT': 1438}
+start            : 2026-09-18T02:00:00+00:00
+end              : 2026-11-16T23:00:00+00:00
 
+duplicate_symbol_window     : 0
+null_market_features        : 0
+label_before_feature        : 0
+label_end_not_after_start   : 0
+one_hot_row_sum_bad         : 0
+symbols                     : ['BNBUSDT', 'BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT']
+splits                      : {'test': 1080, 'train': 5030, 'validation': 1080}
 
-Two synthetic hours, built twice: the second build triples every price from
-2026-11-10T02:00:00+00:00 onward. Features at or before that hour must be identical.
-
-feature hours compared : 2
-feature mismatches     : 0
-label window correct   : True
-
-Checked columns: ret_5m, ret_15m, ret_60m, rv_5m, rv_15m, rv_60m, volume_z_60m, trade_count_60m, hl_range_1m, vwap_dev
+T-09 feature-level leakage check: PASS

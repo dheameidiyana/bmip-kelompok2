@@ -1,0 +1,46 @@
+{
+  "failed": true,
+  "max_feature_age_seconds": 7200,
+  "model_name": "volatility_model",
+  "model_version": "2",
+  "request_id": "batch-20261118T093601Z",
+  "stale_symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "symbols": {
+    "BNBUSDT": {
+      "age_seconds": 120961.940087,
+      "detail": "latest feature is 120962s old; maximum is 7200s",
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "status": "error"
+    },
+    "BTCUSDT": {
+      "age_seconds": 120961.940087,
+      "detail": "latest feature is 120962s old; maximum is 7200s",
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "status": "error"
+    },
+    "ETHUSDT": {
+      "age_seconds": 120961.940087,
+      "detail": "latest feature is 120962s old; maximum is 7200s",
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "status": "error"
+    },
+    "SOLUSDT": {
+      "age_seconds": 120961.940087,
+      "detail": "latest feature is 120962s old; maximum is 7200s",
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "status": "error"
+    },
+    "XRPUSDT": {
+      "age_seconds": 120961.940087,
+      "detail": "latest feature is 120962s old; maximum is 7200s",
+      "feature_ts": "2026-11-17T00:00:00+00:00",
+      "status": "error"
+    }
+  }
+}

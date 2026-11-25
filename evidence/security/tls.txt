@@ -1,0 +1,19 @@
+id        : TLS
+timestamp : 2026-11-21T10:10:03.157884+00:00
+commit    : e7823c5
+command   : python scripts/w2c_scan.py --tls
+result    : PASS
+owner     : anin
+
+subject: ((('commonName', '*.bmip.local'),),)
+issuer: ((('commonName', 'BMIP Local CA'),),)
+notAfter: Feb 23 08:52:38 2029 GMT
+SAN: (('DNS', 'api.bmip.local'), ('DNS', 'app.bmip.local'), ('DNS', 'catalog.bmip.local'), ('DNS', 'grafana.bmip.local'), ('DNS', 'prometheus.bmip.local'), ('DNS', 'marquez.bmip.local'), ('DNS', 'minio.bmip.local'), ('DNS', 'prefect.bmip.local'), ('DNS', 'mlflow.bmip.local'), ('DNS', 'docs.bmip.local'), ('DNS', 'alertmanager.bmip.local'), ('DNS', 'n1.bmip.local'), ('DNS', 'localhost'), ('IP Address', '127.0.0.1'))
+HTTP -> 301 Location=https://127.0.0.1/
+https whoami -> 200
+app.bmip.local/_stcore/health -> 200 (expect 200)
+catalog.bmip.local/_stcore/health -> 200 (expect 200)
+grafana.bmip.local/api/health -> 200 (expect 200)
+prometheus.bmip.local/-/healthy -> 401 (expect 401)
+marquez.bmip.local/ -> 401 (expect 401)
+minio.bmip.local/ -> 401 (expect 401)

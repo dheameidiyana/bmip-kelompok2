@@ -1,26 +1,179 @@
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/bmip.pem
+      keyFile: /etc/traefik/certs/bmip-key.pem
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/bmip.pem
+        keyFile: /etc/traefik/certs/bmip-key.pem
+
 http:
   routers:
-    api:
-      rule: "PathPrefix(`/api`) || PathPrefix(`/v1`) || PathPrefix(`/health`) || PathPrefix(`/metrics`) || PathPrefix(`/docs`) || PathPrefix(`/openapi.json`)"
-      entryPoints:
-        - web
+    api-host:
+      rule: "Host(`api.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
       service: api
+      middlewares: [api-rate-limit, api-retry, api-headers]
+      priority: 30
+
+    api-dev:
+      rule: "PathPrefix(`/api`) || PathPrefix(`/v1`) || PathPrefix(`/health`) || PathPrefix(`/metrics`) || PathPrefix(`/docs`) || PathPrefix(`/openapi.json`)"
+      entryPoints: [dev]
+      service: api
+      middlewares: [api-headers]
       priority: 20
 
-    dashboard:
-      rule: "PathPrefix(`/`)"
-      entryPoints:
-        - web
+    app-host:
+      rule: "Host(`app.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
       service: dashboard
-      priority: 1
+      middlewares: [ui-headers]
+      priority: 20
+
+    catalog-host:
+      rule: "Host(`catalog.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: catalog
+      middlewares: [ui-headers]
+      priority: 20
+
+    grafana-host:
+      rule: "Host(`grafana.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: grafana
+      middlewares: [ui-headers]
+      priority: 20
+
+    prometheus-host:
+      rule: "Host(`prometheus.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: prometheus
+      middlewares: [admin-auth, ui-headers]
+      priority: 20
+
+    marquez-host:
+      rule: "Host(`marquez.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: marquez
+      middlewares: [admin-auth, ui-headers]
+      priority: 20
+
+    minio-host:
+      rule: "Host(`minio.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: minio
+      middlewares: [admin-auth, ui-headers]
+      priority: 20
+
+    prefect-host:
+      rule: "Host(`prefect.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: prefect
+      middlewares: [ui-headers]
+      priority: 20
 
   services:
     api:
       loadBalancer:
+        strategy: wrr
+        healthCheck:
+          path: /health/ready
+          interval: 10s
+          timeout: 3s
         servers:
           - url: "http://api:8000"
 
     dashboard:
       loadBalancer:
+        healthCheck:
+          path: /_stcore/health
+          interval: 10s
+          timeout: 3s
         servers:
           - url: "http://dashboard:8501"
+
+    catalog:
+      loadBalancer:
+        healthCheck:
+          path: /_stcore/health
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://catalog:8502"
+
+    grafana:
+      loadBalancer:
+        healthCheck:
+          path: /api/health
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://grafana:3000"
+
+    prometheus:
+      loadBalancer:
+        healthCheck:
+          path: /-/healthy
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://prometheus:9090"
+
+    marquez:
+      loadBalancer:
+        servers:
+          - url: "http://marquez-web:3000"
+
+    minio:
+      loadBalancer:
+        healthCheck:
+          path: /minio/health/live
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://minio:9001"
+
+    prefect:
+      loadBalancer:
+        healthCheck:
+          path: /api/health
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://prefect-server:4200"
+
+  middlewares:
+    api-rate-limit:
+      rateLimit:
+        average: 100
+        burst: 200
+
+    api-retry:
+      retry:
+        attempts: 3
+        initialInterval: 200ms
+
+    api-headers:
+      headers:
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: strict-origin-when-cross-origin
+
+    ui-headers:
+      headers:
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: strict-origin-when-cross-origin
+
+    admin-auth:
+      basicAuth:
+        usersFile: /etc/traefik/users.htpasswd

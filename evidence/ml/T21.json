@@ -1,0 +1,26 @@
+{
+  "challenger_version": "4",
+  "champion_after": "2",
+  "champion_before": "2",
+  "checks": {
+    "leakage": true,
+    "model_card": true
+  },
+  "gate_comparison": "champion",
+  "gate_pass": false,
+  "id": "T-21",
+  "metrics": {
+    "baseline_mae": 0.00023923638799465123,
+    "baseline_rmse": 0.0005970315337401798,
+    "champion_mae": 0.00023923638799465123,
+    "champion_rmse": 0.0005970315337401798,
+    "comparison": "champion",
+    "directional_accuracy": 0.49047619047619045,
+    "mae": 0.0003946648322761135,
+    "mae_improvement": -0.6496856334619853,
+    "rmse": 0.0007521219246635194,
+    "rmse_change": 0.2597691782739785
+  },
+  "pass": true,
+  "timestamp": "2026-11-18T09:33:43.480373+00:00"
+}

@@ -22,6 +22,8 @@ services:
     volumes:
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/dynamic:/etc/traefik/dynamic:ro
+      - ./traefik/certs:/etc/traefik/certs:ro
+      - ./traefik/users.htpasswd:/etc/traefik/users.htpasswd:ro
     networks:
       - edge
     healthcheck:
@@ -100,6 +102,64 @@ services:
       timeout: 5s
       retries: 20
       start_period: 15s
+    logging: *default-logging
+
+  postgres-gov:
+    image: postgres:16.15-alpine
+    profiles: ["governance"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_GOV_USER:-marquez}
+      POSTGRES_PASSWORD: ${POSTGRES_GOV_PASSWORD:?set POSTGRES_GOV_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_GOV_DB:-marquez}
+    volumes:
+      - postgres-gov-data:/var/lib/postgresql/data
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    logging: *default-logging
+
+  marquez:
+    image: marquezproject/marquez:0.51.1
+    profiles: ["governance"]
+    restart: unless-stopped
+    environment:
+      MARQUEZ_CONFIG: marquez.yml
+      MARQUEZ_PORT: "5000"
+      MARQUEZ_ADMIN_PORT: "5001"
+      POSTGRES_HOST: postgres-gov
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_GOV_DB:-marquez}
+      POSTGRES_USER: ${POSTGRES_GOV_USER:-marquez}
+      POSTGRES_PASSWORD: ${POSTGRES_GOV_PASSWORD:?set POSTGRES_GOV_PASSWORD in .env}
+      SEARCH_ENABLED: "false"
+    volumes:
+      - ./marquez/marquez.yml:/usr/src/app/marquez.yml:ro
+    networks:
+      - edge
+      - data
+    depends_on:
+      postgres-gov:
+        condition: service_healthy
+    logging: *default-logging
+
+  marquez-web:
+    image: marquezproject/marquez-web:0.51.1
+    profiles: ["governance"]
+    restart: unless-stopped
+    environment:
+      MARQUEZ_HOST: marquez
+      MARQUEZ_PORT: "5000"
+      WEB_PORT: "3000"
+    networks:
+      - edge
+    depends_on:
+      - marquez
     logging: *default-logging
 
   prefect-server:
@@ -287,7 +347,10 @@ services:
       API_PORT: "8000"
       API_AUTH_REQUIRED: ${API_AUTH_REQUIRED:-true}
       BMIP_API_KEY: ${BMIP_API_KEY:?set BMIP_API_KEY in .env}
+      BMIP_API_KEY_HASH_SALT: ${BMIP_API_KEY_HASH_SALT:?set BMIP_API_KEY_HASH_SALT in .env}
+      MARQUEZ_URL: ${MARQUEZ_URL_INTERNAL:-http://marquez:5000}
       MARKET_SYMBOL: ${MARKET_SYMBOL:-BTCUSDT}
+      MARKET_SYMBOLS: ${MARKET_SYMBOLS:-BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT_INTERNAL:-http://minio:9000}
       MINIO_S3_REGION: ${MINIO_S3_REGION:-local}
       LAKEKEEPER_URL: ${LAKEKEEPER_URL_INTERNAL:-http://lakekeeper:8181}
@@ -336,6 +399,7 @@ services:
       BMIP_API_BASE_URL: http://api:8000
       BMIP_API_KEY: ${BMIP_API_KEY:?set BMIP_API_KEY in .env}
       BMIP_DASHBOARD_SYMBOL: ${MARKET_SYMBOL:-BTCUSDT}
+      BMIP_DASHBOARD_SYMBOLS: ${BMIP_DASHBOARD_SYMBOLS:-BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT}
     networks:
       - edge
     depends_on:
@@ -354,6 +418,200 @@ services:
     logging: *default-logging
 
 
+  catalog:
+    build:
+      context: ..
+      dockerfile: deploy/dashboard/Dockerfile
+    image: bmip/dashboard:dev
+    restart: unless-stopped
+    user: "10001:10001"
+    environment:
+      BMIP_ENV: ${BMIP_ENV:-dev}
+      BMIP_LOG_LEVEL: ${BMIP_LOG_LEVEL:-INFO}
+      BMIP_APP_PACKAGE: bmip.catalog
+      STREAMLIT_PORT: "8502"
+      BMIP_API_BASE_URL: http://api:8000
+      BMIP_API_KEY: ${BMIP_API_KEY:?set BMIP_API_KEY in .env}
+      BMIP_CATALOG_TITLE: ${BMIP_CATALOG_TITLE:-BMIP Data Catalog}
+    networks:
+      - edge
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8502/_stcore/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    logging: *default-logging
+
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./observability/rules.yml:/etc/prometheus/rules.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - alertmanager
+      - pushgateway
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:9090/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    logging: *default-logging
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    volumes:
+      - ./observability/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    networks:
+      - data
+    depends_on:
+      - notify
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:9093/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    logging: *default-logging
+
+  pushgateway:
+    image: prom/pushgateway:v1.9.0
+    restart: unless-stopped
+    command:
+      - --persistence.file=/pushgateway/data
+      - --persistence.interval=30s
+    volumes:
+      - pushgateway-data:/pushgateway
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:9091/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    logging: *default-logging
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.16.0
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: >-
+        postgresql://${POSTGRES_USER:-bmip}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres-core:5432/${POSTGRES_DB:-bmip}?sslmode=disable
+    networks:
+      - data
+    depends_on:
+      postgres-core:
+        condition: service_healthy
+    logging: *default-logging
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    restart: unless-stopped
+    privileged: true
+    command:
+      - --docker_only=true
+      - --housekeeping_interval=30s
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - data
+    logging: *default-logging
+
+  notify:
+    build:
+      context: ./notify
+      dockerfile: Dockerfile
+    image: bmip/notify:dev
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      NOTIFY_DATA_DIR: /data
+      NOTIFY_PORT: "8080"
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+    volumes:
+      - ../evidence/alerts:/data
+    networks:
+      - data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2)"
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging: *default-logging
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    restart: unless-stopped
+    user: "472:472"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-bmipadmin}
+      GF_AUTH_ANONYMOUS_ENABLED: ${GRAFANA_ANONYMOUS:-true}
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/dashboards/pipeline.json
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:3000}
+      # Consumed by the provisioned PostgreSQL datasource.
+      POSTGRES_USER: ${POSTGRES_USER:-bmip}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-bmip}
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    networks:
+      - edge
+      - data
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      postgres-core:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    logging: *default-logging
+
 networks:
   edge:
     driver: bridge
@@ -365,4 +623,9 @@ volumes:
   redpanda-data:
   postgres-core-data:
   postgres-ml-data:
+  postgres-gov-data:
   minio-data:
+  prometheus-data:
+  alertmanager-data:
+  pushgateway-data:
+  grafana-data:

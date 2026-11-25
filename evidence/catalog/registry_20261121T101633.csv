@@ -1,0 +1,12 @@
+id,name,layer,domain,owner,classification,retention_days,refresh_schedule,sla,license,contains_pii,auto_classification
+bronze.market_trade_raw,Bronze market trades,bronze,market,dhea,internal,14,continuous,silver within 120 seconds of event time,Binance public market data (data.binance.vision),False,restricted
+bronze.social_post_raw,Bronze social posts,bronze,social,dhea,restricted,14,hourly at :10 UTC,bronze within 75 minutes of the hour,Bluesky public AT Protocol data,True,pii
+gold.mart_market,Market mart,gold,market,vio,internal,90,hourly at :50 UTC,within 90 minutes of silver,Binance public market data,False,internal
+gold.mart_ml,ML feature mart,gold,ml,dhea,internal,90,hourly at :50 UTC,within 90 minutes of silver,Derived from Binance market data and Bluesky public posts,False,internal
+gold.mart_sentiment,Sentiment mart,gold,social,vio,internal,90,hourly at :50 UTC,within 90 minutes of silver,Bluesky public AT Protocol data,False,internal
+serving.market_latest,Serving market latest,serving,market,anin,internal,1,"hourly, after gold publish",market freshness under 90 minutes,Derived from Binance public market data,False,internal
+serving.predictions,Serving predictions,serving,ml,anin,internal,90,hourly at :05 once a champion exists,prediction freshness under 2 hours,Derived from Binance market data and Bluesky public posts,False,internal
+silver.market_ohlcv_1m,Silver one-minute OHLCV,silver,market,lois,internal,30,continuous,within 2 minutes of event time,Binance public market data,False,internal
+silver.market_trades,Silver market trades,silver,market,lois,internal,30,continuous,lag under 5 seconds p95,Binance public market data,False,internal
+silver.social_post,Silver social posts,silver,social,vio,internal,30,hourly at :40 UTC,within 90 minutes of the hour,Bluesky public AT Protocol data,False,internal
+silver.social_sentiment,Silver social sentiment,silver,social,vio,internal,30,hourly at :40 UTC,within 90 minutes of the hour,Bluesky public AT Protocol data,False,internal

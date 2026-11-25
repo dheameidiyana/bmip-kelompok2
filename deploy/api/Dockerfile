@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 COPY pyproject.toml README.md ./
 COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip wheel --wheel-dir /wheels .
+    pip wheel --no-cache-dir --retries 10 --timeout 120 --wheel-dir /wheels ".[ml]"
 
 FROM python:3.11-slim AS runtime
 
@@ -30,7 +30,7 @@ RUN addgroup --gid 10001 api \
     && chown -R 10001:10001 /app
 
 COPY --from=build /wheels /wheels
-RUN pip install --no-cache-dir --no-index --find-links=/wheels bmip \
+RUN pip install --no-cache-dir --no-index --find-links=/wheels "bmip[ml]" \
     && rm -rf /wheels
 
 USER 10001:10001
@@ -39,4 +39,4 @@ RUN python -c "import duckdb; c = duckdb.connect(config={'extension_directory': 
 WORKDIR /app
 EXPOSE 8000
 
-CMD ["uvicorn", "bmip.api.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "bmip.ml.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]

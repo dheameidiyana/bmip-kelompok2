@@ -5,6 +5,8 @@ Contract:
 * business out-of-range       -> 200 ``status="error"`` and a row with status=error
 * no champion yet             -> 200 ``status="not_available"`` (never a fake value)
 * champion + scorer wired     -> 200 ``status="ok"`` (W2-A sets app.state.predictor)
+* stale feature snapshot      -> 200 ``status="ok"`` + ``X-Data-Stale``, but the
+  persisted serving row is ``status="error"`` so dashboards do not count it as fresh.
 """
 
 from __future__ import annotations
@@ -13,6 +15,7 @@ import hashlib
 import json
 import math
 from collections.abc import Callable
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, Request, Response
@@ -93,14 +96,33 @@ def predict(
         )
 
     result = predictor(payload)
+    if result is None:
+        return PredictOut(
+            status="not_available",
+            symbol=symbol,
+            window_start=window_start,
+            detail="No usable feature row and no feature payload for this symbol.",
+            meta=build_meta(request, source="serving", stale=False),
+        )
+    feature_ts = _as_datetime(result.get("feature_ts"))
+    stale = _is_stale(
+        feature_ts,
+        now,
+        settings.freshness_predictions_slo_seconds,
+    )
+    response.headers["X-Data-Stale"] = "true" if stale else "false"
     repository.insert_prediction(
         symbol=symbol,
         window_start=window_start,
-        status="ok",
+        status="error" if stale else "ok",
+        detail=_stale_detail(feature_ts, now, settings)
+        if stale
+        else None,
         model_name=str(champion["model_name"]),
         model_version=str(champion["version"]),
         model_alias=str(champion.get("alias") or "champion"),
         predicted_rv_next_1h=float(result["predicted_rv_next_1h"]),
+        feature_ts=feature_ts,
         request_id=request_id,
         input_hash=_input_hash(payload),
     )
@@ -108,10 +130,50 @@ def predict(
         status="ok",
         symbol=symbol,
         window_start=window_start,
+        feature_ts=feature_ts,
         predicted_rv_next_1h=float(result["predicted_rv_next_1h"]),
         model_name=str(champion["model_name"]),
         model_version=str(champion["version"]),
-        meta=build_meta(request, source="serving", stale=False),
+        meta=build_meta(request, source="serving", stale=stale),
+    )
+
+
+def _as_datetime(value: Any) -> datetime | None:
+    if value is None:
+        return None
+    if hasattr(value, "to_pydatetime"):
+        value = value.to_pydatetime()
+    if isinstance(value, datetime):
+        parsed = value
+    else:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _is_stale(
+    feature_ts: datetime | None,
+    now: datetime,
+    slo_seconds: int,
+) -> bool:
+    if feature_ts is None:
+        return False
+    return (now - feature_ts).total_seconds() > slo_seconds
+
+
+def _stale_detail(
+    feature_ts: datetime | None,
+    now: datetime,
+    settings: Settings,
+) -> str:
+    slo = settings.freshness_predictions_slo_seconds
+    if feature_ts is None:
+        return f"feature_ts missing; freshness SLO {slo}s"
+    age = int((now - feature_ts).total_seconds())
+    return (
+        f"stale feature_ts {feature_ts.isoformat()}; "
+        f"age {age}s exceeds freshness SLO {slo}s"
     )
 
 

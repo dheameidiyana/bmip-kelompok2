@@ -1,0 +1,13 @@
+id        : PORT-SCAN
+timestamp : 2026-11-21T10:07:37.647310+00:00
+commit    : e7823c5
+command   : python scripts/w2c_scan.py --ports
+result    : PASS
+owner     : anin
+
+127.0.0.1: open [80, 443, 3000, 3002, 4200, 5002, 5433, 5434, 8000, 8181, 8501, 8502, 9000, 9001, 9090, 9091, 9093]
+192.168.1.73: open [80, 443]
+100.126.160.5: open [80, 443]
+
+Expected outside loopback: only 80/443 (Traefik).
+Findings: none

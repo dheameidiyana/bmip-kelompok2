@@ -1,0 +1,74 @@
+{
+  "champion_run_id": "013094ccc529414ea88da0cb70d0968d",
+  "champion_version": "2",
+  "id": "W2-A-registry-evidence",
+  "model_card_artifact": {
+    "artifact_path": "model_card/model-card.md",
+    "run_id": "013094ccc529414ea88da0cb70d0968d",
+    "source": "evidence\\ml\\model-card.md"
+  },
+  "model_name": "volatility_model",
+  "runs": [
+    {
+      "run_id": "6376965a3ed44068a887bb81b6a79f38",
+      "run_name": "t21_bad_challenger"
+    },
+    {
+      "run_id": "d14dc883120241e28b0e743a2a38bae9",
+      "run_name": "t21_bad_challenger"
+    },
+    {
+      "run_id": "013094ccc529414ea88da0cb70d0968d",
+      "run_name": "registered_e1_xgboost"
+    },
+    {
+      "run_id": "8d874c35e96248f38f2e17d7ca1d7b17",
+      "run_name": "e2_xgboost"
+    },
+    {
+      "run_id": "70c06e10c6ad445886f15f412c69d539",
+      "run_name": "e2_ridge"
+    },
+    {
+      "run_id": "9a2ca76cb59649a7adca168aa62e3bd4",
+      "run_name": "e1_xgboost"
+    },
+    {
+      "run_id": "01b5c8a091264fad83ee0622e2f505ae",
+      "run_name": "e1_ridge"
+    },
+    {
+      "run_id": "55c1c245d3e6487993e5c0c9e309efc9",
+      "run_name": "registered_e1_xgboost"
+    },
+    {
+      "run_id": "c9f1cfb7ed7b42c2b358401d9749d0ca",
+      "run_name": "e2_xgboost"
+    },
+    {
+      "run_id": "32dad038e8c042e7b5d7a045d040a0dc",
+      "run_name": "e2_ridge"
+    },
+    {
+      "run_id": "d6813612c04044b89ad04e5cc1da2194",
+      "run_name": "e1_xgboost"
+    },
+    {
+      "run_id": "7657b22e85094e44828e306655ec4e11",
+      "run_name": "e1_ridge"
+    },
+    {
+      "run_id": "a72cd78119bf4b0f965426c70c6bb228",
+      "run_name": "e1_ridge"
+    }
+  ],
+  "tagged_run_count": 13,
+  "tags": {
+    "data_snapshot_id": "3627445140691597595",
+    "feature_version": "features/v1",
+    "git_sha": "eec3186",
+    "trigger": "manual-w2a-closeout"
+  },
+  "timestamp": "2026-11-18T11:08:08Z",
+  "tracking_uri": "http://localhost:5000"
+}

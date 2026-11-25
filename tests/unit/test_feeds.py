@@ -39,8 +39,9 @@ def test_parse_binance_vision_row_maps_event_time() -> None:
         "is_buyer_maker": "false",
         "is_best_match": "true",
     }
-    record = parse_binance_vision_row(row)
+    record = parse_binance_vision_row(row, "ETHUSDT")
     assert record["source"] == "binance_vision"
+    assert record["symbol"] == "ETHUSDT"
     assert record["event_ts"] == "2026-11-10T14:00:01.123000Z"
     assert record["is_buyer_maker"] is False
 

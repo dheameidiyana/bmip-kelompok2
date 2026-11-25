@@ -9,6 +9,8 @@ from urllib.parse import quote
 
 from dotenv import load_dotenv
 
+from bmip.common.symbols import DEFAULT_MARKET_SYMBOLS
+
 load_dotenv()
 
 SERVICE_CREDENTIAL_KEYS = {
@@ -38,9 +40,11 @@ def _flag(name: str, default: bool) -> bool:
 
 def _symbols() -> tuple[str, ...]:
     """Allowlist of symbols; MARKET_SYMBOLS wins, then MARKET_SYMBOL."""
-    raw = os.getenv("MARKET_SYMBOLS") or os.getenv("MARKET_SYMBOL") or "BTCUSDT"
+    raw = os.getenv("MARKET_SYMBOLS") or os.getenv("MARKET_SYMBOL")
+    if not raw:
+        return DEFAULT_MARKET_SYMBOLS
     symbols = tuple(part.strip().upper() for part in raw.split(",") if part.strip())
-    return symbols or ("BTCUSDT",)
+    return symbols or DEFAULT_MARKET_SYMBOLS
 
 
 @dataclass(frozen=True)
@@ -96,7 +100,7 @@ class Settings:
     lake_reader: str = "duckdb"
     lake_query_timeout_seconds: float = 5.0
     duckdb_extension_dir: str = ""
-    market_symbols: tuple[str, ...] = ("BTCUSDT",)
+    market_symbols: tuple[str, ...] = DEFAULT_MARKET_SYMBOLS
     freshness_market_slo_seconds: int = 5400
     freshness_sentiment_slo_seconds: int = 5400
     freshness_predictions_slo_seconds: int = 7200
@@ -104,6 +108,10 @@ class Settings:
     bmip_as_of: str = ""
     dq_report_path: str = "evidence/dq/dq_report.json"
     dataset_registry_path: str = "catalog/datasets.yml"
+    openlineage_url: str = ""
+    openlineage_spool_dir: str = "evidence/lineage/spool"
+    marquez_url: str = "http://localhost:5002"
+    api_key_salt: str = ""
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -159,7 +167,10 @@ class Settings:
                 os.getenv("STREAM_STARTUP_DELAY_SECONDS", "0")
             ),
             social_feed=os.getenv("SOCIAL_FEED", "bluesky"),
-            social_query=os.getenv("SOCIAL_QUERY", "bitcoin OR btc OR crypto"),
+            social_query=os.getenv(
+                "SOCIAL_QUERY",
+                "bitcoin OR btc OR ethereum OR eth OR solana OR sol OR xrp OR bnb OR crypto",
+            ),
             social_max_pages=int(os.getenv("SOCIAL_MAX_PAGES", "50")),
             social_replay_file=os.getenv(
                 "SOCIAL_REPLAY_FILE", "tests/fixtures/bluesky_posts.json"
@@ -212,6 +223,12 @@ class Settings:
             dataset_registry_path=os.getenv(
                 "DATASET_REGISTRY_PATH", "catalog/datasets.yml"
             ),
+            openlineage_url=os.getenv("OPENLINEAGE_URL", ""),
+            openlineage_spool_dir=os.getenv(
+                "OPENLINEAGE_SPOOL_DIR", "evidence/lineage/spool"
+            ),
+            marquez_url=os.getenv("MARQUEZ_URL", "http://localhost:5002"),
+            api_key_salt=os.getenv("BMIP_API_KEY_HASH_SALT", ""),
         )
 
     def minio_credentials(self, service: str) -> tuple[str, str]:

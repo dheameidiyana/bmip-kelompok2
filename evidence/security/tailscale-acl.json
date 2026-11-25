@@ -1,0 +1,329 @@
+{
+  "acl_sha256": "f21dd723a9927ea2b691f1a6dd9e8f1b5536698f1a3de67a6924c53dd415ed52",
+  "acl_path": "deploy\\tailscale\\acl.json",
+  "exit_code": 0,
+  "status": {
+    "Version": "1.98.4-t9e69045b2-ged3a62f14",
+    "TUN": true,
+    "BackendState": "Running",
+    "HaveNodeKey": true,
+    "AuthURL": "",
+    "TailscaleIPs": [
+      "100.126.160.5",
+      "fd7a:115c:a1e0::253a:a005"
+    ],
+    "Self": {
+      "ID": "niqKc9gB6L11CNTRL",
+      "PublicKey": "nodekey:e9c1260ae70195f294195f5215d82d273f625ed2c2433ee38531869a42ed8844",
+      "HostName": "ANIN",
+      "DNSName": "anin-database.tail227db1.ts.net.",
+      "OS": "windows",
+      "UserID": 855588540107445,
+      "TailscaleIPs": [
+        "100.126.160.5",
+        "fd7a:115c:a1e0::253a:a005"
+      ],
+      "AllowedIPs": [
+        "100.126.160.5/32",
+        "fd7a:115c:a1e0::253a:a005/128"
+      ],
+      "Addrs": [
+        "114.12.15.48:30479",
+        "114.12.15.48:30517",
+        "114.12.15.48:30505",
+        "114.12.15.48:30513",
+        "114.12.15.48:30499",
+        "114.12.15.48:30509",
+        "172.19.240.1:41641",
+        "192.168.1.73:41641",
+        "192.168.8.1:41641",
+        "192.168.56.1:41641"
+      ],
+      "CurAddr": "",
+      "Relay": "sin",
+      "PeerRelay": "",
+      "RxBytes": 0,
+      "TxBytes": 0,
+      "Created": "2026-05-08T12:02:48.42978258Z",
+      "LastWrite": "0001-01-01T00:00:00Z",
+      "LastSeen": "0001-01-01T00:00:00Z",
+      "LastHandshake": "0001-01-01T00:00:00Z",
+      "Online": true,
+      "ExitNode": false,
+      "ExitNodeOption": false,
+      "Active": false,
+      "PeerAPIURL": [
+        "http://100.126.160.5:54318",
+        "http://[fd7a:115c:a1e0::253a:a005]:61746"
+      ],
+      "TaildropTarget": 0,
+      "NoFileSharingReason": "",
+      "Capabilities": [
+        "HTTPS://TAILSCALE.COM/s/DEPRECATED-NODE-CAPS#see-https://github.com/tailscale/tailscale/issues/11508",
+        "default-auto-update",
+        "funnel",
+        "https",
+        "https://tailscale.com/cap/file-sharing",
+        "https://tailscale.com/cap/funnel-ports?ports=443,8443,10000",
+        "https://tailscale.com/cap/is-admin",
+        "https://tailscale.com/cap/is-owner",
+        "https://tailscale.com/cap/ssh",
+        "https://tailscale.com/cap/tailnet-lock",
+        "probe-udp-lifetime",
+        "ssh-behavior-v1",
+        "ssh-env-vars",
+        "store-appc-routes",
+        "tailnet-display-name"
+      ],
+      "CapMap": {
+        "default-auto-update": [
+          true
+        ],
+        "funnel": null,
+        "https": null,
+        "https://tailscale.com/cap/file-sharing": null,
+        "https://tailscale.com/cap/funnel-ports?ports=443,8443,10000": null,
+        "https://tailscale.com/cap/is-admin": null,
+        "https://tailscale.com/cap/is-owner": null,
+        "https://tailscale.com/cap/ssh": null,
+        "https://tailscale.com/cap/tailnet-lock": null,
+        "probe-udp-lifetime": null,
+        "ssh-behavior-v1": null,
+        "ssh-env-vars": null,
+        "store-appc-routes": null,
+        "tailnet-display-name": [
+          "kelompok1rsimandat@gmail.com"
+        ]
+      },
+      "InNetworkMap": true,
+      "InMagicSock": false,
+      "InEngine": false,
+      "KeyExpiry": "2027-05-20T08:34:24Z"
+    },
+    "Health": [],
+    "MagicDNSSuffix": "tail227db1.ts.net",
+    "CurrentTailnet": {
+      "Name": "kelompok1rsimandat@gmail.com",
+      "MagicDNSSuffix": "tail227db1.ts.net",
+      "MagicDNSEnabled": true
+    },
+    "CertDomains": [
+      "anin-database.tail227db1.ts.net"
+    ],
+    "Peer": {
+      "nodekey:0033e4e52b196ffd6076de899aa78b13477fb30e508f68549fff578cf439306b": {
+        "ID": "nvwGRaY5qp11CNTRL",
+        "PublicKey": "nodekey:0033e4e52b196ffd6076de899aa78b13477fb30e508f68549fff578cf439306b",
+        "HostName": "vioouw",
+        "DNSName": "vioouw.tail227db1.ts.net.",
+        "OS": "windows",
+        "UserID": 855588540107445,
+        "TailscaleIPs": [
+          "100.121.48.108",
+          "fd7a:115c:a1e0::f43a:306c"
+        ],
+        "AllowedIPs": [
+          "100.121.48.108/32",
+          "fd7a:115c:a1e0::f43a:306c/128"
+        ],
+        "Addrs": null,
+        "CurAddr": "",
+        "Relay": "",
+        "PeerRelay": "",
+        "RxBytes": 0,
+        "TxBytes": 0,
+        "Created": "2026-05-08T04:16:38.011783373Z",
+        "LastWrite": "0001-01-01T00:00:00Z",
+        "LastSeen": "2026-06-27T05:35:28.1Z",
+        "LastHandshake": "0001-01-01T00:00:00Z",
+        "Online": false,
+        "ExitNode": false,
+        "ExitNodeOption": false,
+        "Active": false,
+        "PeerAPIURL": [
+          "http://100.121.48.108:37197",
+          "http://[fd7a:115c:a1e0::f43a:306c]:41684"
+        ],
+        "TaildropTarget": 5,
+        "NoFileSharingReason": "",
+        "InNetworkMap": true,
+        "InMagicSock": true,
+        "InEngine": false,
+        "Expired": true,
+        "KeyExpiry": "2026-11-04T04:16:38Z"
+      },
+      "nodekey:0195fbe8f2f9a82ada12cb091d6a14115e19a29d87a2bd5558bfc20414234165": {
+        "ID": "nZGdpNURd411CNTRL",
+        "PublicKey": "nodekey:0195fbe8f2f9a82ada12cb091d6a14115e19a29d87a2bd5558bfc20414234165",
+        "HostName": "BEM-FATISDA",
+        "DNSName": "rexy-backend.tail227db1.ts.net.",
+        "OS": "windows",
+        "UserID": 855588540107445,
+        "TailscaleIPs": [
+          "100.78.242.71",
+          "fd7a:115c:a1e0::293a:f247"
+        ],
+        "AllowedIPs": [
+          "100.78.242.71/32",
+          "fd7a:115c:a1e0::293a:f247/128"
+        ],
+        "Addrs": null,
+        "CurAddr": "",
+        "Relay": "",
+        "PeerRelay": "",
+        "RxBytes": 0,
+        "TxBytes": 0,
+        "Created": "2026-05-08T12:36:36.701735104Z",
+        "LastWrite": "0001-01-01T00:00:00Z",
+        "LastSeen": "2026-06-30T08:27:18.1Z",
+        "LastHandshake": "0001-01-01T00:00:00Z",
+        "Online": false,
+        "ExitNode": false,
+        "ExitNodeOption": false,
+        "Active": false,
+        "PeerAPIURL": [
+          "http://100.78.242.71:44756",
+          "http://[fd7a:115c:a1e0::293a:f247]:61016"
+        ],
+        "TaildropTarget": 5,
+        "NoFileSharingReason": "",
+        "InNetworkMap": true,
+        "InMagicSock": true,
+        "InEngine": false,
+        "Expired": true,
+        "KeyExpiry": "2026-06-29T08:27:07Z"
+      },
+      "nodekey:1e16d8be5750745e78193acb185b7e680723bae1918c5914a269c25f3c9fb934": {
+        "ID": "nVFiJZ3wxx11CNTRL",
+        "PublicKey": "nodekey:1e16d8be5750745e78193acb185b7e680723bae1918c5914a269c25f3c9fb934",
+        "HostName": "Xorde",
+        "DNSName": "xorde.tail227db1.ts.net.",
+        "OS": "windows",
+        "UserID": 855588540107445,
+        "TailscaleIPs": [
+          "100.94.211.4",
+          "fd7a:115c:a1e0::683a:d304"
+        ],
+        "AllowedIPs": [
+          "100.94.211.4/32",
+          "fd7a:115c:a1e0::683a:d304/128"
+        ],
+        "Addrs": null,
+        "CurAddr": "",
+        "Relay": "",
+        "PeerRelay": "",
+        "RxBytes": 0,
+        "TxBytes": 0,
+        "Created": "2026-05-17T05:48:35.535578073Z",
+        "LastWrite": "0001-01-01T00:00:00Z",
+        "LastSeen": "2026-06-18T04:34:44.1Z",
+        "LastHandshake": "0001-01-01T00:00:00Z",
+        "Online": false,
+        "ExitNode": false,
+        "ExitNodeOption": false,
+        "Active": false,
+        "PeerAPIURL": [
+          "http://100.94.211.4:34925",
+          "http://[fd7a:115c:a1e0::683a:d304]:60305"
+        ],
+        "TaildropTarget": 5,
+        "NoFileSharingReason": "",
+        "InNetworkMap": true,
+        "InMagicSock": true,
+        "InEngine": false,
+        "Expired": true,
+        "KeyExpiry": "2026-11-21T09:39:38Z"
+      },
+      "nodekey:965c7588a3176bdfff8f4e39f50b8e4196b6f53ae6dac4ea029db807a59abf65": {
+        "ID": "n9RzbKtSU521CNTRL",
+        "PublicKey": "nodekey:965c7588a3176bdfff8f4e39f50b8e4196b6f53ae6dac4ea029db807a59abf65",
+        "HostName": "Jonnathan\u00e2\u20ac\u2122s Laptop",
+        "DNSName": "jonnathans-laptop.tail227db1.ts.net.",
+        "OS": "macOS",
+        "UserID": 855588540107445,
+        "TailscaleIPs": [
+          "100.84.35.60",
+          "fd7a:115c:a1e0::7e3a:233c"
+        ],
+        "AllowedIPs": [
+          "100.84.35.60/32",
+          "fd7a:115c:a1e0::7e3a:233c/128"
+        ],
+        "Addrs": null,
+        "CurAddr": "",
+        "Relay": "sin",
+        "PeerRelay": "",
+        "RxBytes": 0,
+        "TxBytes": 0,
+        "Created": "2026-05-12T04:34:18.853346051Z",
+        "LastWrite": "0001-01-01T00:00:00Z",
+        "LastSeen": "2026-06-17T02:48:55.1Z",
+        "LastHandshake": "0001-01-01T00:00:00Z",
+        "Online": false,
+        "ExitNode": false,
+        "ExitNodeOption": false,
+        "Active": false,
+        "PeerAPIURL": [
+          "http://100.84.35.60:54424",
+          "http://[fd7a:115c:a1e0::7e3a:233c]:45746"
+        ],
+        "TaildropTarget": 5,
+        "NoFileSharingReason": "",
+        "InNetworkMap": true,
+        "InMagicSock": true,
+        "InEngine": false,
+        "KeyExpiry": "2026-12-06T23:10:40Z"
+      },
+      "nodekey:b2ddab9fd79a365b609cf8a8ce2e02bfcf41a48e8e50216b182e4c222f20b508": {
+        "ID": "nTLmgDf6aB11CNTRL",
+        "PublicKey": "nodekey:b2ddab9fd79a365b609cf8a8ce2e02bfcf41a48e8e50216b182e4c222f20b508",
+        "HostName": "LAPTOP-DARREL",
+        "DNSName": "laptop-darrel.tail227db1.ts.net.",
+        "OS": "windows",
+        "UserID": 855588540107445,
+        "TailscaleIPs": [
+          "100.96.181.8",
+          "fd7a:115c:a1e0::2f2f:b509"
+        ],
+        "AllowedIPs": [
+          "100.96.181.8/32",
+          "fd7a:115c:a1e0::2f2f:b509/128"
+        ],
+        "Addrs": null,
+        "CurAddr": "",
+        "Relay": "",
+        "PeerRelay": "",
+        "RxBytes": 0,
+        "TxBytes": 0,
+        "Created": "2026-09-14T13:47:05.710930156Z",
+        "LastWrite": "0001-01-01T00:00:00Z",
+        "LastSeen": "2026-10-27T04:13:46.1Z",
+        "LastHandshake": "0001-01-01T00:00:00Z",
+        "Online": false,
+        "ExitNode": false,
+        "ExitNodeOption": false,
+        "Active": false,
+        "PeerAPIURL": [
+          "http://100.96.181.8:49405",
+          "http://[fd7a:115c:a1e0::2f2f:b509]:47766"
+        ],
+        "TaildropTarget": 5,
+        "NoFileSharingReason": "",
+        "InNetworkMap": true,
+        "InMagicSock": true,
+        "InEngine": false,
+        "Expired": true,
+        "KeyExpiry": "2026-10-26T04:13:31Z"
+      }
+    },
+    "User": {
+      "855588540107445": {
+        "ID": 855588540107445,
+        "LoginName": "kelompok1rsimandat@gmail.com",
+        "DisplayName": "Kelompok 1 RSI ManDat",
+        "ProfilePicURL": "https://lh3.googleusercontent.com/a/ACg8ocLO90MYR0cOBIYI7z6c7Q9lXc_6L_ruKYKHqjVi729LlejwJw=s96-c"
+      }
+    },
+    "ClientVersion": null
+  }
+}

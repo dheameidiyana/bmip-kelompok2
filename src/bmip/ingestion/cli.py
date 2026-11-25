@@ -12,7 +12,7 @@ from typing import Any
 from bmip.common.config import get_settings
 from bmip.common.logging import configure_logging, get_logger
 from bmip.ingestion.feeds import (
-    collect_binance_ws,
+    collect_binance_ws_many,
     download_binance_vision_day,
     iter_binance_vision_csv,
     iter_bluesky_search,
@@ -30,31 +30,34 @@ def _market_items(args: argparse.Namespace, settings: Any) -> list[dict[str, Any
     if args.replay:
         return list(iter_static_market(Path(args.replay)))[: args.max_records]
     if args.vision:
-        archive = download_binance_vision_day(
-            args.vision,
-            settings.market_symbol,
-            Path("data/replay"),
-            settings.binance_vision_base_url,
-        )
-        return list(
-            iter_binance_vision_csv(
-                archive,
-                settings.market_symbol,
-                max_records=args.max_records,
-                speed=args.speed,
+        records: list[dict[str, Any]] = []
+        for symbol in settings.market_symbols:
+            archive = download_binance_vision_day(
+                args.vision,
+                symbol,
+                Path("data/replay"),
+                settings.binance_vision_base_url,
             )
-        )
+            records.extend(
+                iter_binance_vision_csv(
+                    archive,
+                    symbol,
+                    max_records=args.max_records,
+                    speed=args.speed,
+                )
+            )
+        return records
     if args.live:
-        return collect_binance_ws(
+        return collect_binance_ws_many(
             settings.market_ws_url,
-            settings.market_symbol,
+            settings.market_symbols,
             max_records=args.max_records,
         )
     if settings.market_feed == "binance_vision":
         return list(iter_static_market(Path(settings.market_replay_file)))[: args.max_records]
-    return collect_binance_ws(
+    return collect_binance_ws_many(
         settings.market_ws_url,
-        settings.market_symbol,
+        settings.market_symbols,
         max_records=args.max_records,
     )
 

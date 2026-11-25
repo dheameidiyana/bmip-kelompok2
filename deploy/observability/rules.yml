@@ -1,0 +1,273 @@
+# 16 alert rules, three classes: job failure, stream lag/freshness, service.
+# Every rule carries severity, owner, channel, class, runbook, impact, and a
+# first step, so the Telegram message answers "what, how bad, what do I do".
+groups:
+  - name: job-failure
+    rules:
+      - alert: BmipBatchJobStale
+        expr: time() - max by (job) (bmip_last_success_timestamp_seconds) > 7200
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
+        annotations:
+          summary: "Job batch {{ $labels.job }} belum sukses dalam 2 jam"
+          description: "Pushgateway masih menyimpan waktu sukses terakhir untuk {{ $labels.job }}, dan sudah lewat 2 jam."
+          impact: "Data {{ $labels.job }} tidak diperbarui; gold dan serving bisa memakai data lama."
+          first_step: "Cek container dan run terakhir di Prefect, lalu baca log job tersebut."
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-job-failure.md
+
+      - alert: BmipDqCriticalFailures
+        expr: bmip_dq_failures_total{severity="critical"} > 0
+        for: 1m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
+        annotations:
+          summary: "Gate kualitas data menemukan {{ $value }} kegagalan critical"
+          description: "Satu atau lebih aturan critical gagal, sehingga gold tidak dipublish."
+          impact: "Gold dan serving tidak menerima data baru sampai aturan yang gagal diperbaiki."
+          first_step: "Buka evidence/dq/dq_report.json dan cari nama suite serta rule yang gagal."
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-job-failure.md
+
+      - alert: BmipGoldRowsMissing
+        expr: bmip_gold_rows == 0
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
+        annotations:
+          summary: "Mart gold {{ $labels.table }} kosong"
+          description: "Publish terakhir menulis nol baris ke {{ $labels.table }}."
+          impact: "API dan dashboard menampilkan data kosong atau lama untuk tabel itu."
+          first_step: "Cek hasil dbt dan gate gold, lalu jalankan ulang build setelah penyebabnya jelas."
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-job-failure.md
+
+      - alert: BmipPredictionsFailed
+        expr: bmip_predictions_total{status="error"} > 0
+        for: 5m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: job-failure
+          run_id: "{{ $labels.run_id }}"
+        annotations:
+          summary: "Inferensi menulis {{ $value }} baris error"
+          description: "serving.predictions berisi baris status=error, biasanya karena feature_ts sudah terlalu tua."
+          impact: "Prediksi untuk simbol tersebut tidak tersedia; panel prediksi menampilkan data lama atau kosong."
+          first_step: "Cek feature_ts di evidence/ml/predictions_*.json dan jadwal infer-volatility."
+          runbook: docs/runbooks/alert-job-failure.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-job-failure.md
+
+  - name: stream-lag-freshness
+    rules:
+      - alert: BmipConsumerLagHigh
+        expr: bmip_consumer_lag > 1000
+        for: 2m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Consumer lag {{ $value }} pesan"
+          description: "Processor tertinggal dari topic market.trades lebih dari 1000 pesan selama 2 menit."
+          impact: "Silver market dan gold akan terlambat; dashboard menampilkan data yang makin basi."
+          first_step: "Cek lag per partisi dan pastikan processor benar-benar hidup."
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipStreamIdle
+        expr: (up{job="stream"} == 1) and (rate(bmip_ingest_events_total[10m]) == 0)
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Stream processor hidup tetapi tidak menerima event"
+          description: "Endpoint metrik menjawab, tetapi tidak ada trade masuk selama 10 menit."
+          impact: "Tidak ada bar silver baru; freshness akan naik terus."
+          first_step: "Cek koneksi Binance dan topic Redpanda, lalu lihat log processor."
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipSilverFreshnessBreach
+        expr: bmip_freshness_seconds{job="stream"} > 5400
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Silver market tertinggal {{ $value }} detik dari event time"
+          description: "SLO stream 90 menit terlampaui."
+          impact: "Gold dan dashboard memakai data silver yang sudah lama."
+          first_step: "Bandingkan bar silver terbaru dengan event terbaru di market.trades."
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipGoldFreshnessBreach
+        expr: bmip_freshness_seconds{layer="gold"} > 5400
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Gold tertinggal {{ $value }} detik dari silver"
+          description: "Batas lag gold 90 menit terlampaui."
+          impact: "Serving dan API menyajikan gold yang tidak sinkron dengan silver."
+          first_step: "Cek run transform-gold terakhir dan langkah publish."
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-stream-freshness.md
+
+      - alert: BmipSilverBarAgeHigh
+        expr: bmip_silver_bar_age_seconds > 3600
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: stream-lag
+        annotations:
+          summary: "Bar silver terbaru berumur {{ $value }} detik"
+          description: "Lebih dari satu jam tanpa bar menit baru."
+          impact: "Replay atau stream kemungkinan berhenti; data dashboard membeku."
+          first_step: "Cek consumer group dan offset commit processor."
+          runbook: docs/runbooks/alert-stream-freshness.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-stream-freshness.md
+
+  - name: service-resource
+    rules:
+      - alert: BmipApiDown
+        expr: up{job="api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Query API tidak bisa di-scrape"
+          description: "Prometheus gagal mengambil /metrics dari api:8000 selama lebih dari 2 menit."
+          impact: "Dashboard dan endpoint /v1 tidak bisa dipakai."
+          first_step: "Cek container api dan 50 baris log terakhirnya."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipStreamDown
+        expr: up{job="stream"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Endpoint metrik stream processor mati"
+          description: "Target host.docker.internal:9101 tidak menjawab."
+          impact: "Tidak ada metrik stream; alert freshness tidak bisa dinilai."
+          first_step: "Nyalakan processor jika replay sedang dijalankan."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipTargetDown
+        expr: up{job!~"stream|api"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Target scrape {{ $labels.job }} mati"
+          description: "Salah satu target infrastruktur berhenti menjawab."
+          impact: "Metrik dari target itu hilang; alert turunannya tidak bisa dinilai."
+          first_step: "Cek container dan port target tersebut."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipApiErrorRate
+        expr: >-
+          sum(rate(bmip_api_errors_total[5m]))
+          / clamp_min(sum(rate(bmip_api_requests_total[5m])), 0.001) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Error rate API di atas 5 persen"
+          description: "Lebih dari satu dari dua puluh request menghasilkan error yang tidak ditangani."
+          impact: "Dashboard dan klien API menerima respons 5xx."
+          first_step: "Cari severity=ERROR di log API dan telusuri request_id-nya."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipApiLatencyHigh
+        expr: >-
+          sum(rate(bmip_api_request_duration_seconds_sum[5m]))
+          / clamp_min(sum(rate(bmip_api_request_duration_seconds_count[5m])), 0.001) > 1
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Rata-rata latency API di atas 1 detik"
+          description: "Jalur lake kemungkinan sering jatuh ke PostgreSQL."
+          impact: "Dashboard terasa lambat dan batas waktu klien bisa terlampaui."
+          first_step: "Cek bmip_api_fallback_total dan kesehatan MinIO serta Lakekeeper."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipContainerCpuHigh
+        expr: sum by (name) (rate(container_cpu_usage_seconds_total{name=~".+"}[5m])) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Container {{ $labels.name }} memakai CPU lebih dari 0,8"
+          description: "Pemakaian CPU bertahan di atas anggaran profil dev."
+          impact: "Container lain bisa kelaparan CPU dan scrape melambat."
+          first_step: "Bandingkan dengan batas cpus di compose dan cek proses di dalam container."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md
+
+      - alert: BmipContainerMemoryHigh
+        expr: container_memory_working_set_bytes{name=~".+"} > 800000000
+        for: 10m
+        labels:
+          severity: warning
+          owner: vio
+          channel: telegram
+          alert_class: service
+        annotations:
+          summary: "Container {{ $labels.name }} memakai memori lebih dari 800 MB"
+          description: "Tekanan memori pada profil dev."
+          impact: "Container bisa di-restart oleh kernel atau Docker."
+          first_step: "Cek batas memori dan jumlah restart container."
+          runbook: docs/runbooks/alert-service-resource.md
+          runbook_url: https://github.com/dheameidiyana/bmip-kelompok2/blob/w2-b-ok/docs/runbooks/alert-service-resource.md

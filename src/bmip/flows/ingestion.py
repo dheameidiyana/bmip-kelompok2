@@ -18,6 +18,9 @@ from bmip.ingestion.feeds import (
 )
 from bmip.ingestion.ledger import get_watermark
 from bmip.ingestion.pipeline import run_social_batch
+from bmip.lineage import dataset_ref, lineage_run
+from bmip.lineage.dbt import dbt_lineage
+from bmip.lineage.hooks import emit_edges
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -69,23 +72,56 @@ def transform_silver_task(select: str | None = None) -> dict[str, Any]:
     ]
     if select:
         command.extend(["--select", select])
-    result = dbtRunner().invoke(command)
-    if not result.success:
-        detail = str(result.exception) if result.exception is not None else "dbt build failed"
-        raise RuntimeError(detail)
+    with dbt_lineage(select=select):
+        result = dbtRunner().invoke(command)
+        if not result.success:
+            detail = str(result.exception) if result.exception is not None else "dbt build failed"
+            raise RuntimeError(detail)
     return {"success": True, "select": select}
 
 
 @flow(name="harvest-social", log_prints=True)
 def harvest_social_flow(max_pages: int | None = None) -> dict[str, Any]:
     configure_logging()
-    return harvest_social_task(max_pages=max_pages)
+    with lineage_run(
+        "harvest-social",
+        outputs=[dataset_ref("bronze", "social_post_raw")],
+    ):
+        return harvest_social_task(max_pages=max_pages)
 
 
 @flow(name="transform-silver", log_prints=True)
 def transform_silver_flow(select: str | None = None) -> dict[str, Any]:
     configure_logging()
-    return transform_silver_task(select=select)
+    with lineage_run("transform-silver") as run_id:
+        result = transform_silver_task(select=select)
+        emit_edges(
+            "transform-silver",
+            [
+                (
+                    [dataset_ref("bronze", "market_trade_raw")],
+                    [dataset_ref("silver", "market_trades")],
+                    "market_trades",
+                ),
+                (
+                    [dataset_ref("bronze", "market_trade_raw")],
+                    [dataset_ref("silver", "market_ohlcv_1m")],
+                    "market_ohlcv_1m",
+                ),
+                (
+                    [dataset_ref("bronze", "social_post_raw")],
+                    [dataset_ref("silver", "social_post")],
+                    "social_post",
+                ),
+                (
+                    [dataset_ref("bronze", "social_post_raw")],
+                    [dataset_ref("silver", "social_sentiment")],
+                    "social_sentiment",
+                ),
+            ],
+            run_id=run_id,
+        )
+    return result
 
 
 @task(name="build-silver-social", retries=1, retry_delay_seconds=30)
@@ -183,17 +219,18 @@ def transform_gold_flow(
     a backfill to the partitions inside the range.
     """
     configure_logging()
-    social_silver = build_silver_social_task()
-    silver_build = transform_silver_task(select="staging intermediate silver")
-    silver_quality = quality_silver_task()
-    gold_build = transform_silver_task(select="marts")
-    gold_quality = quality_gold_task(duckdb_path=duckdb_path)
-    published = publish_gold_task(
-        duckdb_path=duckdb_path,
-        start=start,
-        end=end,
-    )
-    serving = publish_serving_task(start=start, end=end)
+    with lineage_run("transform-gold"):
+        social_silver = build_silver_social_task()
+        silver_build = transform_silver_task(select="staging intermediate silver")
+        silver_quality = quality_silver_task()
+        gold_build = transform_silver_task(select="marts")
+        gold_quality = quality_gold_task(duckdb_path=duckdb_path)
+        published = publish_gold_task(
+            duckdb_path=duckdb_path,
+            start=start,
+            end=end,
+        )
+        serving = publish_serving_task(start=start, end=end)
     return {
         "social_silver": social_silver,
         "silver_build": silver_build,

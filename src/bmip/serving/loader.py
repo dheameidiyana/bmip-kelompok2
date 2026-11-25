@@ -329,7 +329,31 @@ def load_serving(
             "ctx_hash": result.logical_hash[:12],
         },
     )
+    _emit_serving_lineage()
     return result
+
+
+def _emit_serving_lineage() -> None:
+    """Emit gold -> serving edges without making the load depend on Marquez."""
+    try:
+        from bmip.lineage import LineageEmitter, dataset_ref
+
+        emitter = LineageEmitter.from_env("bmip_serving")
+        try:
+            for target, source in (
+                ("market_hourly", "mart_market"),
+                ("sentiment_hourly", "mart_sentiment"),
+            ):
+                emitter.emit(
+                    "COMPLETE",
+                    f"publish-serving.{target}",
+                    inputs=[dataset_ref("gold", source)],
+                    outputs=[dataset_ref("serving", target)],
+                )
+        finally:
+            emitter.close()
+    except Exception as exc:  # noqa: BLE001 - lineage is not a load gate
+        log.warning("serving lineage emit failed", extra={"ctx_error": str(exc)})
 
 
 def _prediction_freshness(
@@ -352,10 +376,13 @@ def _prediction_freshness(
 
 def _registry_rows(settings: Settings, connection) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
+    from bmip.catalog.classify import suggest_classification
+
     for dataset in load_registry(settings):
         schema = None
         if dataset.kind == "iceberg":
-            schema = iceberg_columns(settings, dataset.location)
+            service = "api" if dataset.layer == "gold" else "process"
+            schema = iceberg_columns(settings, dataset.location, service)
         else:
             try:
                 schema = postgres_columns(connection, dataset.location)
@@ -369,8 +396,39 @@ def _registry_rows(settings: Settings, connection) -> list[dict[str, Any]]:
                 )
         payload = dataset.row()
         payload["schema"] = schema
+        if schema:
+            payload["auto_classification"] = suggest_classification(schema)
+        elif not payload.get("auto_classification"):
+            payload["auto_classification"] = suggest_classification([])
         rows.append(payload)
     return rows
+
+
+def reload_catalog(settings: Settings) -> dict[str, Any]:
+    """Copy ops.dataset_registry into serving.catalog_datasets (admin action)."""
+    with connect(settings) as connection:
+        repository = ServingRepository(settings, connection=connection)
+        rows = _registry_rows(settings, connection)
+        written = repository.upsert_registry(rows)
+        with connection.cursor() as cursor:
+            for row in rows:
+                cursor.execute(
+                    """
+                    UPDATE ops.dataset_registry
+                    SET columns = %s::jsonb,
+                        auto_classification = %s,
+                        updated_at = now()
+                    WHERE id = %s
+                    """,
+                    (
+                        json.dumps(row.get("schema")) if row.get("schema") else None,
+                        row.get("auto_classification"),
+                        row["id"],
+                    ),
+                )
+        connection.commit()
+    log.info("catalog reloaded", extra={"ctx_datasets": written})
+    return {"datasets": written}
 
 
 def _decimal(value: Any) -> Decimal:

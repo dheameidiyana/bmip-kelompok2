@@ -61,6 +61,44 @@ deployments:
         timezone: UTC
         active: true
 
+  - name: infer-volatility
+    version: "1"
+    description: Score the latest feature row for every symbol and persist predictions.
+    tags:
+      - bmip
+      - w2-a
+      - ml
+      - inference
+    entrypoint: src/bmip/flows/ml.py:infer_volatility_flow
+    parameters: {}
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1
+    schedules:
+      - cron: "5 * * * *"
+        timezone: UTC
+        active: true
+
+  - name: train-volatility
+    version: "1"
+    description: Retrain E1/E2 candidates and run the champion/challenger gate.
+    tags:
+      - bmip
+      - w2-a
+      - ml
+      - training
+    entrypoint: src/bmip/flows/ml.py:train_volatility_flow
+    parameters: {}
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1
+    schedules:
+      - cron: "0 2 * * 0"
+        timezone: UTC
+        active: false
+
   - name: backfill-gold
     version: "1"
     description: Rebuild and republish gold for an explicit hour range.

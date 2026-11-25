@@ -17,7 +17,7 @@ jobs:
 
       - name: Install
         timeout-minutes: 10
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,ml]"
 
       - name: Prepare compose env
         run: cp deploy/env/ci.env.example .env

@@ -1,0 +1,49 @@
+{
+  "tagOwners": {
+    "tag:bmip-core": ["autogroup:admin"],
+    "tag:bmip-ui": ["autogroup:admin"],
+    "tag:bmip-user": ["autogroup:admin"]
+  },
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["tag:bmip-user"],
+      "dst": ["tag:bmip-core:443", "tag:bmip-ui:443"]
+    },
+    {
+      "action": "accept",
+      "src": ["tag:bmip-core"],
+      "dst": [
+        "tag:bmip-core:443",
+        "tag:bmip-core:5433",
+        "tag:bmip-core:5435",
+        "tag:bmip-core:8000",
+        "tag:bmip-core:8181",
+        "tag:bmip-core:9000",
+        "tag:bmip-core:9090",
+        "tag:bmip-core:3000",
+        "tag:bmip-core:5002"
+      ]
+    },
+    {
+      "action": "accept",
+      "src": ["tag:bmip-core"],
+      "dst": [
+        "tag:bmip-ui:3000",
+        "tag:bmip-ui:3002",
+        "tag:bmip-ui:8501",
+        "tag:bmip-ui:8502"
+      ]
+    },
+    {
+      "action": "accept",
+      "src": ["tag:bmip-ui"],
+      "dst": [
+        "tag:bmip-core:8000",
+        "tag:bmip-core:9000",
+        "tag:bmip-core:8181",
+        "tag:bmip-core:5433"
+      ]
+    }
+  ]
+}

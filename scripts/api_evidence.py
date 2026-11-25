@@ -343,7 +343,7 @@ def step_auth(ctx: dict[str, Any]) -> dict[str, Any]:
 
 def step_invalid(ctx: dict[str, Any]) -> dict[str, Any]:
     cases = [
-        ("unknown symbol", "/v1/market/latest", {"symbol": "ETHUSDT"}),
+        ("unknown symbol", "/v1/market/latest", {"symbol": "NOPEUSDT"}),
         (
             "from after to",
             "/v1/market/ohlc",

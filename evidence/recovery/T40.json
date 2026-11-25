@@ -1,0 +1,3904 @@
+{
+  "branch": "slot/w2-d-lois",
+  "command": "python scripts/w2d_restart.py",
+  "commit": "6187d41",
+  "compose": {
+    "files": [
+      "deploy/compose.base.yml",
+      "deploy/compose.dev.yml",
+      "deploy/compose.host-ml.yml"
+    ],
+    "profile": "governance",
+    "restart_services": [
+      "alertmanager",
+      "api",
+      "cadvisor",
+      "catalog",
+      "dashboard",
+      "grafana",
+      "lakekeeper",
+      "marquez",
+      "marquez-web",
+      "minio",
+      "notify",
+      "postgres-core",
+      "postgres-exporter",
+      "postgres-gov",
+      "postgres-ml",
+      "prefect-server",
+      "prometheus",
+      "pushgateway",
+      "redpanda"
+    ],
+    "return_code": 0
+  },
+  "databases": {
+    "after": {
+      "bmip": {
+        "container": "f834b8087f0bce46eb76e4b335ed6a06663d5c462549bc2a59d40a8e453b2c3b",
+        "row_total": 248,
+        "service": "postgres-core",
+        "tables": [
+          {
+            "checksum": "676df81dfb89ad0cd4834c4d03f5d9a1",
+            "rows": 3,
+            "table": "ops.api_keys"
+          },
+          {
+            "checksum": "d3207490ce26c7ca9ee0f8b24046ec35",
+            "rows": 54,
+            "table": "ops.audit_log"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "ops.backfill_requests"
+          },
+          {
+            "checksum": "e52c43271c1b83004348b2bfb7529086",
+            "rows": 10,
+            "table": "ops.batch_runs"
+          },
+          {
+            "checksum": "ea227cb3a6c2680467bb04ac0681adfc",
+            "rows": 11,
+            "table": "ops.dataset_registry"
+          },
+          {
+            "checksum": "927d600eb38c39095aa5abd529298118",
+            "rows": 9,
+            "table": "ops.lineage_edges"
+          },
+          {
+            "checksum": "ed77d8b47cfb9c784fac2031f322c007",
+            "rows": 1,
+            "table": "ops.social_watermark"
+          },
+          {
+            "checksum": "590fbd426b8c747402b32a661a3a6bee",
+            "rows": 11,
+            "table": "serving.catalog_datasets"
+          },
+          {
+            "checksum": "91ac24fb2ea2eaca5dba8fc55b41bdfe",
+            "rows": 29,
+            "table": "serving.dq_results"
+          },
+          {
+            "checksum": "d9460aa453ada5bceda03bce35723e6d",
+            "rows": 1,
+            "table": "serving.dq_runs"
+          },
+          {
+            "checksum": "7fa9c59713f8b8ce7abafee85635e023",
+            "rows": 4,
+            "table": "serving.freshness"
+          },
+          {
+            "checksum": "6ad30da18fecec1888bf4ac8fddcd85b",
+            "rows": 42,
+            "table": "serving.market_hourly"
+          },
+          {
+            "checksum": "1296ad8ab24ce07b580e2ccce95482eb",
+            "rows": 1,
+            "table": "serving.market_latest"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "serving.model_decisions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "serving.model_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "serving.predictions"
+          },
+          {
+            "checksum": "272612e1a35677d49792a613e2838057",
+            "rows": 72,
+            "table": "serving.sentiment_hourly"
+          }
+        ]
+      },
+      "lakekeeper": {
+        "container": "f834b8087f0bce46eb76e4b335ed6a06663d5c462549bc2a59d40a8e453b2c3b",
+        "row_total": 5027,
+        "service": "postgres-core",
+        "tables": [
+          {
+            "checksum": "1a99018a83e33f897f126a2625d244bc",
+            "rows": 77,
+            "table": "public._sqlx_migrations"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.cache_change_log"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.current_view_metadata_version"
+          },
+          {
+            "checksum": "e937ce1a1a468c00c6deb770847a4d71",
+            "rows": 115,
+            "table": "public.endpoint_statistics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.generic_table"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.generic_table_properties"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.grant_assignment"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.idempotency_record"
+          },
+          {
+            "checksum": "fec0e26683096f2c41087ce353fab977",
+            "rows": 4,
+            "table": "public.namespace"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.partition_statistics"
+          },
+          {
+            "checksum": "901ec2deeb1e22b6bc7a86a6419ab3b2",
+            "rows": 1,
+            "table": "public.project"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_assignment"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_assignment_sync"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_members_sync"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_membership"
+          },
+          {
+            "checksum": "ecb3d1faaa45f1af68cad8ea3e95a313",
+            "rows": 157,
+            "table": "public.schema_field"
+          },
+          {
+            "checksum": "dca467c6f3fd11025ab4c6f785b88437",
+            "rows": 1,
+            "table": "public.secret"
+          },
+          {
+            "checksum": "8422477e7f623ad342043b8b5f4bf660",
+            "rows": 1,
+            "table": "public.server"
+          },
+          {
+            "checksum": "cecd5569669d8146523441a4dc0a3340",
+            "rows": 10,
+            "table": "public.table"
+          },
+          {
+            "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+            "rows": 10,
+            "table": "public.table_current_schema"
+          },
+          {
+            "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+            "rows": 10,
+            "table": "public.table_default_partition_spec"
+          },
+          {
+            "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+            "rows": 10,
+            "table": "public.table_default_sort_order"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.table_encryption_keys"
+          },
+          {
+            "checksum": "13f355efa4851866e6147f3e56d0afd0",
+            "rows": 282,
+            "table": "public.table_metadata_log"
+          },
+          {
+            "checksum": "a91d53d41a4ca06c6a34d4f36c36cbd5",
+            "rows": 10,
+            "table": "public.table_partition_spec"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.table_properties"
+          },
+          {
+            "checksum": "fcf248cc1853d7a2f951eb070d470800",
+            "rows": 10,
+            "table": "public.table_refs"
+          },
+          {
+            "checksum": "6dc62f594de21f0c3e728be11517a2a1",
+            "rows": 10,
+            "table": "public.table_schema"
+          },
+          {
+            "checksum": "5f4da64c1721ded2ca03813d404957a4",
+            "rows": 2455,
+            "table": "public.table_snapshot"
+          },
+          {
+            "checksum": "fe135f1f578de2941824de58879e5ca7",
+            "rows": 1677,
+            "table": "public.table_snapshot_log"
+          },
+          {
+            "checksum": "0ac7cd020bdc721f57bc330435671b18",
+            "rows": 10,
+            "table": "public.table_sort_order"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.table_statistics"
+          },
+          {
+            "checksum": "c93d622dcd76602bfcfa468be28678d1",
+            "rows": 10,
+            "table": "public.tabular"
+          },
+          {
+            "checksum": "020a76b71e92e5efdbb328fb4f0a4ccc",
+            "rows": 157,
+            "table": "public.tabular_field"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tag"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tag_allowed_value"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tag_definition"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.task"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.task_config"
+          },
+          {
+            "checksum": "1f5b7c3ae9662c2142752323058a7426",
+            "rows": 5,
+            "table": "public.task_log"
+          },
+          {
+            "checksum": "7d30eebeb98a4ed54c4486d6db32c050",
+            "rows": 1,
+            "table": "public.task_schedule"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.users"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_properties"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_representation"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_schema"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_version"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_version_log"
+          },
+          {
+            "checksum": "c92fd9ce7d446c1b87fe72b97ac75326",
+            "rows": 1,
+            "table": "public.warehouse"
+          },
+          {
+            "checksum": "a423337b13bd1fe2afb1c90b895f52b2",
+            "rows": 1,
+            "table": "public.warehouse_statistics"
+          },
+          {
+            "checksum": "17516e66c6d03f1f2954e3d79a6a8df7",
+            "rows": 2,
+            "table": "public.warehouse_statistics_history"
+          }
+        ]
+      },
+      "marquez": {
+        "container": "760cf451c758077ea12cdcb89363947f6033f9e4c876444be933428836c91fc0",
+        "row_total": 95,
+        "service": "postgres-gov",
+        "tables": [
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.column_lineage"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_facets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_fields"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_fields_tag_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_schema_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_schema_versions_field_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_symlinks"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_versions_field_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.datasets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.datasets_tag_mapping"
+          },
+          {
+            "checksum": "8d15c9da5c738e4f756a6053760b0a7f",
+            "rows": 1,
+            "table": "public.facet_migration_lock"
+          },
+          {
+            "checksum": "36d7c0767baddbefd538c1e46b3ab911",
+            "rows": 91,
+            "table": "public.flyway_schema_history"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_facets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_versions_io_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs_fqn"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs_tag_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.lineage_events"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.namespace_ownerships"
+          },
+          {
+            "checksum": "d74fd15f58bc2a79c28f417001632ad1",
+            "rows": 1,
+            "table": "public.namespaces"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.owners"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.run_args"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.run_facets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.run_states"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.runs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.runs_input_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sources"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.stream_versions"
+          },
+          {
+            "checksum": "65db878f6261eb2b4976f479dabdd186",
+            "rows": 2,
+            "table": "public.tags"
+          }
+        ]
+      },
+      "mlflow": {
+        "container": "9d9d828fc0a754b2d859d3d81cddab262ec82a61212e1747909b9f2212a60cd7",
+        "row_total": 3,
+        "service": "postgres-ml",
+        "tables": [
+          {
+            "checksum": "4576b5ff3fa49ac56d564b6e2ff75748",
+            "rows": 1,
+            "table": "public.alembic_version"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.assessments"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.budget_policies"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.datasets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoint_bindings"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoint_model_mappings"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoint_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoints"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.entity_associations"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.evaluation_dataset_records"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.evaluation_dataset_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.evaluation_datasets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.experiment_tags"
+          },
+          {
+            "checksum": "c9cd017a0c1c67448a028db3d7de3525",
+            "rows": 1,
+            "table": "public.experiments"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.guardrail_configs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.guardrails"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.input_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.inputs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.issue_categories"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.issues"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_locks"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.label_schemas"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.latest_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_model_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_model_params"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_model_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_models"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_access_endpoints"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_aliases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_version_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_servers"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.model_definitions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.model_version_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.model_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.online_scoring_configs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.params"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.registered_model_aliases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.registered_model_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.registered_models"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queue_items"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queue_label_schemas"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queue_users"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queues"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.runs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.scheduler_leases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.scorer_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.scorers"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.secrets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_aliases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_version_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skills"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.span_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.spans"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_assessment_daily_rollups"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_span_cost_daily_rollups"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_trace_metric_daily_rollups"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_trace_rollup_rebuild_queue"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_info"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_request_metadata"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.webhook_events"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.webhooks"
+          },
+          {
+            "checksum": "1bcf1dcccb36e3668f13bfd56a4b07a6",
+            "rows": 1,
+            "table": "public.workspaces"
+          }
+        ]
+      },
+      "prefect": {
+        "container": "9d9d828fc0a754b2d859d3d81cddab262ec82a61212e1747909b9f2212a60cd7",
+        "row_total": 1184,
+        "service": "postgres-ml",
+        "tables": [
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.agent"
+          },
+          {
+            "checksum": "a7c29fb23c128d3508b5d177fcfac668",
+            "rows": 1,
+            "table": "public.alembic_version"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.artifact"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.artifact_collection"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_bucket"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_event_follower"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_held_event"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_related_resource"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.block_document"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.block_document_reference"
+          },
+          {
+            "checksum": "e68d8de5319cdb720e32e12d51b42b8c",
+            "rows": 65,
+            "table": "public.block_schema"
+          },
+          {
+            "checksum": "01701c8691467b705d7edfb16b2a5dfc",
+            "rows": 26,
+            "table": "public.block_schema_reference"
+          },
+          {
+            "checksum": "aa741c44699a77f28d16f7e8fcc2d708",
+            "rows": 55,
+            "table": "public.block_type"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.composite_trigger_child_firing"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.concurrency_limit"
+          },
+          {
+            "checksum": "c5f10e20b2b3ff62d3a0fe827a516a0e",
+            "rows": 2,
+            "table": "public.concurrency_limit_v2"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.configuration"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.csrf_token"
+          },
+          {
+            "checksum": "d779f6a64a69e454263783f7857c9819",
+            "rows": 2,
+            "table": "public.deployment"
+          },
+          {
+            "checksum": "5c003ca093dc2d231b361b12e481e74c",
+            "rows": 2,
+            "table": "public.deployment_schedule"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.deployment_version"
+          },
+          {
+            "checksum": "82da9ae435d2a3698e6930efaf831b65",
+            "rows": 562,
+            "table": "public.event_resources"
+          },
+          {
+            "checksum": "dcb317039a4988c97045a12a6bddfe24",
+            "rows": 86,
+            "table": "public.events"
+          },
+          {
+            "checksum": "57bf26a14b6fe3a885138b583761ffd9",
+            "rows": 2,
+            "table": "public.flow"
+          },
+          {
+            "checksum": "a86fadd16cd3327fff7104085511de8d",
+            "rows": 67,
+            "table": "public.flow_run"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.flow_run_input"
+          },
+          {
+            "checksum": "83d5b0ef8e89abcea7748ca666311363",
+            "rows": 167,
+            "table": "public.flow_run_state"
+          },
+          {
+            "checksum": "680733970df22f2bad522f4a16387dae",
+            "rows": 96,
+            "table": "public.log"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.saved_search"
+          },
+          {
+            "checksum": "add9992fa6a76798e53d547462596511",
+            "rows": 10,
+            "table": "public.task_run"
+          },
+          {
+            "checksum": "98795bf31f6e728e178d5de75a15d087",
+            "rows": 30,
+            "table": "public.task_run_state"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.task_run_state_cache"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.variable"
+          },
+          {
+            "checksum": "d620575b5ac46b6045fa7e641eb52d43",
+            "rows": 1,
+            "table": "public.work_pool"
+          },
+          {
+            "checksum": "759f9a8c160833f870c7ad1b15966e81",
+            "rows": 1,
+            "table": "public.work_queue"
+          },
+          {
+            "checksum": "a81bd2238d07f9cd6d8ba99b2778bb07",
+            "rows": 9,
+            "table": "public.worker"
+          }
+        ]
+      }
+    },
+    "before": {
+      "bmip": {
+        "container": "f834b8087f0bce46eb76e4b335ed6a06663d5c462549bc2a59d40a8e453b2c3b",
+        "row_total": 248,
+        "service": "postgres-core",
+        "tables": [
+          {
+            "checksum": "676df81dfb89ad0cd4834c4d03f5d9a1",
+            "rows": 3,
+            "table": "ops.api_keys"
+          },
+          {
+            "checksum": "d3207490ce26c7ca9ee0f8b24046ec35",
+            "rows": 54,
+            "table": "ops.audit_log"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "ops.backfill_requests"
+          },
+          {
+            "checksum": "e52c43271c1b83004348b2bfb7529086",
+            "rows": 10,
+            "table": "ops.batch_runs"
+          },
+          {
+            "checksum": "ea227cb3a6c2680467bb04ac0681adfc",
+            "rows": 11,
+            "table": "ops.dataset_registry"
+          },
+          {
+            "checksum": "927d600eb38c39095aa5abd529298118",
+            "rows": 9,
+            "table": "ops.lineage_edges"
+          },
+          {
+            "checksum": "ed77d8b47cfb9c784fac2031f322c007",
+            "rows": 1,
+            "table": "ops.social_watermark"
+          },
+          {
+            "checksum": "590fbd426b8c747402b32a661a3a6bee",
+            "rows": 11,
+            "table": "serving.catalog_datasets"
+          },
+          {
+            "checksum": "91ac24fb2ea2eaca5dba8fc55b41bdfe",
+            "rows": 29,
+            "table": "serving.dq_results"
+          },
+          {
+            "checksum": "d9460aa453ada5bceda03bce35723e6d",
+            "rows": 1,
+            "table": "serving.dq_runs"
+          },
+          {
+            "checksum": "7fa9c59713f8b8ce7abafee85635e023",
+            "rows": 4,
+            "table": "serving.freshness"
+          },
+          {
+            "checksum": "6ad30da18fecec1888bf4ac8fddcd85b",
+            "rows": 42,
+            "table": "serving.market_hourly"
+          },
+          {
+            "checksum": "1296ad8ab24ce07b580e2ccce95482eb",
+            "rows": 1,
+            "table": "serving.market_latest"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "serving.model_decisions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "serving.model_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "serving.predictions"
+          },
+          {
+            "checksum": "272612e1a35677d49792a613e2838057",
+            "rows": 72,
+            "table": "serving.sentiment_hourly"
+          }
+        ]
+      },
+      "lakekeeper": {
+        "container": "f834b8087f0bce46eb76e4b335ed6a06663d5c462549bc2a59d40a8e453b2c3b",
+        "row_total": 5027,
+        "service": "postgres-core",
+        "tables": [
+          {
+            "checksum": "1a99018a83e33f897f126a2625d244bc",
+            "rows": 77,
+            "table": "public._sqlx_migrations"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.cache_change_log"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.current_view_metadata_version"
+          },
+          {
+            "checksum": "e7b48827e20f2fe85ee8f50654eb4185",
+            "rows": 115,
+            "table": "public.endpoint_statistics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.generic_table"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.generic_table_properties"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.grant_assignment"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.idempotency_record"
+          },
+          {
+            "checksum": "fec0e26683096f2c41087ce353fab977",
+            "rows": 4,
+            "table": "public.namespace"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.partition_statistics"
+          },
+          {
+            "checksum": "901ec2deeb1e22b6bc7a86a6419ab3b2",
+            "rows": 1,
+            "table": "public.project"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_assignment"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_assignment_sync"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_members_sync"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.role_membership"
+          },
+          {
+            "checksum": "ecb3d1faaa45f1af68cad8ea3e95a313",
+            "rows": 157,
+            "table": "public.schema_field"
+          },
+          {
+            "checksum": "dca467c6f3fd11025ab4c6f785b88437",
+            "rows": 1,
+            "table": "public.secret"
+          },
+          {
+            "checksum": "8422477e7f623ad342043b8b5f4bf660",
+            "rows": 1,
+            "table": "public.server"
+          },
+          {
+            "checksum": "cecd5569669d8146523441a4dc0a3340",
+            "rows": 10,
+            "table": "public.table"
+          },
+          {
+            "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+            "rows": 10,
+            "table": "public.table_current_schema"
+          },
+          {
+            "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+            "rows": 10,
+            "table": "public.table_default_partition_spec"
+          },
+          {
+            "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+            "rows": 10,
+            "table": "public.table_default_sort_order"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.table_encryption_keys"
+          },
+          {
+            "checksum": "13f355efa4851866e6147f3e56d0afd0",
+            "rows": 282,
+            "table": "public.table_metadata_log"
+          },
+          {
+            "checksum": "a91d53d41a4ca06c6a34d4f36c36cbd5",
+            "rows": 10,
+            "table": "public.table_partition_spec"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.table_properties"
+          },
+          {
+            "checksum": "fcf248cc1853d7a2f951eb070d470800",
+            "rows": 10,
+            "table": "public.table_refs"
+          },
+          {
+            "checksum": "6dc62f594de21f0c3e728be11517a2a1",
+            "rows": 10,
+            "table": "public.table_schema"
+          },
+          {
+            "checksum": "5f4da64c1721ded2ca03813d404957a4",
+            "rows": 2455,
+            "table": "public.table_snapshot"
+          },
+          {
+            "checksum": "fe135f1f578de2941824de58879e5ca7",
+            "rows": 1677,
+            "table": "public.table_snapshot_log"
+          },
+          {
+            "checksum": "0ac7cd020bdc721f57bc330435671b18",
+            "rows": 10,
+            "table": "public.table_sort_order"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.table_statistics"
+          },
+          {
+            "checksum": "c93d622dcd76602bfcfa468be28678d1",
+            "rows": 10,
+            "table": "public.tabular"
+          },
+          {
+            "checksum": "020a76b71e92e5efdbb328fb4f0a4ccc",
+            "rows": 157,
+            "table": "public.tabular_field"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tag"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tag_allowed_value"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tag_definition"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.task"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.task_config"
+          },
+          {
+            "checksum": "1f5b7c3ae9662c2142752323058a7426",
+            "rows": 5,
+            "table": "public.task_log"
+          },
+          {
+            "checksum": "7d30eebeb98a4ed54c4486d6db32c050",
+            "rows": 1,
+            "table": "public.task_schedule"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.users"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_properties"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_representation"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_schema"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_version"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.view_version_log"
+          },
+          {
+            "checksum": "c92fd9ce7d446c1b87fe72b97ac75326",
+            "rows": 1,
+            "table": "public.warehouse"
+          },
+          {
+            "checksum": "a423337b13bd1fe2afb1c90b895f52b2",
+            "rows": 1,
+            "table": "public.warehouse_statistics"
+          },
+          {
+            "checksum": "17516e66c6d03f1f2954e3d79a6a8df7",
+            "rows": 2,
+            "table": "public.warehouse_statistics_history"
+          }
+        ]
+      },
+      "marquez": {
+        "container": "760cf451c758077ea12cdcb89363947f6033f9e4c876444be933428836c91fc0",
+        "row_total": 95,
+        "service": "postgres-gov",
+        "tables": [
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.column_lineage"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_facets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_fields"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_fields_tag_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_schema_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_schema_versions_field_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_symlinks"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.dataset_versions_field_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.datasets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.datasets_tag_mapping"
+          },
+          {
+            "checksum": "8d15c9da5c738e4f756a6053760b0a7f",
+            "rows": 1,
+            "table": "public.facet_migration_lock"
+          },
+          {
+            "checksum": "36d7c0767baddbefd538c1e46b3ab911",
+            "rows": 91,
+            "table": "public.flyway_schema_history"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_facets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_versions_io_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs_fqn"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs_tag_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.lineage_events"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.namespace_ownerships"
+          },
+          {
+            "checksum": "539a0f7c11bdbfefbb2e0dd1082a0f55",
+            "rows": 1,
+            "table": "public.namespaces"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.owners"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.run_args"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.run_facets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.run_states"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.runs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.runs_input_mapping"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sources"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.stream_versions"
+          },
+          {
+            "checksum": "4b0ef0f3f51f14fc2d40d5d9010957c0",
+            "rows": 2,
+            "table": "public.tags"
+          }
+        ]
+      },
+      "mlflow": {
+        "container": "9d9d828fc0a754b2d859d3d81cddab262ec82a61212e1747909b9f2212a60cd7",
+        "row_total": 3,
+        "service": "postgres-ml",
+        "tables": [
+          {
+            "checksum": "4576b5ff3fa49ac56d564b6e2ff75748",
+            "rows": 1,
+            "table": "public.alembic_version"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.assessments"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.budget_policies"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.datasets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoint_bindings"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoint_model_mappings"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoint_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.endpoints"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.entity_associations"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.evaluation_dataset_records"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.evaluation_dataset_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.evaluation_datasets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.experiment_tags"
+          },
+          {
+            "checksum": "c9cd017a0c1c67448a028db3d7de3525",
+            "rows": 1,
+            "table": "public.experiments"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.guardrail_configs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.guardrails"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.input_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.inputs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.issue_categories"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.issues"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.job_locks"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.jobs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.label_schemas"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.latest_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_model_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_model_params"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_model_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.logged_models"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_access_endpoints"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_aliases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_version_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_server_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.mcp_servers"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.model_definitions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.model_version_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.model_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.online_scoring_configs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.params"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.registered_model_aliases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.registered_model_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.registered_models"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queue_items"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queue_label_schemas"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queue_users"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.review_queues"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.runs"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.scheduler_leases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.scorer_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.scorers"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.secrets"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_aliases"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_version_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skill_versions"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.skills"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.span_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.spans"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_assessment_daily_rollups"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_span_cost_daily_rollups"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_trace_metric_daily_rollups"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.sql_trace_rollup_rebuild_queue"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_info"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_metrics"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_request_metadata"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.trace_tags"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.webhook_events"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.webhooks"
+          },
+          {
+            "checksum": "1bcf1dcccb36e3668f13bfd56a4b07a6",
+            "rows": 1,
+            "table": "public.workspaces"
+          }
+        ]
+      },
+      "prefect": {
+        "container": "9d9d828fc0a754b2d859d3d81cddab262ec82a61212e1747909b9f2212a60cd7",
+        "row_total": 1184,
+        "service": "postgres-ml",
+        "tables": [
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.agent"
+          },
+          {
+            "checksum": "a7c29fb23c128d3508b5d177fcfac668",
+            "rows": 1,
+            "table": "public.alembic_version"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.artifact"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.artifact_collection"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_bucket"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_event_follower"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_held_event"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.automation_related_resource"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.block_document"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.block_document_reference"
+          },
+          {
+            "checksum": "e68d8de5319cdb720e32e12d51b42b8c",
+            "rows": 65,
+            "table": "public.block_schema"
+          },
+          {
+            "checksum": "01701c8691467b705d7edfb16b2a5dfc",
+            "rows": 26,
+            "table": "public.block_schema_reference"
+          },
+          {
+            "checksum": "aa741c44699a77f28d16f7e8fcc2d708",
+            "rows": 55,
+            "table": "public.block_type"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.composite_trigger_child_firing"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.concurrency_limit"
+          },
+          {
+            "checksum": "c5f10e20b2b3ff62d3a0fe827a516a0e",
+            "rows": 2,
+            "table": "public.concurrency_limit_v2"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.configuration"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.csrf_token"
+          },
+          {
+            "checksum": "d779f6a64a69e454263783f7857c9819",
+            "rows": 2,
+            "table": "public.deployment"
+          },
+          {
+            "checksum": "5c003ca093dc2d231b361b12e481e74c",
+            "rows": 2,
+            "table": "public.deployment_schedule"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.deployment_version"
+          },
+          {
+            "checksum": "82da9ae435d2a3698e6930efaf831b65",
+            "rows": 562,
+            "table": "public.event_resources"
+          },
+          {
+            "checksum": "dcb317039a4988c97045a12a6bddfe24",
+            "rows": 86,
+            "table": "public.events"
+          },
+          {
+            "checksum": "57bf26a14b6fe3a885138b583761ffd9",
+            "rows": 2,
+            "table": "public.flow"
+          },
+          {
+            "checksum": "a86fadd16cd3327fff7104085511de8d",
+            "rows": 67,
+            "table": "public.flow_run"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.flow_run_input"
+          },
+          {
+            "checksum": "83d5b0ef8e89abcea7748ca666311363",
+            "rows": 167,
+            "table": "public.flow_run_state"
+          },
+          {
+            "checksum": "680733970df22f2bad522f4a16387dae",
+            "rows": 96,
+            "table": "public.log"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.saved_search"
+          },
+          {
+            "checksum": "add9992fa6a76798e53d547462596511",
+            "rows": 10,
+            "table": "public.task_run"
+          },
+          {
+            "checksum": "98795bf31f6e728e178d5de75a15d087",
+            "rows": 30,
+            "table": "public.task_run_state"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.task_run_state_cache"
+          },
+          {
+            "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+            "rows": 0,
+            "table": "public.variable"
+          },
+          {
+            "checksum": "d620575b5ac46b6045fa7e641eb52d43",
+            "rows": 1,
+            "table": "public.work_pool"
+          },
+          {
+            "checksum": "759f9a8c160833f870c7ad1b15966e81",
+            "rows": 1,
+            "table": "public.work_queue"
+          },
+          {
+            "checksum": "a81bd2238d07f9cd6d8ba99b2778bb07",
+            "rows": 9,
+            "table": "public.worker"
+          }
+        ]
+      }
+    },
+    "comparison": {
+      "all_tables_identical": false,
+      "business_tables_identical": true,
+      "databases": {
+        "bmip": {
+          "after_rows": 248,
+          "before_rows": 248,
+          "critical_mismatches": [],
+          "critical_missing": [],
+          "extra": [],
+          "identical": true,
+          "mismatches": [],
+          "missing": [],
+          "present_after": true,
+          "tables_after": 17,
+          "tables_before": 17
+        },
+        "lakekeeper": {
+          "after_rows": 5027,
+          "before_rows": 5027,
+          "critical_mismatches": [],
+          "critical_missing": [],
+          "extra": [],
+          "identical": false,
+          "mismatches": [
+            {
+              "after_checksum": "e937ce1a1a468c00c6deb770847a4d71",
+              "after_rows": 115,
+              "before_checksum": "e7b48827e20f2fe85ee8f50654eb4185",
+              "before_rows": 115,
+              "table": "public.endpoint_statistics"
+            }
+          ],
+          "missing": [],
+          "present_after": true,
+          "tables_after": 52,
+          "tables_before": 52
+        },
+        "marquez": {
+          "after_rows": 95,
+          "before_rows": 95,
+          "critical_mismatches": [],
+          "critical_missing": [],
+          "extra": [],
+          "identical": false,
+          "mismatches": [
+            {
+              "after_checksum": "d74fd15f58bc2a79c28f417001632ad1",
+              "after_rows": 1,
+              "before_checksum": "539a0f7c11bdbfefbb2e0dd1082a0f55",
+              "before_rows": 1,
+              "table": "public.namespaces"
+            },
+            {
+              "after_checksum": "65db878f6261eb2b4976f479dabdd186",
+              "after_rows": 2,
+              "before_checksum": "4b0ef0f3f51f14fc2d40d5d9010957c0",
+              "before_rows": 2,
+              "table": "public.tags"
+            }
+          ],
+          "missing": [],
+          "present_after": true,
+          "tables_after": 31,
+          "tables_before": 31
+        },
+        "mlflow": {
+          "after_rows": 3,
+          "before_rows": 3,
+          "critical_mismatches": [],
+          "critical_missing": [],
+          "extra": [],
+          "identical": true,
+          "mismatches": [],
+          "missing": [],
+          "present_after": true,
+          "tables_after": 71,
+          "tables_before": 71
+        },
+        "prefect": {
+          "after_rows": 1184,
+          "before_rows": 1184,
+          "critical_mismatches": [],
+          "critical_missing": [],
+          "extra": [],
+          "identical": true,
+          "mismatches": [],
+          "missing": [],
+          "present_after": true,
+          "tables_after": 37,
+          "tables_before": 37
+        }
+      },
+      "row_totals_not_decreased": true
+    }
+  },
+  "evidence": [
+    "evidence/recovery/T40.json"
+  ],
+  "health": {
+    "after": {
+      "alertmanager": {
+        "body": "OK",
+        "name": "alertmanager",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9093/-/healthy"
+      },
+      "api": {
+        "body": "{\"status\":\"ready\",\"checks\":{\"lake\":true,\"serving\":true},\"instance\":\"a3e05f3ec022\",\"detail\":null}",
+        "name": "api",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:8000/health/ready"
+      },
+      "catalog": {
+        "body": "ok",
+        "name": "catalog",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:8502/_stcore/health"
+      },
+      "dashboard": {
+        "body": "ok",
+        "name": "dashboard",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:8501/_stcore/health"
+      },
+      "grafana": {
+        "body": "{\n  \"database\": \"ok\",\n  \"version\": \"11.3.0\",\n  \"commit\": \"d9455ff7db73b694db7d412e49a68bec767f2b5a\"\n}",
+        "name": "grafana",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:3000/api/health"
+      },
+      "minio": {
+        "body": "",
+        "name": "minio",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9000/minio/health/live"
+      },
+      "mlflow": {
+        "body": "OK",
+        "name": "mlflow",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:5000/health"
+      },
+      "prefect": {
+        "body": "true",
+        "name": "prefect",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:4200/api/health"
+      },
+      "prometheus": {
+        "body": "Prometheus Server is Ready.",
+        "name": "prometheus",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9090/-/ready"
+      },
+      "pushgateway": {
+        "body": "OK",
+        "name": "pushgateway",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9091/-/healthy"
+      }
+    },
+    "before": {
+      "alertmanager": {
+        "body": "OK",
+        "name": "alertmanager",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9093/-/healthy"
+      },
+      "api": {
+        "body": "{\"status\":\"ready\",\"checks\":{\"lake\":true,\"serving\":true},\"instance\":\"a3e05f3ec022\",\"detail\":null}",
+        "name": "api",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:8000/health/ready"
+      },
+      "catalog": {
+        "body": "ok",
+        "name": "catalog",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:8502/_stcore/health"
+      },
+      "dashboard": {
+        "body": "ok",
+        "name": "dashboard",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:8501/_stcore/health"
+      },
+      "grafana": {
+        "body": "{\n  \"database\": \"ok\",\n  \"version\": \"11.3.0\",\n  \"commit\": \"d9455ff7db73b694db7d412e49a68bec767f2b5a\"\n}",
+        "name": "grafana",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:3000/api/health"
+      },
+      "minio": {
+        "body": "",
+        "name": "minio",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9000/minio/health/live"
+      },
+      "mlflow": {
+        "body": "OK",
+        "name": "mlflow",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:5000/health"
+      },
+      "prefect": {
+        "body": "true",
+        "name": "prefect",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:4200/api/health"
+      },
+      "prometheus": {
+        "body": "Prometheus Server is Ready.",
+        "name": "prometheus",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9090/-/ready"
+      },
+      "pushgateway": {
+        "body": "OK",
+        "name": "pushgateway",
+        "ok": true,
+        "status": 200,
+        "url": "http://127.0.0.1:9091/-/healthy"
+      }
+    }
+  },
+  "id": "T-40",
+  "offsets": {
+    "after": {
+      "cp1-20261116234725": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261116234725"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261116234725"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261116234725"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117003649": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117003649"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117003649"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117003649"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117011559": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117011559"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117011559"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117011559"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117024630": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117024630"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117024630"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117024630"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117030506": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117030506"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117030506"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117030506"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261116234800": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261116234800"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261116234800"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261116234800"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117000626": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117000626"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117000626"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117000626"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117003926": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117003926"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117003926"
+          },
+          {
+            "current_offset": 6,
+            "log_end_offset": 6,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117003926"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117011237": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117011237"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117011237"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117011237"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117011358": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117011358"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117011358"
+          },
+          {
+            "current_offset": 6,
+            "log_end_offset": 6,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117011358"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117024659": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117024659"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117024659"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117024659"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117030535": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117030535"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117030535"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117030535"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261116234904": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261116234904"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261116234904"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261116234904"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117004057": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117004057"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117004057"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117004057"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117011807": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117011807"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117011807"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117011807"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117024804": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117024804"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117024804"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117024804"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117030640": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117030640"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117030640"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117030640"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261116234904": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261116234904"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261116234904"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261116234904"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117004057": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117004057"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117004057"
+          },
+          {
+            "current_offset": 5,
+            "log_end_offset": 5,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117004057"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117011807": {
+        "partitions": [
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117011807"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117011807"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117011807"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117024804": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117024804"
+          },
+          {
+            "current_offset": 7,
+            "log_end_offset": 7,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117024804"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117024804"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117030640": {
+        "partitions": [
+          {
+            "current_offset": 5,
+            "log_end_offset": 5,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117030640"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117030640"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117030640"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261116234904": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261116234904"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261116234904"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261116234904"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117004057": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117004057"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117004057"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117004057"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117011807": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117011807"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117011807"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117011807"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117024804": {
+        "partitions": [
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117024804"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117024804"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117024804"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117030640": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117030640"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117030640"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117030640"
+          }
+        ],
+        "state": "Empty"
+      }
+    },
+    "before": {
+      "cp1-20261116234725": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261116234725"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261116234725"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261116234725"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117003649": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117003649"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117003649"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117003649"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117011559": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117011559"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117011559"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117011559"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117024630": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117024630"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117024630"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117024630"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp1-20261117030506": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp1-20261117030506"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp1-20261117030506"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp1-20261117030506"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261116234800": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261116234800"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261116234800"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261116234800"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117000626": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117000626"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117000626"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117000626"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117003926": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117003926"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117003926"
+          },
+          {
+            "current_offset": 6,
+            "log_end_offset": 6,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117003926"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117011237": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117011237"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117011237"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117011237"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117011358": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117011358"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117011358"
+          },
+          {
+            "current_offset": 6,
+            "log_end_offset": 6,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117011358"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117024659": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117024659"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117024659"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117024659"
+          }
+        ],
+        "state": "Empty"
+      },
+      "cp2-20261117030535": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.cp2-20261117030535"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.cp2-20261117030535"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.cp2-20261117030535"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261116234904": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261116234904"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261116234904"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261116234904"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117004057": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117004057"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117004057"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117004057"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117011807": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117011807"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117011807"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117011807"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117024804": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117024804"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117024804"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117024804"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t24-20261117030640": {
+        "partitions": [
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t24-20261117030640"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t24-20261117030640"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t24-20261117030640"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261116234904": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261116234904"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261116234904"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261116234904"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117004057": {
+        "partitions": [
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117004057"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117004057"
+          },
+          {
+            "current_offset": 5,
+            "log_end_offset": 5,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117004057"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117011807": {
+        "partitions": [
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117011807"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117011807"
+          },
+          {
+            "current_offset": 3,
+            "log_end_offset": 3,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117011807"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117024804": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117024804"
+          },
+          {
+            "current_offset": 7,
+            "log_end_offset": 7,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117024804"
+          },
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117024804"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t28-20261117030640": {
+        "partitions": [
+          {
+            "current_offset": 5,
+            "log_end_offset": 5,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t28-20261117030640"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t28-20261117030640"
+          },
+          {
+            "current_offset": 4,
+            "log_end_offset": 4,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t28-20261117030640"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261116234904": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261116234904"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261116234904"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261116234904"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117004057": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117004057"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117004057"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117004057"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117011807": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117011807"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117011807"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117011807"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117024804": {
+        "partitions": [
+          {
+            "current_offset": 2,
+            "log_end_offset": 2,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117024804"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117024804"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117024804"
+          }
+        ],
+        "state": "Empty"
+      },
+      "t29-20261117030640": {
+        "partitions": [
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 0,
+            "topic": "market.t29-20261117030640"
+          },
+          {
+            "current_offset": 1,
+            "log_end_offset": 1,
+            "log_start_offset": 0,
+            "partition": 1,
+            "topic": "market.t29-20261117030640"
+          },
+          {
+            "current_offset": -1,
+            "log_end_offset": 0,
+            "log_start_offset": 0,
+            "partition": 2,
+            "topic": "market.t29-20261117030640"
+          }
+        ],
+        "state": "Empty"
+      }
+    },
+    "comparison": {
+      "extra": [],
+      "groups_after": 27,
+      "groups_before": 27,
+      "identical": true,
+      "mismatches": [],
+      "missing": []
+    }
+  },
+  "owner": "lois",
+  "restart": {
+    "command_seconds": 9.7,
+    "ready_seconds": 34.08,
+    "services": [
+      "alertmanager",
+      "api",
+      "cadvisor",
+      "catalog",
+      "dashboard",
+      "grafana",
+      "lakekeeper",
+      "marquez",
+      "marquez-web",
+      "minio",
+      "notify",
+      "postgres-core",
+      "postgres-exporter",
+      "postgres-gov",
+      "postgres-ml",
+      "prefect-server",
+      "prometheus",
+      "pushgateway",
+      "redpanda"
+    ],
+    "services_after": [
+      "alertmanager",
+      "api",
+      "cadvisor",
+      "catalog",
+      "dashboard",
+      "grafana",
+      "lakekeeper",
+      "marquez",
+      "marquez-web",
+      "minio",
+      "notify",
+      "postgres-core",
+      "postgres-exporter",
+      "postgres-gov",
+      "postgres-ml",
+      "prefect-server",
+      "prometheus",
+      "pushgateway",
+      "redpanda"
+    ],
+    "started_at": "2026-11-23T18:06:56Z"
+  },
+  "result": "PASS",
+  "timestamp": "2026-11-23T18:07:54Z"
+}

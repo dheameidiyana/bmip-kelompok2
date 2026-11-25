@@ -1,13 +1,14 @@
-"""Dataset registry: business metadata for /v1/dataset (W1-D).
+"""Dataset registry: business metadata for /v1/dataset.
 
-The registry is a committed YAML file so the catalogue answers questions the
-lakehouse cannot: who owns a table, how long it is retained, whether it holds
-personal data, and what its freshness promise is. W2-C replaces the loader's
-source with ``ops.dataset_registry``; the API contract stays identical.
+W2-C moves the source of truth to ``ops.dataset_registry``. The committed
+``catalog/datasets.yml`` remains the seed and the offline fallback, so tests and
+a clean checkout work before postgres-core is initialised. The API contract is
+unchanged: the loader copies the chosen source into ``serving.catalog_datasets``.
 """
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -60,6 +61,7 @@ class Dataset:
     license: str = ""
     contains_pii: bool = False
     tags: tuple[str, ...] = field(default_factory=tuple)
+    auto_classification: str = ""
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -78,6 +80,7 @@ class Dataset:
             "license": self.license,
             "contains_pii": bool(self.contains_pii),
             "tags": list(self.tags),
+            "auto_classification": self.auto_classification or None,
         }
 
     def row(self) -> dict[str, Any]:
@@ -132,12 +135,72 @@ def parse_registry(payload: dict[str, Any]) -> list[Dataset]:
                 license=str(raw.get("license") or ""),
                 contains_pii=bool(raw.get("contains_pii", False)),
                 tags=tuple(str(tag) for tag in raw.get("tags") or ()),
+                auto_classification=str(raw.get("auto_classification") or ""),
             )
         )
     return datasets
 
 
+def _row_to_dataset(row: dict[str, Any]) -> Dataset:
+    return Dataset(
+        id=str(row["id"]),
+        name=str(row["name"]),
+        layer=str(row["layer"]),
+        domain=str(row["domain"]),
+        kind=str(row["kind"]),
+        location=str(row["location"]),
+        description=str(row["description"]),
+        owner=str(row["owner"]),
+        classification=str(row["classification"]),
+        retention_days=int(row["retention_days"]),
+        refresh_schedule=str(row.get("refresh_schedule") or ""),
+        sla=str(row.get("sla") or ""),
+        license=str(row.get("license") or ""),
+        contains_pii=bool(row.get("contains_pii", False)),
+        tags=tuple(str(tag) for tag in row.get("tags") or ()),
+        auto_classification=str(row.get("auto_classification") or ""),
+    )
+
+
+def _from_database(settings: Settings | None) -> list[Dataset] | None:
+    """Read ops.dataset_registry; None when the table or database is absent."""
+    if settings is None or not settings.postgres_dsn:
+        return None
+    try:
+        import psycopg
+        from psycopg.rows import dict_row
+
+        with psycopg.connect(
+            settings.postgres_dsn, connect_timeout=2, row_factory=dict_row
+        ) as connection:
+            rows = connection.execute(
+                """
+                SELECT id, name, layer, domain, kind, location, description,
+                       owner, classification, retention_days, refresh_schedule,
+                       sla, license, contains_pii, tags, auto_classification
+                FROM ops.dataset_registry
+                ORDER BY layer, id
+                """
+            ).fetchall()
+    except Exception as exc:  # noqa: BLE001 - YAML fallback is intentional
+        log.info(
+            "dataset registry table unavailable; using YAML",
+            extra={"ctx_error": f"{type(exc).__name__}: {exc}"},
+        )
+        return None
+    if not rows:
+        return None
+    return [_row_to_dataset(row) for row in rows]
+
+
 def load_registry(settings: Settings | None = None) -> list[Dataset]:
+    source = os.getenv("DATASET_REGISTRY_SOURCE", "auto").strip().lower()
+    if source in {"auto", "database", "ops"}:
+        from_db = _from_database(settings)
+        if from_db:
+            return from_db
+        if source in {"database", "ops"}:
+            raise RegistryError("ops.dataset_registry is empty or unavailable")
     path = _path(settings)
     if not path.exists():
         raise RegistryError(f"registry file not found: {path}")
@@ -152,12 +215,14 @@ def find_registry_entry(settings: Settings | None, dataset_id: str) -> Dataset |
     return None
 
 
-def iceberg_columns(settings: Settings, identifier: str) -> list[dict[str, Any]] | None:
+def iceberg_columns(
+    settings: Settings, identifier: str, service: str = "api"
+) -> list[dict[str, Any]] | None:
     """Read the live Iceberg schema; None when the table is not reachable."""
     try:
         from bmip.transform.iceberg import load_rest_catalog
 
-        catalog = load_rest_catalog(settings, "api")
+        catalog = load_rest_catalog(settings, service)
         table = catalog.load_table(identifier)
         return [
             {

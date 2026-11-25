@@ -30,6 +30,7 @@ def list_datasets(
     domain: str | None = Query(None),
     layer: str | None = Query(None),
     owner: str | None = Query(None),
+    classification: str | None = Query(None),
     limit: int | None = Query(None),
     cursor: str | None = Query(None),
     repository: ServingRepository = Depends(get_repository),
@@ -41,6 +42,7 @@ def list_datasets(
         domain=domain,
         layer=layer,
         owner=owner,
+        classification=classification,
         limit=size,
         cursor=cursor,
     )
@@ -56,6 +58,30 @@ def list_datasets(
             next_cursor=page.next_cursor,
         ),
     )
+
+
+@router.get(
+    "/{dataset_id}",
+    response_model=DatasetOut,
+    summary="One catalogue entry with business metadata",
+)
+def dataset_detail(
+    request: Request,
+    response: Response,
+    dataset_id: str,
+    repository: ServingRepository = Depends(get_repository),
+) -> DatasetOut:
+    row = repository.dataset(dataset_id)
+    if row is None:
+        raise ApiProblem(
+            404,
+            "dataset-not-found",
+            "Dataset not found",
+            f"No dataset with id {dataset_id!r} is registered.",
+        )
+    response.headers["X-Data-Source"] = "serving"
+    response.headers["X-Data-Stale"] = "false"
+    return DatasetOut.model_validate(row)
 
 
 @router.get(
@@ -101,6 +127,7 @@ def catalog_search(
     domain: str | None = Query(None),
     layer: str | None = Query(None),
     owner: str | None = Query(None),
+    classification: str | None = Query(None),
     limit: int | None = Query(None),
     cursor: str | None = Query(None),
     repository: ServingRepository = Depends(get_repository),
@@ -113,6 +140,7 @@ def catalog_search(
         domain=domain,
         layer=layer,
         owner=owner,
+        classification=classification,
         limit=limit,
         cursor=cursor,
         repository=repository,

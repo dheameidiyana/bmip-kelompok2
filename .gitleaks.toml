@@ -1,0 +1,13 @@
+# Gitleaks configuration (W2-C).
+#
+# The default rules are kept. The only allowlist is the W1-C PII evidence file:
+# it prints pseudonymized `post_key` / `author_key` SHA-256 hashes and a
+# `sentiment_model_version`, which the generic-api-key rule mistakes for a
+# credential. The file is evidence, not a secret store.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "W1-C PII evidence contains pseudonymized hashes, not credentials"
+paths = ['''evidence/security/pii-columns_[0-9T]+\.txt''']

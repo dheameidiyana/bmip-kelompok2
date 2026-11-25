@@ -1,0 +1,97 @@
+{
+  "id": "W2D-FAULT-MINIO",
+  "scenario": "stop MinIO",
+  "timestamp": "2026-11-23T18:26:01Z",
+  "commit": "6187d41",
+  "owner": "lois",
+  "command": "python scripts/w2d_faults.py --only minio",
+  "result": "PASS",
+  "before": {
+    "status": 200,
+    "x_data_stale": "false",
+    "elapsed_seconds": 2.281
+  },
+  "stopped_at": "2026-11-23T18:26:03Z",
+  "stop": {
+    "command": "docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml stop minio",
+    "exit_code": 0,
+    "seconds": 1.19,
+    "output": "Container bmip-minio-1 Stopping \n Container bmip-minio-1 Stopped"
+  },
+  "degraded_at": "2026-11-23T18:26:12Z",
+  "degraded_latency_seconds": 8.23,
+  "lake_down": {
+    "status": 200,
+    "payload": {
+      "status": "ready",
+      "checks": {
+        "lake": false,
+        "serving": true
+      },
+      "instance": "a3e05f3ec022",
+      "detail": null
+    },
+    "elapsed": 7.047000000020489
+  },
+  "fallback_checks": [
+    {
+      "path": "/v1/market/volatility/range",
+      "status": 200,
+      "x_data_stale": "true",
+      "x_data_source": "serving",
+      "meta_source": "serving",
+      "rows": 5,
+      "elapsed_seconds": 7.078,
+      "pass": true
+    },
+    {
+      "path": "/v1/sentiment/hourly",
+      "status": 200,
+      "x_data_stale": "true",
+      "x_data_source": "serving",
+      "meta_source": "serving",
+      "rows": 5,
+      "elapsed_seconds": 7.094,
+      "pass": true
+    },
+    {
+      "path": "/v1/market/ohlc",
+      "status": 200,
+      "x_data_stale": "true",
+      "x_data_source": "serving",
+      "meta_source": "serving",
+      "rows": 5,
+      "elapsed_seconds": 7.047,
+      "pass": true
+    }
+  ],
+  "started_at": "2026-11-23T18:26:33Z",
+  "start": {
+    "command": "docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml start minio",
+    "exit_code": 0,
+    "seconds": 4.28,
+    "output": "Container bmip-minio-perms-1 Starting \n Container bmip-minio-perms-1 Started \n Container bmip-minio-perms-1 Waiting \n Container bmip-minio-perms-1 Exited \n Container bmip-minio-1 Starting \n Container bmip-minio-1 Started"
+  },
+  "minio_up_at": "2026-11-23T18:26:41Z",
+  "lake_up": {
+    "status": 200,
+    "payload": {
+      "status": "ready",
+      "checks": {
+        "lake": true,
+        "serving": true
+      },
+      "instance": "a3e05f3ec022",
+      "detail": null
+    },
+    "elapsed": 2.0939999998081475
+  },
+  "recovered_at": "2026-11-23T18:26:45Z",
+  "recovery": {
+    "status": 200,
+    "x_data_stale": "false",
+    "elapsed": 2.172000000020489
+  },
+  "rto_seconds": 42.0,
+  "degraded_seconds": 33.77
+}

@@ -1,0 +1,9 @@
+﻿id        : W2B-DASHBOARD-LOG
+timestamp : 2026-11-20T03:35:09Z
+commit    : b52ce90
+command   : docker exec bmip-dashboard-1 python -c 'AppTest.from_file(app).run()'
+result    : PASS
+owner     : vio
+
+Setiap baris di dashboard_20261120T0334_b52ce90.jsonl berasal dari formatter JSON yang sama.
+

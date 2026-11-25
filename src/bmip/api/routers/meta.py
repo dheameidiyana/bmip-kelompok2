@@ -7,13 +7,21 @@ auth in front of them would break a gate that is older than this slot.
 
 from __future__ import annotations
 
+import time
 from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import PlainTextResponse
 
-from bmip.api.deps import build_meta, get_clock, get_instance, get_lake, get_repository
+from bmip.api.deps import (
+    build_meta,
+    freshness_payload,
+    get_clock,
+    get_instance,
+    get_lake,
+    get_repository,
+)
 from bmip.serving.repository import ServingRepository
 
 public_router = APIRouter()
@@ -93,9 +101,12 @@ def health_ready(
 @public_router.get(
     "/metrics",
     response_class=PlainTextResponse,
-    summary="Prometheus metrics (minimal, W2-B extends)",
+    summary="Prometheus metrics for the Query API and the serving freshness",
 )
-def metrics(request: Request) -> str:
+def metrics(
+    request: Request,
+    repository: ServingRepository = Depends(get_repository),
+) -> str:
     state = request.app.state.metrics
     lines = [
         "# HELP bmip_api_requests_total HTTP requests served by the Query API.",
@@ -122,8 +133,46 @@ def metrics(request: Request) -> str:
             "# HELP bmip_api_start_time_seconds Process start time.",
             "# TYPE bmip_api_start_time_seconds gauge",
             f"bmip_api_start_time_seconds {state['started_epoch']}",
+            "# HELP bmip_api_uptime_seconds Seconds since the process started.",
+            "# TYPE bmip_api_uptime_seconds gauge",
+            f"bmip_api_uptime_seconds {max(0.0, time.time() - state['started_epoch']):.3f}",
+            "# HELP bmip_api_info Build identity of this replica.",
+            "# TYPE bmip_api_info gauge",
+            f'bmip_api_info{{version="{request.app.state.version}",'
+            f'commit="{request.app.state.commit}",'
+            f'instance="{request.app.state.instance}"}} 1',
         ]
     )
+
+    # Serving freshness is the signal the pipeline alerts read. The endpoint
+    # must stay scrapeable even when the serving tier is empty, so every
+    # failure degrades to "no freshness samples" instead of a 500.
+    try:
+        now, clock = get_clock(request)
+        rows = repository.freshness()
+        freshness_lines = [
+            "# HELP bmip_freshness_seconds Age of the newest serving row.",
+            "# TYPE bmip_freshness_seconds gauge",
+            "# HELP bmip_freshness_slo_seconds Freshness SLO for the dataset.",
+            "# TYPE bmip_freshness_slo_seconds gauge",
+        ]
+        for row in rows:
+            payload = freshness_payload(row, now=now, clock=clock) if row else None
+            if not payload or payload.get("age_seconds") is None:
+                continue
+            dataset = str(payload["metric"])
+            freshness_lines.append(
+                f'bmip_freshness_seconds{{dataset="{dataset}"}} '
+                f'{float(payload["age_seconds"]):.3f}'
+            )
+            freshness_lines.append(
+                f'bmip_freshness_slo_seconds{{dataset="{dataset}"}} '
+                f'{int(payload["slo_seconds"])}'
+            )
+        lines.extend(freshness_lines)
+    except Exception:  # noqa: BLE001 - a scrape must never take the API down
+        pass
+
     return "\n".join(lines) + "\n"
 
 

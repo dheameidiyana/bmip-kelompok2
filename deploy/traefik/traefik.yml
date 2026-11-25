@@ -1,5 +1,14 @@
 entryPoints:
   web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+  dev:
     address: ":8000"
   ping:
     address: ":8082"
@@ -15,4 +24,5 @@ providers:
 log:
   level: INFO
 
-accessLog: {}
+accessLog:
+  format: json

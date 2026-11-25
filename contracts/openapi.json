@@ -1,6 +1,82 @@
 {
   "components": {
     "schemas": {
+      "BackfillOut": {
+        "properties": {
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "status",
+          "start",
+          "end",
+          "meta"
+        ],
+        "title": "BackfillOut",
+        "type": "object"
+      },
+      "BackfillRequest": {
+        "properties": {
+          "detail": {
+            "additionalProperties": true,
+            "title": "Detail",
+            "type": "object"
+          },
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "BackfillRequest",
+        "type": "object"
+      },
+      "CatalogReloadOut": {
+        "properties": {
+          "datasets": {
+            "title": "Datasets",
+            "type": "integer"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "datasets",
+          "meta"
+        ],
+        "title": "CatalogReloadOut",
+        "type": "object"
+      },
       "ColumnOut": {
         "properties": {
           "doc": {
@@ -37,6 +113,17 @@
       },
       "DatasetOut": {
         "properties": {
+          "auto_classification": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Classification"
+          },
           "classification": {
             "title": "Classification",
             "type": "string"
@@ -291,6 +378,74 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "KeyRotateOut": {
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "key_id": {
+            "title": "Key Id",
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "owner": {
+            "title": "Owner",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key_id",
+          "role",
+          "owner",
+          "key",
+          "meta"
+        ],
+        "title": "KeyRotateOut",
+        "type": "object"
+      },
+      "LineageOut": {
+        "properties": {
+          "dataset_id": {
+            "title": "Dataset Id",
+            "type": "string"
+          },
+          "downstream": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Downstream",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "source": {
+            "default": "ops.lineage_edges",
+            "title": "Source",
+            "type": "string"
+          },
+          "upstream": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Upstream",
+            "type": "array"
+          }
+        },
+        "required": [
+          "dataset_id",
+          "meta"
+        ],
+        "title": "LineageOut",
         "type": "object"
       },
       "MarketBar": {
@@ -613,6 +768,18 @@
               }
             ],
             "title": "Detail"
+          },
+          "feature_ts": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feature Ts"
           },
           "meta": {
             "$ref": "#/components/schemas/Meta"
@@ -1022,6 +1189,39 @@
         ],
         "title": "VolatilityPoint",
         "type": "object"
+      },
+      "WhoAmIOut": {
+        "properties": {
+          "actor": {
+            "title": "Actor",
+            "type": "string"
+          },
+          "key_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Id"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor",
+          "role",
+          "meta"
+        ],
+        "title": "WhoAmIOut",
+        "type": "object"
       }
     }
   },
@@ -1107,7 +1307,132 @@
             "description": "Successful Response"
           }
         },
-        "summary": "Prometheus metrics (minimal, W2-B extends)"
+        "summary": "Prometheus metrics for the Query API and the serving freshness"
+      }
+    },
+    "/v1/admin/backfill": {
+      "post": {
+        "operationId": "queue_backfill_v1_admin_backfill_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackfillRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackfillOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Queue a gold/serving backfill for an event-time range",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/v1/admin/catalog/reload": {
+      "post": {
+        "operationId": "catalog_reload_v1_admin_catalog_reload_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogReloadOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Reload serving.catalog_datasets from ops.dataset_registry",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/v1/admin/keys/{key_id}/rotate": {
+      "post": {
+        "operationId": "rotate_key_v1_admin_keys__key_id__rotate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key_id",
+            "required": true,
+            "schema": {
+              "title": "Key Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyRotateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Rotate one API key; the new plaintext is returned once",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/v1/auth/whoami": {
+      "get": {
+        "operationId": "whoami_v1_auth_whoami_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhoAmIOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Caller identity and role",
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/catalog/search": {
@@ -1176,6 +1501,22 @@
                 }
               ],
               "title": "Owner"
+            }
+          },
+          {
+            "in": "query",
+            "name": "classification",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classification"
             }
           },
           {
@@ -1311,6 +1652,22 @@
           },
           {
             "in": "query",
+            "name": "classification",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classification"
+            }
+          },
+          {
+            "in": "query",
             "name": "limit",
             "required": false,
             "schema": {
@@ -1365,6 +1722,48 @@
           }
         },
         "summary": "List catalogue datasets",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/v1/dataset/{dataset_id}": {
+      "get": {
+        "operationId": "dataset_detail_v1_dataset__dataset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "required": true,
+            "schema": {
+              "title": "Dataset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "One catalogue entry with business metadata",
         "tags": [
           "catalog"
         ]
@@ -1481,6 +1880,48 @@
         "summary": "Age of every serving metric against its SLO",
         "tags": [
           "freshness"
+        ]
+      }
+    },
+    "/v1/lineage/{dataset_id}": {
+      "get": {
+        "operationId": "lineage_v1_lineage__dataset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "required": true,
+            "schema": {
+              "title": "Dataset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upstream and downstream datasets for one catalogue entry",
+        "tags": [
+          "lineage"
         ]
       }
     },

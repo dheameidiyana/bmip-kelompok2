@@ -5,6 +5,7 @@
 deploy/env/*.env
 !deploy/env/*.env.example
 deploy/**/certs/
+deploy/traefik/users.htpasswd
 *.pem
 *.key
 
@@ -28,6 +29,9 @@ dbt/logs/
 dbt/.user.yml
 data/
 logs/
+# evidence keeps its own log samples; only runtime logs are ignored
+!evidence/logs/
+!evidence/logs/**
 backups/
 tools/
 *.duckdb

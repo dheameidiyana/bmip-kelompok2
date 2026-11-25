@@ -314,6 +314,7 @@ class ServingRepository:
         domain: str | None = None,
         layer: str | None = None,
         owner: str | None = None,
+        classification: str | None = None,
         limit: int = 100,
         cursor: str | None = None,
     ) -> Page:
@@ -334,6 +335,9 @@ class ServingRepository:
         if owner:
             clauses.append("owner = %s")
             params.append(owner)
+        if classification:
+            clauses.append("classification = %s")
+            params.append(classification)
         if cursor is not None:
             clauses.append("id > %s")
             params.append(cursor)
@@ -361,6 +365,50 @@ class ServingRepository:
             "SELECT * FROM serving.catalog_datasets WHERE id = %s",
             (dataset_id,),
         )
+
+    def lineage(self, dataset_id: str) -> dict[str, list[str]]:
+        upstream = _many(
+            self.connection,
+            """
+            SELECT upstream_id FROM ops.lineage_edges
+            WHERE dataset_id = %s
+            ORDER BY upstream_id
+            """,
+            (dataset_id,),
+        )
+        downstream = _many(
+            self.connection,
+            """
+            SELECT dataset_id FROM ops.lineage_edges
+            WHERE upstream_id = %s
+            ORDER BY dataset_id
+            """,
+            (dataset_id,),
+        )
+        return {
+            "upstream": [str(row["upstream_id"]) for row in upstream],
+            "downstream": [str(row["dataset_id"]) for row in downstream],
+        }
+
+    def insert_backfill(
+        self,
+        *,
+        request_id: str,
+        start: datetime,
+        end: datetime,
+        actor: str,
+        role: str,
+        detail: dict[str, Any] | None = None,
+    ) -> None:
+        self.connection.execute(
+            """
+            INSERT INTO ops.backfill_requests
+                (request_id, start_ts, end_ts, status, requested_by, role, detail)
+            VALUES (%s, %s, %s, 'queued', %s, %s, %s)
+            """,
+            (request_id, start, end, actor, role, json.dumps(detail or {})),
+        )
+        self.connection.commit()
 
 
     def quality_status(self) -> dict[str, Any]:
@@ -605,9 +653,10 @@ class ServingRepository:
                     INSERT INTO serving.catalog_datasets
                         (id, name, layer, domain, kind, location, description,
                          owner, classification, retention_days, refresh_schedule,
-                         sla, license, contains_pii, tags, schema_json, updated_at)
+                         sla, license, contains_pii, tags, auto_classification,
+                         schema_json, updated_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s::jsonb, now())
+                            %s, %s, %s, %s, %s::jsonb, now())
                     ON CONFLICT (id) DO UPDATE SET
                         name = EXCLUDED.name,
                         layer = EXCLUDED.layer,
@@ -623,6 +672,7 @@ class ServingRepository:
                         license = EXCLUDED.license,
                         contains_pii = EXCLUDED.contains_pii,
                         tags = EXCLUDED.tags,
+                        auto_classification = EXCLUDED.auto_classification,
                         schema_json = COALESCE(
                             EXCLUDED.schema_json, serving.catalog_datasets.schema_json
                         ),
@@ -644,6 +694,7 @@ class ServingRepository:
                         row.get("license"),
                         bool(row.get("contains_pii", False)),
                         list(row.get("tags") or ()),
+                        row.get("auto_classification"),
                         json.dumps(row.get("schema")) if row.get("schema") else None,
                     ),
                 )
@@ -661,6 +712,7 @@ class ServingRepository:
         model_version: str = "none",
         model_alias: str = "none",
         predicted_rv_next_1h: float | None = None,
+        feature_ts: datetime | None = None,
         request_id: str | None = None,
         input_hash: str | None = None,
     ) -> None:
@@ -669,11 +721,12 @@ class ServingRepository:
                 """
                 INSERT INTO serving.predictions
                     (symbol, window_start, model_version, model_name, model_alias,
-                     predicted_rv_next_1h, predicted_at, status, detail, request_id,
-                     input_hash)
-                VALUES (%s, %s, %s, %s, %s, %s, now(), %s, %s, %s, %s)
+                     predicted_rv_next_1h, feature_ts, predicted_at, status, detail,
+                     request_id, input_hash)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, now(), %s, %s, %s, %s)
                 ON CONFLICT (symbol, window_start, model_version) DO UPDATE SET
                     predicted_rv_next_1h = EXCLUDED.predicted_rv_next_1h,
+                    feature_ts = EXCLUDED.feature_ts,
                     predicted_at = now(),
                     status = EXCLUDED.status,
                     detail = EXCLUDED.detail,
@@ -687,6 +740,7 @@ class ServingRepository:
                     model_name,
                     model_alias,
                     predicted_rv_next_1h,
+                    feature_ts,
                     status,
                     detail,
                     request_id,

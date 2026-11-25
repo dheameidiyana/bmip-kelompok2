@@ -1,0 +1,767 @@
+{
+  "backup_dir": "backups/20261121T163617Z",
+  "databases": [
+    {
+      "bytes": 37846,
+      "container": "f834b8087f0bce46eb76e4b335ed6a06663d5c462549bc2a59d40a8e453b2c3b",
+      "database": "bmip",
+      "dump_path": "backups/20261121T163617Z/bmip.dump",
+      "row_total": 221,
+      "service": "postgres-core",
+      "sha256": "dec6fa1a2975cd3c0cbef8ff6713e4f839f30d17ab07037c83d1bd1916b9b82c",
+      "tables": [
+        {
+          "checksum": "676df81dfb89ad0cd4834c4d03f5d9a1",
+          "rows": 3,
+          "table": "ops.api_keys"
+        },
+        {
+          "checksum": "4ce284eb0d08adc365648260f0e5d9fe",
+          "rows": 27,
+          "table": "ops.audit_log"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "ops.backfill_requests"
+        },
+        {
+          "checksum": "e52c43271c1b83004348b2bfb7529086",
+          "rows": 10,
+          "table": "ops.batch_runs"
+        },
+        {
+          "checksum": "ea227cb3a6c2680467bb04ac0681adfc",
+          "rows": 11,
+          "table": "ops.dataset_registry"
+        },
+        {
+          "checksum": "927d600eb38c39095aa5abd529298118",
+          "rows": 9,
+          "table": "ops.lineage_edges"
+        },
+        {
+          "checksum": "ed77d8b47cfb9c784fac2031f322c007",
+          "rows": 1,
+          "table": "ops.social_watermark"
+        },
+        {
+          "checksum": "590fbd426b8c747402b32a661a3a6bee",
+          "rows": 11,
+          "table": "serving.catalog_datasets"
+        },
+        {
+          "checksum": "91ac24fb2ea2eaca5dba8fc55b41bdfe",
+          "rows": 29,
+          "table": "serving.dq_results"
+        },
+        {
+          "checksum": "d9460aa453ada5bceda03bce35723e6d",
+          "rows": 1,
+          "table": "serving.dq_runs"
+        },
+        {
+          "checksum": "7fa9c59713f8b8ce7abafee85635e023",
+          "rows": 4,
+          "table": "serving.freshness"
+        },
+        {
+          "checksum": "6ad30da18fecec1888bf4ac8fddcd85b",
+          "rows": 42,
+          "table": "serving.market_hourly"
+        },
+        {
+          "checksum": "1296ad8ab24ce07b580e2ccce95482eb",
+          "rows": 1,
+          "table": "serving.market_latest"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "serving.model_decisions"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "serving.model_metrics"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "serving.predictions"
+        },
+        {
+          "checksum": "272612e1a35677d49792a613e2838057",
+          "rows": 72,
+          "table": "serving.sentiment_hourly"
+        }
+      ],
+      "user": "bmip"
+    },
+    {
+      "bytes": 451548,
+      "container": "f834b8087f0bce46eb76e4b335ed6a06663d5c462549bc2a59d40a8e453b2c3b",
+      "database": "lakekeeper",
+      "dump_path": "backups/20261121T163617Z/lakekeeper.dump",
+      "row_total": 5020,
+      "service": "postgres-core",
+      "sha256": "140649db32acd11bda98d8bb88ad8126776de4d3ef0643ca68e0ef0836ccfc9c",
+      "tables": [
+        {
+          "checksum": "1a99018a83e33f897f126a2625d244bc",
+          "rows": 77,
+          "table": "public._sqlx_migrations"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.cache_change_log"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.current_view_metadata_version"
+        },
+        {
+          "checksum": "39819ada34000e6c11c78bdb2e90ed6d",
+          "rows": 111,
+          "table": "public.endpoint_statistics"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.generic_table"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.generic_table_properties"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.grant_assignment"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.idempotency_record"
+        },
+        {
+          "checksum": "fec0e26683096f2c41087ce353fab977",
+          "rows": 4,
+          "table": "public.namespace"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.partition_statistics"
+        },
+        {
+          "checksum": "901ec2deeb1e22b6bc7a86a6419ab3b2",
+          "rows": 1,
+          "table": "public.project"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.role"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.role_assignment"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.role_assignment_sync"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.role_members_sync"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.role_membership"
+        },
+        {
+          "checksum": "ecb3d1faaa45f1af68cad8ea3e95a313",
+          "rows": 157,
+          "table": "public.schema_field"
+        },
+        {
+          "checksum": "dca467c6f3fd11025ab4c6f785b88437",
+          "rows": 1,
+          "table": "public.secret"
+        },
+        {
+          "checksum": "8422477e7f623ad342043b8b5f4bf660",
+          "rows": 1,
+          "table": "public.server"
+        },
+        {
+          "checksum": "cecd5569669d8146523441a4dc0a3340",
+          "rows": 10,
+          "table": "public.table"
+        },
+        {
+          "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+          "rows": 10,
+          "table": "public.table_current_schema"
+        },
+        {
+          "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+          "rows": 10,
+          "table": "public.table_default_partition_spec"
+        },
+        {
+          "checksum": "28b309e3fd6a394bdf014e67dac0c5f2",
+          "rows": 10,
+          "table": "public.table_default_sort_order"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.table_encryption_keys"
+        },
+        {
+          "checksum": "13f355efa4851866e6147f3e56d0afd0",
+          "rows": 282,
+          "table": "public.table_metadata_log"
+        },
+        {
+          "checksum": "a91d53d41a4ca06c6a34d4f36c36cbd5",
+          "rows": 10,
+          "table": "public.table_partition_spec"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.table_properties"
+        },
+        {
+          "checksum": "fcf248cc1853d7a2f951eb070d470800",
+          "rows": 10,
+          "table": "public.table_refs"
+        },
+        {
+          "checksum": "6dc62f594de21f0c3e728be11517a2a1",
+          "rows": 10,
+          "table": "public.table_schema"
+        },
+        {
+          "checksum": "5f4da64c1721ded2ca03813d404957a4",
+          "rows": 2455,
+          "table": "public.table_snapshot"
+        },
+        {
+          "checksum": "fe135f1f578de2941824de58879e5ca7",
+          "rows": 1677,
+          "table": "public.table_snapshot_log"
+        },
+        {
+          "checksum": "0ac7cd020bdc721f57bc330435671b18",
+          "rows": 10,
+          "table": "public.table_sort_order"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.table_statistics"
+        },
+        {
+          "checksum": "c93d622dcd76602bfcfa468be28678d1",
+          "rows": 10,
+          "table": "public.tabular"
+        },
+        {
+          "checksum": "020a76b71e92e5efdbb328fb4f0a4ccc",
+          "rows": 157,
+          "table": "public.tabular_field"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.tag"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.tag_allowed_value"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.tag_definition"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.task"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.task_config"
+        },
+        {
+          "checksum": "6275cd09cd355759b5ea7cf71630b692",
+          "rows": 2,
+          "table": "public.task_log"
+        },
+        {
+          "checksum": "d8bc8a30ad8e13f9e6fef0834e49659b",
+          "rows": 1,
+          "table": "public.task_schedule"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.users"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.view"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.view_properties"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.view_representation"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.view_schema"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.view_version"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.view_version_log"
+        },
+        {
+          "checksum": "c92fd9ce7d446c1b87fe72b97ac75326",
+          "rows": 1,
+          "table": "public.warehouse"
+        },
+        {
+          "checksum": "a423337b13bd1fe2afb1c90b895f52b2",
+          "rows": 1,
+          "table": "public.warehouse_statistics"
+        },
+        {
+          "checksum": "17516e66c6d03f1f2954e3d79a6a8df7",
+          "rows": 2,
+          "table": "public.warehouse_statistics_history"
+        }
+      ],
+      "user": "bmip"
+    },
+    {
+      "bytes": 267660,
+      "container": "9d9d828fc0a754b2d859d3d81cddab262ec82a61212e1747909b9f2212a60cd7",
+      "database": "prefect",
+      "dump_path": "backups/20261121T163617Z/prefect.dump",
+      "row_total": 2002,
+      "service": "postgres-ml",
+      "sha256": "1e1b5b2aab418ed68a0f53e557777ada08bee6c08e4fc607a2fe614a8bc1528c",
+      "tables": [
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.agent"
+        },
+        {
+          "checksum": "a7c29fb23c128d3508b5d177fcfac668",
+          "rows": 1,
+          "table": "public.alembic_version"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.artifact"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.artifact_collection"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.automation"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.automation_bucket"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.automation_event_follower"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.automation_held_event"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.automation_related_resource"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.block_document"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.block_document_reference"
+        },
+        {
+          "checksum": "e68d8de5319cdb720e32e12d51b42b8c",
+          "rows": 65,
+          "table": "public.block_schema"
+        },
+        {
+          "checksum": "01701c8691467b705d7edfb16b2a5dfc",
+          "rows": 26,
+          "table": "public.block_schema_reference"
+        },
+        {
+          "checksum": "44e2963624f39eda93075849dbe7f1a8",
+          "rows": 55,
+          "table": "public.block_type"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.composite_trigger_child_firing"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.concurrency_limit"
+        },
+        {
+          "checksum": "c5f10e20b2b3ff62d3a0fe827a516a0e",
+          "rows": 2,
+          "table": "public.concurrency_limit_v2"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.configuration"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.csrf_token"
+        },
+        {
+          "checksum": "d779f6a64a69e454263783f7857c9819",
+          "rows": 2,
+          "table": "public.deployment"
+        },
+        {
+          "checksum": "5c003ca093dc2d231b361b12e481e74c",
+          "rows": 2,
+          "table": "public.deployment_schedule"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.deployment_version"
+        },
+        {
+          "checksum": "a8faf8951cb1558a0c055475dfb1821c",
+          "rows": 1369,
+          "table": "public.event_resources"
+        },
+        {
+          "checksum": "4a96a614dc8308f8a1d677eab5639f36",
+          "rows": 205,
+          "table": "public.events"
+        },
+        {
+          "checksum": "57bf26a14b6fe3a885138b583761ffd9",
+          "rows": 2,
+          "table": "public.flow"
+        },
+        {
+          "checksum": "c207946b919bc2f231587f7835923878",
+          "rows": 31,
+          "table": "public.flow_run"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.flow_run_input"
+        },
+        {
+          "checksum": "bb40e51b0ef0729f5bd649ebb3087b9f",
+          "rows": 95,
+          "table": "public.flow_run_state"
+        },
+        {
+          "checksum": "680733970df22f2bad522f4a16387dae",
+          "rows": 96,
+          "table": "public.log"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.saved_search"
+        },
+        {
+          "checksum": "add9992fa6a76798e53d547462596511",
+          "rows": 10,
+          "table": "public.task_run"
+        },
+        {
+          "checksum": "98795bf31f6e728e178d5de75a15d087",
+          "rows": 30,
+          "table": "public.task_run_state"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.task_run_state_cache"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.variable"
+        },
+        {
+          "checksum": "d620575b5ac46b6045fa7e641eb52d43",
+          "rows": 1,
+          "table": "public.work_pool"
+        },
+        {
+          "checksum": "759f9a8c160833f870c7ad1b15966e81",
+          "rows": 1,
+          "table": "public.work_queue"
+        },
+        {
+          "checksum": "a81bd2238d07f9cd6d8ba99b2778bb07",
+          "rows": 9,
+          "table": "public.worker"
+        }
+      ],
+      "user": "prefect"
+    },
+    {
+      "bytes": 812,
+      "container": "9d9d828fc0a754b2d859d3d81cddab262ec82a61212e1747909b9f2212a60cd7",
+      "database": "mlflow",
+      "dump_path": "backups/20261121T163617Z/mlflow.dump",
+      "row_total": 0,
+      "service": "postgres-ml",
+      "sha256": "40fa42bdae5f8f7b09735c419b4c9f7b323bf6f7afb24a6c41c98951ce6b39c8",
+      "tables": [],
+      "user": "prefect"
+    },
+    {
+      "bytes": 93176,
+      "container": "760cf451c758077ea12cdcb89363947f6033f9e4c876444be933428836c91fc0",
+      "database": "marquez",
+      "dump_path": "backups/20261121T163617Z/marquez.dump",
+      "row_total": 95,
+      "service": "postgres-gov",
+      "sha256": "65bd9d292c5a3aeb950e8153160f15485154b4ae33719d5530e9accaff61c5ed",
+      "tables": [
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.column_lineage"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_facets"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_fields"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_fields_tag_mapping"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_schema_versions"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_schema_versions_field_mapping"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_symlinks"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_versions"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.dataset_versions_field_mapping"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.datasets"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.datasets_tag_mapping"
+        },
+        {
+          "checksum": "8d15c9da5c738e4f756a6053760b0a7f",
+          "rows": 1,
+          "table": "public.facet_migration_lock"
+        },
+        {
+          "checksum": "36d7c0767baddbefd538c1e46b3ab911",
+          "rows": 91,
+          "table": "public.flyway_schema_history"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.job_facets"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.job_versions"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.job_versions_io_mapping"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.jobs"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.jobs_fqn"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.jobs_tag_mapping"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.lineage_events"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.namespace_ownerships"
+        },
+        {
+          "checksum": "5195d8d81eab8b34c6a6900d66b4e8d5",
+          "rows": 1,
+          "table": "public.namespaces"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.owners"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.run_args"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.run_facets"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.run_states"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.runs"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.runs_input_mapping"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.sources"
+        },
+        {
+          "checksum": "d41d8cd98f00b204e9800998ecf8427e",
+          "rows": 0,
+          "table": "public.stream_versions"
+        },
+        {
+          "checksum": "bab1424111f31099bbc246e6097e3a44",
+          "rows": 2,
+          "table": "public.tags"
+        }
+      ],
+      "user": "marquez"
+    }
+  ],
+  "errors": [],
+  "generated_at": "2026-11-21T16:36:39.750419+00:00",
+  "git_branch": "slot/w2-d-lois",
+  "git_commit": "b3ffb46e708a7e4b99dba1dd15136aa8a8fdefb4",
+  "id": "W2D-CP1",
+  "minio": {
+    "bucket": "backups",
+    "prefix": "postgres/20261121T163617Z",
+    "uploaded": [
+      "postgres/20261121T163617Z/postgres-core/bmip.dump",
+      "postgres/20261121T163617Z/postgres-core/lakekeeper.dump",
+      "postgres/20261121T163617Z/postgres-ml/prefect.dump",
+      "postgres/20261121T163617Z/postgres-ml/mlflow.dump",
+      "postgres/20261121T163617Z/postgres-gov/marquez.dump"
+    ]
+  },
+  "stamp": "20261121T163617Z",
+  "status": "PASS"
+}

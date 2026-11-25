@@ -101,7 +101,17 @@ class FakeRepository:
     def freshness_one(self, metric):
         return self.freshness()[0]
 
-    def datasets(self, *, q=None, domain=None, layer=None, owner=None, limit=100, cursor=None):
+    def datasets(
+        self,
+        *,
+        q=None,
+        domain=None,
+        layer=None,
+        owner=None,
+        classification=None,
+        limit=100,
+        cursor=None,
+    ):
         row = {
             "id": "gold.mart_market",
             "name": "Market mart",
@@ -232,7 +242,7 @@ def test_market_latest_defaults_to_btcusdt(harness):
 def test_unknown_symbol_is_a_400_problem(harness):
     client, *_ = harness
     response = client.get(
-        "/v1/market/latest", params={"symbol": "ETHUSDT"}, headers=auth()
+        "/v1/market/latest", params={"symbol": "NOPEUSDT"}, headers=auth()
     )
     assert response.status_code == 400
     assert response.json()["type"].endswith("/unknown-symbol")
@@ -397,6 +407,34 @@ def test_predict_without_a_champion_is_not_available(harness):
     assert response.json()["status"] == "not_available"
 
 
+def test_predict_returns_feature_timestamp_and_stale_flag(harness):
+    client, repository, _, app = harness
+    feature_ts = NOW - timedelta(hours=3)
+    repository.champion = lambda model_name="volatility_model": {
+        "model_name": model_name,
+        "version": "2",
+        "alias": "champion",
+    }
+    app.state.predictor = lambda payload: {
+        "predicted_rv_next_1h": 0.01,
+        "feature_ts": feature_ts,
+    }
+    response = client.post(
+        "/v1/predict",
+        json={"symbol": "BTCUSDT"},
+        headers=auth(),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["feature_ts"] == feature_ts.isoformat().replace("+00:00", "Z")
+    assert body["meta"]["stale"] is True
+    assert response.headers["X-Data-Stale"] == "true"
+    assert repository.inserted[-1]["feature_ts"] == feature_ts
+    assert repository.inserted[-1]["status"] == "error"
+    assert "stale feature_ts" in repository.inserted[-1]["detail"]
+
+
 def test_health_ready_reports_both_paths(harness):
     client, repository, lake, _ = harness
     response = client.get("/health/ready")
@@ -419,6 +457,8 @@ def test_metrics_expose_the_counters(harness):
     assert "bmip_api_requests_total" in text
     assert "bmip_api_fallback_total" in text
     assert "bmip_api_request_duration_seconds_count" in text
+    assert "bmip_api_uptime_seconds" in text
+    assert "bmip_api_info" in text
 
 
 def test_aliases_stay_in_openapi(harness):

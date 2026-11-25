@@ -80,6 +80,7 @@ def sum_lag(high_low: list[tuple[int, int]]) -> int:
 def _consumer_config(settings: Settings, group: str, client_id: str) -> dict[str, Any]:
     return {
         "bootstrap.servers": settings.redpanda_brokers,
+        "broker.address.family": "v4",
         "group.id": group,
         "client.id": client_id,
         "auto.offset.reset": "earliest",
@@ -297,7 +298,7 @@ class MarketStreamProcessor:
 
         trade, error = parse_trade(
             raw,
-            allowed_symbols={self.settings.market_symbol},
+            allowed_symbols=set(self.settings.market_symbols),
         )
         if error is not None or trade is None:
             record = quarantine_record(
@@ -371,7 +372,7 @@ class MarketStreamProcessor:
         if not callable(freshness):
             return
         try:
-            value = freshness(symbol=self.settings.market_symbol)
+            value = freshness()
         except Exception as exc:  # noqa: BLE001 - metrics must not fail a batch
             log.warning("cannot read silver freshness", extra={"ctx_error": str(exc)})
             return

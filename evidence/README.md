@@ -1,4 +1,4 @@
-# Evidence Index
+﻿# Evidence Index
 
 Setiap klaim pada demo harus punya file bukti di direktori ini.
 
@@ -89,13 +89,137 @@ menunjuk commit final W1-D setelah evidence ini di-commit.
 | --- | --- | --- | --- | --- |
 | CP1 | api | `api/smoke_20261114T0239.txt` | PASS | health, 10 endpoint, baris market, freshness, request id |
 | ROUTES | api | `api/routes_20261114T0239.txt` | PASS | 14 route kanonik + 5 alias; `contracts/openapi.json` ditulis |
-| T-13 | security | `security/api-401.txt` | PASS | tanpa key / key salah → 401 problem+json; `/api` tetap publik |
+| T-13 | security | `security/api-401.txt` | PASS | tanpa key / key salah â†’ 401 problem+json; `/api` tetap publik |
 | T-14 | tests | `tests/T14.txt` | PASS | 2 halaman live (limit=1) dan 11 halaman atas 1.002 baris, 0 duplikat |
-| T-15 | tests | `tests/T15.txt` | PASS | MinIO stop → 200 `X-Data-Stale: true`; pulih → `false` |
+| T-15 | tests | `tests/T15.txt` | PASS | MinIO stop â†’ 200 `X-Data-Stale: true`; pulih â†’ `false` |
 | T-34 | api | `api/T34.json` | PASS | symbol, range, limit, cursor, datetime, missing range |
-| T-36 | ml | `ml/T36.json` | PASS | 422 malformed, error out-of-range, `not_available` tanpa champion |
+| T-36 | ml | `ml/T36.json` | PASS | W1-D contract; final W2-A run supersedes this row (see W2-A block) |
 | IDEM | serving | `serving/loader-idempotence_20261114T0239.json` | PASS | dua load, counts + logical hash identik |
 | T-37 | dashboard | `dashboard/reconciliation-draft.json` | PASS | API vs serving vs gold, 2/2 baris, 0 selisih (draft) |
 | DQ | dq | `dq/dq_report_w1d_20261114T0255.json` | PASS | checkpoint GX run W1-D (`a58f5d7`); `dq_report.json` kanonik tetap milik W1-C |
-| M1 | e2e | `e2e/M1_20261114T0405.txt` | PASS | bronze → silver → gold → serving → API → dashboard |
+| M1 | e2e | `e2e/M1_20261114T0405.txt` | PASS | bronze â†’ silver â†’ gold â†’ serving â†’ API â†’ dashboard |
 | DASH | dashboards | `dashboards/streamlit_20261114T0405.png` | PASS | 4 metrik, 2 filter, "belum ada model", Poppins, palet hitam-abu-putih-navy-pink, sidebar bisa ditutup/dibuka |
+
+### W2-A
+
+Environment: branch `slot/w2-a-dhea`, Windows / Docker Compose dev + ML overlay,
+Python 3.11.9, MLflow 3.18.0. Five symbols, 60 days of 1-minute klines, pooled
+model, champion `volatility_model` version 2. Evidence closeout: 2026-11-18;
+code under test: `afa8617` plus the final evidence diff. Tag `w2-a-ok-complete`
+menunjuk commit close-out lengkap; `w2-a-ok-final` tetap di `38f0441` dan tag
+lama `w2-a-ok` tetap di `eec3186`.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | ml | `ml/dataset_20261118T044935Z.json` | PASS | snapshot `mart_ml@3627445140691597595`; 7.190 baris; 5 symbol |
+| CP1 | tests | `tests/T09.txt` | PASS | T-09 feature-level, 7.200 baris `mart_ml` |
+| CP2 | experiments | `experiments/E1_vs_E2.md` | PASS | E1/E2 Ridge/XGBoost; E1 promoted under H0; top features |
+| CP2 | experiments | `experiments/mlflow_volatility_20261118T0719Z.png` | PASS | MLflow experiment `volatility`; tags, bad challenger |
+| CP2 | ml | `ml/feature_importance_20261118T143530Z.json` | PASS | model-native top features; `rv_60m` 35.60% |
+| BASELINE | experiments | `experiments/baselines.md` | PASS | persistence + EWMA `alpha=0.06`, shifted one hour |
+| BASELINE | experiments | `experiments/baselines_20261118T092655Z.json` | PASS | validation/test MAE, RMSE, R2, Spearman |
+| T-20 | ml | `ml/T20.txt` | PASS | retrain snapshot sama; delta 0.00000000%; tolerance 1% |
+| T-21 | ml | `ml/T21.json` | PASS | bad challenger v4 rejected vs champion v2; champion unchanged |
+| T-36 | ml | `ml/T36.json` | PASS | 422 malformed; 200 error out-of-range; 5 symbol `ok` with `feature_ts`; stale response persisted as `status=error` |
+| MODEL | ml | `ml/model-card.md` | PASS | intended use, feature importance, baselines, out-of-scope, limitations, ethical note |
+| REGISTRY | ml | `ml/registry-metadata_20261118T154807Z.json` | PASS | snapshot/feature/trigger/git tags + model-card and feature-importance artifacts |
+| BATCH | ml | `ml/predictions_20261118T054850Z.json` | PASS | historical 5 predictions written to `serving.predictions` |
+| BATCH | ml | `ml/predictions_20261118T093616Z.json` | PASS | stale snapshot rejected; non-zero exit; cache not overwritten |
+| HEALTH | ml | `ml/predictions_health_20261118T154754Z.json` | PASS | stale `ok` rows cleaned; final `stale_ok=0` |
+| SCHEDULE | deploy | `deploy/prefect_w2a_20261118T155105_afa8617.json` | PASS | hourly `infer-volatility` active + 1 completed run; weekly `train-volatility` inactive |
+| DRIFT | ml | `ml/drift_20261118T092731Z.json` | PASS | holdout reference vs 7 production days; PSI 0.2; 7 flags |
+| CLOSEOUT | tests | `tests/w2a_complete_20261118T155136Z.txt` | PASS | pytest 153 + ruff clean on complete worktree |
+
+
+### W2-B
+
+Environment: branch `slot/w2-b-vio`, base `slot/w2-a-dhea` (`6fbcf98`),
+Windows 11 / Docker Compose dev, Python 3.11.9, Prometheus v2.55.1,
+Alertmanager v0.27.0, Grafana 11.3.0, cAdvisor v0.49.1. Evidence 2026-11-20;
+kode yang diuji: `c9ef99a` (tag `w2-b-ok`).
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | observability | `observability/CP1_20261120T0323_c9ef99a.json` | PASS | 6/6 target; 40 baris log; 6 field kontrak |
+| CP2 | alerts | `alerts/CP2_20261120T0323_c9ef99a.json` | PASS | 16 rule, 3 kelas, 3 runbook, 5 panel business |
+| CP2 | alerts | `alerts/rules_20261120T0323_c9ef99a.yml` | PASS | salinan rule yang ter-load Prometheus |
+| T-39 | alerts | `alerts/T39_20261120T0304_e5369f6.md` | PASS | 3 kelas fire -> deliver -> resolve |
+| T-39 | alerts | `alerts/deliveries.jsonl` | PASS | `run_id=drill-...` ikut di pesan firing dan resolved |
+| T-39 | alerts | `alerts/TELEGRAM_20261120T0249_3a87740.json` | PASS | Telegram `ok: true`, HTTP 200 untuk firing dan resolved |
+| T-39 | alerts | `alerts/telegram_20261121.png` | PASS | screenshot pesan Indonesia (AKTIF + SELESAI) |
+| T-39 | alerts | `alerts/telegram_20261120.png` | arsip | format lama sebelum perbaikan |
+| T-37 | dashboard | `dashboard/reconciliation_20261120T0324_c9ef99a.json` | PASS | API vs SQL vs Iceberg, 24 jam dan 7 hari, 0 selisih |
+| LOG | logs | `logs/sample_20261120T0323_c9ef99a.jsonl` | PASS | `run_id`, `request_id`, `service`, `severity` |
+| LOG | logs | `logs/error_20261120T0324_c9ef99a.jsonl` | PASS | satu baris `severity=ERROR` dengan traceback |
+| LOG | logs | `logs/diagnosis_error_20261120T0324_c9ef99a.json` | PASS | frame gagal dan baris exception terakhir |
+| LOG | logs | `logs/dashboard_20261120T0334_b52ce90.jsonl` | PASS | dashboard JSON log, `service=dashboard` |
+| DASH | dashboards | `dashboards/grafana-pipeline_20261120T0324_c9ef99a.png` | PASS | URL dan range tertulis di panel; 6 target hijau |
+| DASH | dashboards | `dashboards/grafana-business_20261120T0324_c9ef99a.png` | PASS | harga, volatilitas, sentimen berisi; prediksi kosong |
+| E2E | e2e | `e2e/SMOKE-W1A_20261120T0150_ee4c8bf.txt` | PASS | health, replay, bronze, ledger, idempotensi |
+| M1 | e2e | `e2e/M1_20261120T0323.txt` | PASS | bronze -> silver -> gold -> serving -> API -> dashboard |
+| DQ | dq | `dq/dq_report.json` | PASS | 7 suite, 0 critical, 0 warning |
+| SUM | w2b | `w2b/SUMMARY_20261120T0324_c9ef99a.json` | PASS | ringkasan run terakhir |
+| ML | deploy | `deploy/mlflow-health_20261121T0532_a6b33fc.json` | PASS | MLflow sehat (1 worker); registry kosong, prediksi belum bisa |
+
+### W2-C
+
+Environment: branch `slot/w2-c-anin`, base tag `w2-b-ok` (`e7823c5`),
+Windows 11 / Docker Compose dev, Python 3.11.9, Marquez 0.51.1,
+Traefik v3.7.18. Evidence 2026-11-21; kode fitur W2-C: `85549b1`.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | lineage | `lineage/CP1_20261121T101507.md` | PASS | Marquez sehat; event dbt dengan `run_id` |
+| CP1 | lineage | `lineage/first-event_20261121T101507.png` | PASS | screenshot Marquez setelah event dbt |
+| CP1 | lineage | `lineage/events_20261121T101507.jsonl` | PASS | event mentah OpenLineage |
+| CP2 | catalog | `catalog/CP2_20261121T101633.md` | PASS | 11 registry + 11 serving rows |
+| CP2 | catalog | `catalog/registry_20261121T101633.csv` | PASS | owner, klasifikasi, retensi, saran otomatis |
+| CP2 | catalog | `catalog/catalog_20261121T101633.png` | PASS | portal katalog hidup |
+| T-30 | lineage | `lineage/T30.md` | PASS | bronze -> silver -> gold -> serving -> API |
+| T-13 | security | `security/api-401.txt` | PASS | tanpa key -> 401 |
+| T-22 | security | `security/pii-scan.txt` | PASS | tidak ada kolom PII terstruktur di silver |
+| T-38 | security | `security/rbac-matrix.md` | PASS | 401/200/403/202/200 + audit rows |
+| SECRETS | security | `security/gitleaks.txt` | PASS | 0 finding setelah allowlist evidence PII |
+| PORT | security | `security/port-scan.txt` | PASS | hanya 80/443 di luar loopback |
+| TLS | security | `security/tls.txt` | PASS | CA, SAN, redirect, HTTPS routes |
+| ACL | security | `security/tailscale-acl.json` | PASS | ACL hash + `tailscale status` |
+| SUM | w2c | `w2c/SUMMARY_20261121T101848_e7823c5.json` | PASS | ringkasan run |
+
+
+### W2-D
+
+Environment: branch `slot/w2-d-lois`, base tag `w2-c-ok` (`b3ffb46`), commit
+`6187d41`. Windows 11 / Docker Desktop 29.2.1, Python 3.11.9, MLflow 3.18.0 on
+the host. Dataset snapshot is sparse: `gold.mart_ml` has 42 rows / 16 dates but
+only 9 rows / 2 valid event dates after filtering; sentiment covers four dates.
+Tag `w2-d-ok` is not created yet; it must point to the final evidence commit.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | recovery | `recovery/manifest_20261121T163617Z.json` | PASS | 7.338 rows from 5 databases, SHA-256 + row counts |
+| CP1 | deploy | `deploy/health_20261124T0534_6187d41.md` | PASS | final 20-container health after Docker recovery |
+| T-19 | recovery | `recovery/T19.txt` | PASS | restore drill returns identical business rows |
+| T-40 | recovery | `recovery/T40.json` | PASS | 19 services restarted; business tables identical; offsets identical |
+| FAULT | faults | `faults/stream-kill_20261123T182353.json` | PASS | kill stream, 0 duplicates, RTO 88.52 s |
+| FAULT | faults | `faults/minio-kill_20261123T182601.json` | PASS | API `X-Data-Stale`, RTO 42.0 s |
+| T-41 | tests | `tests/coverage.json` | PASS | 51.30% coverage, 186 tests, gate 40% |
+| T-41 | tests | `tests/T41_20261124T050900Z.txt` | PASS | command + totals for the coverage gate |
+| T-42 | benchmark | `benchmark/matrix.csv` | PARTIAL | 16 rows: 13 core + 3 throughput; API and throughput pass, ML/DQ partial |
+| T-42 | benchmark | `benchmark/summary.md` | PARTIAL | bottleneck conclusion + partial blockers |
+| T-42 | benchmark | `benchmark/resources.csv` | PASS | 20 container samples from cAdvisor/docker stats |
+| T-25 | deploy | `deploy/clean-clone.log` | PARTIAL | clean clone install/lint/compose pass; stack + dashboard not demonstrated |
+
+Benchmark highlights:
+
+- API latest p95: 52.592 / 100.452 / 86.607 ms (target <300 ms).
+- API range 14d p95: 550.198 / 357.258 / 361.301 ms (target <2 s).
+- DQ runtime: 60.061 s, partial; one critical `gold_market:gold-market-lag`
+  because the latest event date is far behind wall clock.
+- Training: 28.526 s, partial; `dataset needs at least three event dates`.
+- Inference: 100/100 `not_available`, p95 113.733 ms; no champion in registry.
+- cAdvisor host: CPU 0.000%, memory 2.682 GiB.
+- B2: full scan 724.375 ms vs partition-pruned 48.905 ms (42 vs 5 rows);
+  partial because the dataset is too small to be representative.
+- Throughput replay: 600.000 messages per run, 0 errors, 0 duplicates,
+  999.999 / 999.996 / 999.998 trade/s, p95 3.682 / 3.265 / 4.395 ms.
+  Run 3 was rerun clean after the Docker restart; all three runs are consistent.
