@@ -1,0 +1,19 @@
+# C3-A source of truth for the API replica list.
+# `make c3a-services` renders deploy/traefik/dynamic/services.yaml from this file.
+# Keep this file small so the server list has one obvious owner.
+api:
+  health_check:
+    path: /health/ready
+    interval: 10s
+    timeout: 3s
+  replicas:
+    - api
+    - api-2
+primary:
+  server: api:8000
+chaos:
+  server: toxiproxy:8666
+  health_check:
+    path: /health/live
+    interval: 10s
+    timeout: 3s

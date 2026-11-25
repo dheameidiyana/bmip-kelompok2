@@ -10,20 +10,49 @@ tls:
 
 http:
   routers:
-    api-host:
-      rule: "Host(`api.bmip.local`)"
+    api-read-host:
+      rule: "Host(`api.bmip.local`) && !PathPrefix(`/v1/predict`) && !PathPrefix(`/v1/admin`)"
       entryPoints: [websecure]
       tls: {}
       service: api
-      middlewares: [api-rate-limit, api-retry, api-headers]
+      middlewares: [api-rate-limit, api-retry, api-circuit, api-headers]
       priority: 30
+
+    api-write-host:
+      rule: "Host(`api.bmip.local`) && (PathPrefix(`/v1/predict`) || PathPrefix(`/v1/admin`))"
+      entryPoints: [websecure]
+      tls: {}
+      service: api-primary
+      middlewares: [api-rate-limit, api-headers]
+      priority: 40
 
     api-dev:
       rule: "PathPrefix(`/api`) || PathPrefix(`/v1`) || PathPrefix(`/health`) || PathPrefix(`/metrics`) || PathPrefix(`/docs`) || PathPrefix(`/openapi.json`)"
       entryPoints: [dev]
       service: api
-      middlewares: [api-headers]
+      middlewares: [api-rate-limit, api-retry, api-circuit, api-headers]
       priority: 20
+
+    api-write-dev:
+      rule: "PathPrefix(`/v1/predict`) || PathPrefix(`/v1/admin`)"
+      entryPoints: [dev]
+      service: api-primary
+      middlewares: [api-rate-limit, api-headers]
+      priority: 30
+
+    api-chaos:
+      rule: "PathPrefix(`/`)"
+      entryPoints: [chaos]
+      service: api-chaos
+      middlewares: [api-circuit, api-headers]
+      priority: 10
+
+    api-rate-test:
+      rule: "PathPrefix(`/`)"
+      entryPoints: [ratetest]
+      service: api
+      middlewares: [api-rate-limit]
+      priority: 10
 
     app-host:
       rule: "Host(`app.bmip.local`)"
@@ -82,16 +111,6 @@ http:
       priority: 20
 
   services:
-    api:
-      loadBalancer:
-        strategy: wrr
-        healthCheck:
-          path: /health/ready
-          interval: 10s
-          timeout: 3s
-        servers:
-          - url: "http://api:8000"
-
     dashboard:
       loadBalancer:
         healthCheck:
@@ -162,11 +181,21 @@ http:
         attempts: 3
         initialInterval: 200ms
 
+    api-circuit:
+      circuitBreaker:
+        expression: "ResponseCodeRatio(500, 600, 0, 600) > 0.25 || LatencyAtQuantileMS(50.0) > 1500"
+        checkPeriod: 10s
+        fallbackDuration: 10s
+        recoveryDuration: 10s
+
     api-headers:
       headers:
         contentTypeNosniff: true
         frameDeny: true
         referrerPolicy: strict-origin-when-cross-origin
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
 
     ui-headers:
       headers:

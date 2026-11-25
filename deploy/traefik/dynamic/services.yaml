@@ -1,0 +1,24 @@
+http:
+  services:
+    api:
+      loadBalancer:
+        strategy: wrr
+        healthCheck:
+          path: /health/ready
+          interval: 10s
+          timeout: 3s
+        servers:
+        - url: http://api:8000
+        - url: http://api-2:8000
+    api-primary:
+      loadBalancer:
+        servers:
+        - url: http://api:8000
+    api-chaos:
+      loadBalancer:
+        healthCheck:
+          path: /health/live
+          interval: 10s
+          timeout: 3s
+        servers:
+        - url: http://toxiproxy:8666

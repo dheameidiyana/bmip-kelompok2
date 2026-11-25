@@ -14,7 +14,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check c3a-roles c3a-services c3a-up c3a-chaos c3a-scan c3a-evidence c3a-circuit
 
 help:
 	@echo "BMIP targets:"
@@ -50,6 +50,13 @@ help:
 	@echo "  e2e-smoke    W1-A smoke: health + replay + bronze + ledger"
 	@echo "  evidence     Collect the health evidence file"
 	@echo "  evidence-check Verify manifest, links, and tracked evidence (CI)"
+	@echo "  c3a-roles    Create the read-only API replica role (C3-A)"
+	@echo "  c3a-services Render the Traefik API replica list (C3-A)"
+	@echo "  c3a-up       Recreate api and api-2 (C3-A)"
+	@echo "  c3a-chaos    Start Toxiproxy for the circuit-breaker drill"
+	@echo "  c3a-scan     Trivy, port, rate-limit, TLS, and audit evidence"
+	@echo "  c3a-evidence T-16/T-17 replica evidence"
+	@echo "  c3a-circuit  T-18 circuit-breaker evidence"
 	@echo "  serving      Load gold into the serving schema (W1-D)"
 	@echo "  serving-counts  Print serving table counts"
 	@echo "  api-dev      Run the Query API on the host (uvicorn, port 8000)"
@@ -260,6 +267,27 @@ evidence: doctor
 
 evidence-check: $(PYTHON)
 	$(PYTHON) scripts/w2d_evidence_check.py --check
+
+c3a-roles: $(PYTHON)
+	$(PYTHON) scripts/c3a_roles.py
+
+c3a-services: $(PYTHON)
+	$(PYTHON) scripts/c3a_render_services.py
+
+c3a-up: c3a-services
+	$(COMPOSE_DEV) up -d api api-2 traefik
+
+c3a-chaos:
+	docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml -f deploy/compose.chaos.yml --profile chaos up -d toxiproxy
+
+c3a-scan: $(PYTHON)
+	$(PYTHON) scripts/c3a_scan.py
+
+c3a-evidence: $(PYTHON)
+	$(PYTHON) scripts/c3a_evidence.py --steps lb,failover,summary
+
+c3a-circuit: $(PYTHON)
+	$(PYTHON) scripts/c3a_circuit.py
 
 OBS_SERVICES := prometheus alertmanager pushgateway postgres-exporter cadvisor notify grafana
 

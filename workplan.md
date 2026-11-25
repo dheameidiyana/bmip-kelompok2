@@ -769,6 +769,13 @@ Siklus ini menutup semua komponen `ARCHITECTURE.md` yang belum tercakup di Siklu
 | Circuit breaker memutus dashboard | Middleware hanya dipasang di router API, bukan router Streamlit |
 | Dua replica berebut memori | `api-2` hanya di profil `dev` dan `two-node`; limit 700m |
 
+**Status close-out (2026-11-25)**
+
+- `api-2` read-only + Traefik LB + circuit breaker + HSTS aktif.
+- T-16/T-17/T-18 PASS; Trivy/port/429/TLS/audit evidence ada.
+- Tiga runbook ditulis; dashboard v2 8 tab selesai.
+- Tag `c3-a-ok` dibuat setelah evidence final.
+
 ---
 
 ### C3-B — Dhea — ML completeness

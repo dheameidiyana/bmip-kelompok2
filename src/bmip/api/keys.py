@@ -91,9 +91,15 @@ def resolve_key(
         return None
     if not verify_secret(secret, str(row["key_hash"]), salt):
         return None
-    connection.execute(
-        "UPDATE ops.api_keys SET last_used_at = now() WHERE key_id = %s",
-        (key_id,),
-    )
-    connection.commit()
+    try:
+        connection.execute(
+            "UPDATE ops.api_keys SET last_used_at = now() WHERE key_id = %s",
+            (key_id,),
+        )
+        connection.commit()
+    except Exception:  # noqa: BLE001 - read-only replica may not have UPDATE
+        try:
+            connection.rollback()
+        except Exception:  # noqa: BLE001 - keep auth working even if rollback fails
+            pass
     return ApiKey(str(row["key_id"]), str(row["role"]), str(row["owner"]))

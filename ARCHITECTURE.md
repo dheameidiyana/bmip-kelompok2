@@ -2637,6 +2637,13 @@ There is no cloud bill, but there is a resource budget. The platform is governed
 | Service discovery | Docker provider intra-node; `services.yaml` and Tailscale IPs inter-node | Add a replica; Traefik discovers it | Implemented, configuration-based |
 | Consul or etcd discovery | Not deployed | Not applicable | Rejected as unnecessary for four nodes |
 
+**C3-A implementation note:** `api` and `api-2` are rendered from
+`deploy/traefik/services.yaml` into `deploy/traefik/dynamic/services.yaml`.
+Read routes use the two-server `api` load balancer; `/v1/predict` and
+`/v1/admin` stay on `api-primary` because they write to PostgreSQL. `api-2`
+uses `bmip_api_ro`, which may read business tables and append audit/auth
+telemetry only. HSTS is enabled on the API headers middleware.
+
 ### 19.2 Traefik configuration
 
 Static configuration:

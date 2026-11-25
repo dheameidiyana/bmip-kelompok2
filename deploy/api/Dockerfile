@@ -31,6 +31,7 @@ RUN addgroup --gid 10001 api \
 
 COPY --from=build /wheels /wheels
 RUN pip install --no-cache-dir --no-index --find-links=/wheels "bmip[ml]" \
+    && pip install --no-cache-dir --upgrade "setuptools>=80" "jaraco.context>=6.1.0" "wheel>=0.46.2" \
     && rm -rf /wheels
 
 USER 10001:10001

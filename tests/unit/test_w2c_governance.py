@@ -115,12 +115,26 @@ def test_traefik_has_tls_and_api_middlewares() -> None:
     )
     assert dynamic["tls"]["certificates"]
     routers = dynamic["http"]["routers"]
-    for name in ("api-host", "app-host", "catalog-host"):
+    for name in ("api-read-host", "api-write-host", "app-host", "catalog-host"):
         assert name in routers
-    assert "api-retry" in routers["api-host"]["middlewares"]
-    assert "api-rate-limit" in routers["api-host"]["middlewares"]
-    assert "api-headers" in routers["api-host"]["middlewares"]
+    assert "api-retry" in routers["api-read-host"]["middlewares"]
+    assert "api-rate-limit" in routers["api-read-host"]["middlewares"]
+    assert "api-headers" in routers["api-read-host"]["middlewares"]
+    assert "api-circuit" in routers["api-read-host"]["middlewares"]
+    assert "api-retry" not in routers["api-write-host"]["middlewares"]
     assert "admin-auth" in routers["prometheus-host"]["middlewares"]
+    headers = dynamic["http"]["middlewares"]["api-headers"]["headers"]
+    assert headers["stsSeconds"] == 31536000
+    services = yaml.safe_load(
+        (ROOT / "deploy" / "traefik" / "dynamic" / "services.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    servers = services["http"]["services"]["api"]["loadBalancer"]["servers"]
+    assert [item["url"] for item in servers] == [
+        "http://api:8000",
+        "http://api-2:8000",
+    ]
 
 
 def test_tailscale_acl_is_deny_by_default() -> None:

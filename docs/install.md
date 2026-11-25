@@ -137,6 +137,29 @@ Jika dashboard kosong, cek API health terlebih dahulu, bukan langsung mengubah
 query. Katalog harus menampilkan 11 dataset; Marquez harus hidup di
 `http://localhost:3002` setelah `governance-up` dan `governance`.
 
+Dashboard v2 punya delapan tab: Ringkasan, Market, Volatilitas, Korelasi,
+Sentimen, Kualitas, Katalog, dan Lineage. Tab Korelasi membutuhkan minimal 24
+jam berpasangan untuk menampilkan angka; jika kurang, UI menampilkan status
+"data belum cukup" (bukan korelasi palsu).
+
+## 6.1 Dua replica API dan security sweep (C3-A)
+
+```powershell
+.\scripts\make.ps1 c3a-roles
+.\scripts\make.ps1 c3a-services
+.\scripts\make.ps1 c3a-up
+.\scripts\make.ps1 c3a-evidence
+.\scripts\make.ps1 c3a-circuit
+.\scripts\make.ps1 c3a-scan
+```
+
+`c3a-roles` membuat role `bmip_api_ro`; `c3a-services` merender daftar replica
+Traefik; `c3a-up` menyalakan `api` + `api-2`. `c3a-evidence` menulis T-16/T-17,
+`c3a-circuit` menulis T-18, dan `c3a-scan` menulis Trivy/port/429/TLS/audit.
+
+Endpoint baca lewat load balancer, sedangkan `/v1/predict` dan `/v1/admin`
+selalu diarahkan ke replica utama karena menulis ke database.
+
 ## 7. Test dan benchmark
 
 ```powershell

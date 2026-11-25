@@ -72,6 +72,15 @@ T-42 penuh tetap PARTIAL sampai C3-D. Detail ada di
 [docs/w2-d-recap.md](docs/w2-d-recap.md) dan
 [docs/handoff/w2-d.md](docs/handoff/w2-d.md).
 
+C3-A berjalan di branch `slot/c3-a-anin`: `api-2` read-only, Traefik load
+balancer `wrr`, circuit breaker, HSTS, retry/rate limit, Toxiproxy, Trivy,
+port/TLS/429/audit evidence, tiga runbook, dan T-16/T-17/T-18. Detail ada di
+[docs/handoff/c3-a.md](docs/handoff/c3-a.md).
+
+Dashboard v2 memakai delapan tab: Ringkasan, Market, Volatilitas, Korelasi,
+Sentimen, Kualitas, Katalog, dan Lineage. Tab Korelasi memakai return/volatilitas
+lima symbol dan menampilkan jumlah jam sampel; tidak ada klaim kausalitas.
+
 ## Stack
 
 - Sumber: Binance WebSocket lima pair (stream) + Bluesky AT Protocol (batch per jam)
@@ -168,6 +177,12 @@ Perintah operasional:
 .\scripts\make.ps1 evidence-w2c # CP1/CP2 W2-C
 .\scripts\make.ps1 scan-w2c     # PII, port, gitleaks, TLS, RBAC
 .\scripts\make.ps1 evidence-check # verifikasi manifest dan link tanpa menulis manifest
+.\scripts\make.ps1 c3a-roles   # role read-only bmip_api_ro
+.\scripts\make.ps1 c3a-services # render daftar replica Traefik
+.\scripts\make.ps1 c3a-up      # recreate api + api-2 + traefik
+.\scripts\make.ps1 c3a-scan    # Trivy, port, 429, TLS/HSTS, audit
+.\scripts\make.ps1 c3a-evidence # T-16/T-17 + health replica
+.\scripts\make.ps1 c3a-circuit # T-18 circuit breaker
 .\scripts\make.ps1 evidence     # health + manifest baru (butuh stack hidup)
 .\scripts\make.ps1 ci           # compose config + lint + test
 ```
@@ -228,6 +243,7 @@ Respons memuat `meta.freshness` (`ok`/`warn`/`stale`/`unknown`) dan header
 | `slot/w2-b-vio` | Pekerjaan W2-B |
 | `slot/w2-c-anin` | Pekerjaan W2-C |
 | `slot/w2-d-lois` | Pekerjaan W2-D |
+| `slot/c3-a-anin` | Pekerjaan C3-A |
 | `fix/w2-closeout` | Perbaikan evidence, gitleaks, dan dokumentasi 5 symbol |
 
 Alur: branch slot -> PR ke `dev` (review minimal 1 orang) -> PR `dev` ke `main` saat

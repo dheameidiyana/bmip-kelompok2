@@ -4,6 +4,8 @@ services:
       - "${BMIP_EDGE_BIND_ADDRESS:-0.0.0.0}:80:80"
       - "${BMIP_EDGE_BIND_ADDRESS:-0.0.0.0}:443:443"
       - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8080:8000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8084:8084"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8085:8085"
       - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8082:8082"
     mem_limit: 256m
     cpus: 0.50

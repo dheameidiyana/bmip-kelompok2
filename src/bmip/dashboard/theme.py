@@ -20,6 +20,16 @@ BLACK = "#0A0A0A"
 NAVY = "#0B1F3A"
 NAVY_SOFT = "#163A66"
 PINK = "#E85D9E"
+DEEP_PINK = "#B02862"
+AMBER = "#D97706"
+
+SERIES_COLORS = {
+    "BTCUSDT": NAVY,
+    "ETHUSDT": PINK,
+    "BNBUSDT": NAVY_SOFT,
+    "SOLUSDT": DEEP_PINK,
+    "XRPUSDT": MUTED,
+}
 
 FONT_STACK = "'Poppins', 'Segoe UI', 'Helvetica Neue', sans-serif"
 
@@ -66,6 +76,9 @@ hr {{ border-color: {BORDER}; }}
     border: 1px solid {NAVY};
     border-radius: 6px;
     font-weight: 500;
+}}
+.stButton > button p, .stButton > button div, .stButton > button span {{
+    color: {WHITE} !important;
 }}
 .stButton > button:hover {{
     background: {PINK};
@@ -148,10 +161,121 @@ def value_bars(
         )
     )
     baseline = (
-        alt.Chart(pd.DataFrame({"y": [0.0]}))
-        .mark_rule(color=BORDER, strokeWidth=1)
-        .encode(y="y:Q")
+        alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(color=BORDER, strokeWidth=1).encode(y="y:Q")
     )
-    return (bars + baseline).properties(
-        height=height, width="container", background=WHITE
+    return (bars + baseline).properties(height=height, width="container", background=WHITE)
+
+
+def multi_line(
+    frame: pd.DataFrame,
+    column: str,
+    *,
+    height: int = 320,
+    y_title: str | None = None,
+    domain: tuple[float, float] | None = None,
+) -> alt.Chart:
+    """One line per symbol; caller supplies window_start, symbol, value."""
+    if frame.empty:
+        return alt.Chart(pd.DataFrame({"x": [], "y": []})).mark_line()
+    scale = alt.Scale(domain=list(domain)) if domain else alt.Scale()
+    return (
+        alt.Chart(frame)
+        .mark_line(strokeWidth=2)
+        .encode(
+            x=alt.X("window_start:T", axis=_axis()),
+            y=alt.Y(f"{column}:Q", axis=_axis(y_title), scale=scale),
+            color=alt.Color(
+                "symbol:N",
+                scale=alt.Scale(
+                    domain=list(SERIES_COLORS),
+                    range=list(SERIES_COLORS.values()),
+                ),
+                legend=alt.Legend(orient="top", labelFont=FONT_STACK, title=None),
+            ),
+            tooltip=["symbol:N", alt.Tooltip(f"{column}:Q", format=".4f")],
+        )
+        .properties(height=height, width="container", background=WHITE)
+    )
+
+
+def heatmap(matrix: pd.DataFrame, *, height: int = 360) -> alt.Chart:
+    if matrix.empty:
+        return alt.Chart(pd.DataFrame({"x": [], "y": []})).mark_rect()
+    long = matrix.reset_index().melt(id_vars="index", var_name="right", value_name="correlation")
+    long = long.rename(columns={"index": "left"})
+    base = alt.Chart(long).encode(
+        x=alt.X("right:N", axis=_axis(), sort=list(matrix.columns)),
+        y=alt.Y("left:N", axis=_axis(), sort=list(matrix.index)),
+    )
+    rect = base.mark_rect().encode(
+        color=alt.Color(
+            "correlation:Q",
+            scale=alt.Scale(domain=[-1, 0, 1], range=[NAVY, WHITE, PINK]),
+            legend=alt.Legend(title="r", labelFont=FONT_STACK, titleFont=FONT_STACK),
+        ),
+        tooltip=["left:N", "right:N", alt.Tooltip("correlation:Q", format=".3f")],
+    )
+    text = base.mark_text(font=FONT_STACK, fontSize=11).encode(
+        text=alt.Text("correlation:Q", format=".2f"),
+        color=alt.condition(
+            (alt.datum.correlation > 0.55) | (alt.datum.correlation < -0.55),
+            alt.value(WHITE),
+            alt.value(BLACK),
+        ),
+    )
+    return (rect + text).properties(height=height, width="container", background=WHITE)
+
+
+def correlation_line(frame: pd.DataFrame, *, height: int = 260) -> alt.Chart:
+    if frame.empty:
+        return alt.Chart(pd.DataFrame({"x": [], "y": []})).mark_line()
+    return (
+        alt.Chart(frame)
+        .mark_line(color=NAVY, strokeWidth=2)
+        .encode(
+            x=alt.X("window_start:T", axis=_axis()),
+            y=alt.Y("correlation:Q", axis=_axis("r"), scale=alt.Scale(domain=[-1, 1])),
+        )
+        .properties(height=height, width="container", background=WHITE)
+    )
+
+
+def lead_lag_bars(frame: pd.DataFrame, *, height: int = 240) -> alt.Chart:
+    if frame.empty:
+        return alt.Chart(pd.DataFrame({"x": [], "y": []})).mark_bar()
+    return (
+        alt.Chart(frame)
+        .mark_bar()
+        .encode(
+            x=alt.X("lag:O", axis=_axis("lag (jam)")),
+            y=alt.Y("correlation:Q", axis=_axis("r"), scale=alt.Scale(domain=[-1, 1])),
+            color=alt.condition(
+                alt.datum.correlation >= 0,
+                alt.value(PINK),
+                alt.value(NAVY),
+            ),
+            tooltip=["lag:O", alt.Tooltip("correlation:Q", format=".3f")],
+        )
+        .properties(height=height, width="container", background=WHITE)
+    )
+
+
+def scatter(
+    frame: pd.DataFrame,
+    x: str,
+    y: str,
+    *,
+    height: int = 280,
+) -> alt.Chart:
+    if frame.empty:
+        return alt.Chart(pd.DataFrame({"x": [], "y": []})).mark_circle()
+    return (
+        alt.Chart(frame)
+        .mark_circle(size=45, color=PINK, opacity=0.7)
+        .encode(
+            x=alt.X(f"{x}:Q", axis=_axis(x)),
+            y=alt.Y(f"{y}:Q", axis=_axis(y)),
+            tooltip=[alt.Tooltip(x, format=".4f"), alt.Tooltip(y, format=".4f")],
+        )
+        .properties(height=height, width="container", background=WHITE)
     )

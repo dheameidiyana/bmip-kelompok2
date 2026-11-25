@@ -35,6 +35,7 @@ EXPECTED_SERVICES = [
     "minio",
     "lakekeeper",
     "api",
+    "api-2",
 ]
 EXPECTED_BUCKETS = {"lakehouse", "artifacts", "backups", "docs", "quarantine"}
 EXPECTED_NAMESPACES = {"bronze", "silver", "gold"}

@@ -1,9 +1,3 @@
-services:
-  api-2:
-    image: bmip/api:dev
-    profiles: ["two-node"]
-    restart: unless-stopped
-    user: "10001:10001"
-    networks:
-      - edge
-      - data
+# C3-A keeps the API replicas in compose.base.yml so the dev and two-node
+# overlays share one definition. Node-specific overrides belong here later.
+services: {}

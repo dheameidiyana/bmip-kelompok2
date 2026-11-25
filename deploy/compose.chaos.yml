@@ -1,0 +1,12 @@
+services:
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:2.12.0
+    profiles: ["chaos"]
+    restart: unless-stopped
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8474:8474"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8666:8666"
+    networks:
+      - edge
+    mem_limit: 128m
+    cpus: 0.25

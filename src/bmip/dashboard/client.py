@@ -19,10 +19,7 @@ class ApiError(RuntimeError):
         self.status = status
         self.problem = problem or {}
         message = (
-            self.problem.get("detail")
-            or self.problem.get("title")
-            or detail
-            or f"HTTP {status}"
+            self.problem.get("detail") or self.problem.get("title") or detail or f"HTTP {status}"
         )
         super().__init__(message)
 
@@ -34,9 +31,7 @@ class ApiClient:
         api_key: str | None = None,
         timeout: float = 5.0,
     ) -> None:
-        self.base_url = (base_url or os.getenv("BMIP_API_BASE_URL") or DEFAULT_BASE_URL).rstrip(
-            "/"
-        )
+        self.base_url = (base_url or os.getenv("BMIP_API_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
         self.api_key = api_key if api_key is not None else os.getenv("BMIP_API_KEY", "")
         self.timeout = timeout
 
@@ -54,9 +49,7 @@ class ApiClient:
             raise ApiError(0, None, f"Cannot reach the API at {self.base_url}: {exc}") from exc
         if response.status_code >= 400:
             problem = None
-            if response.headers.get("content-type", "").startswith(
-                "application/problem+json"
-            ):
+            if response.headers.get("content-type", "").startswith("application/problem+json"):
                 try:
                     problem = response.json()
                 except ValueError:
@@ -122,3 +115,12 @@ class ApiClient:
 
     def datasets(self, query: str | None = None, limit: int = 20) -> dict[str, Any]:
         return self.get("/v1/dataset", {"q": query, "limit": limit})
+
+    def dataset_detail(self, dataset_id: str) -> dict[str, Any]:
+        return self.get(f"/v1/dataset/{dataset_id}")
+
+    def dataset_schema(self, dataset_id: str) -> dict[str, Any]:
+        return self.get(f"/v1/dataset/{dataset_id}/schema")
+
+    def lineage(self, dataset_id: str) -> dict[str, Any]:
+        return self.get(f"/v1/lineage/{dataset_id}")
