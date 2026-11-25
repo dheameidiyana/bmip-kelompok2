@@ -66,9 +66,9 @@ audit log; serta scan gitleaks, PII, port, dan TLS. Detail ada di
 
 W2-D selesai di branch `slot/w2-d-lois` (base `w2-c-ok`): backup/restore T-19,
 restart persistence T-40, fault injection stream dan MinIO, benchmark T-42,
-coverage gate T-41 51,35%, evidence checker, `docs/install.md`, dan
-`docs/spec-mapping.md`. T-25 clean clone dan T-42 penuh tetap dicatat sebagai
-PARTIAL sampai ditutup di C3-D. Detail ada di
+coverage gate T-41 51,36%, evidence checker, `docs/install.md`, dan
+`docs/spec-mapping.md`. T-25 clean clone sudah PASS dengan dua deviasi tercatat;
+T-42 penuh tetap PARTIAL sampai C3-D. Detail ada di
 [docs/w2-d-recap.md](docs/w2-d-recap.md) dan
 [docs/handoff/w2-d.md](docs/handoff/w2-d.md).
 

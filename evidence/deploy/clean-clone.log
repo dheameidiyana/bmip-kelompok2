@@ -1,0 +1,87 @@
+﻿id        : T-25
+timestamp : 2026-11-25T03:45:00Z
+commit    : b2eceb1
+command   : git clone --branch fix/w2-closeout; py -3.11 -m venv; pip install -e ".[dev,ml,dashboard]"; make secrets certs users dev-up governance-up governance; make e2e-smoke stream-once gold serving
+result    : PASS (with documented deviations)
+owner     : anin
+
+Environment
+- Clean clone: C:\Users\LENOVO\AppData\Local\Temp\opencode\bmip-t25
+- Source: local repository E:\5 DABD\project\bmip-kelompok2, branch fix/w2-closeout
+- Python 3.11.9, Windows 11, Docker Desktop 29.2.1, Compose v5.0.2
+- Isolated compose project: COMPOSE_PROJECT_NAME=bmip-t25 (fresh volumes)
+- Clone initially checked out f4d7e9f; fast-forwarded to b2eceb1 before the runtime
+  steps to include the PostgreSQL connect-timeout and DLQ IPv4 fixes. No manual
+  source edits were made in the clone.
+
+Deviations
+1. Plain `make dev-up` with the compose top-level name `bmip` reused the existing
+   `bmip_*` volumes and failed at lakekeeper-migrate with
+   `password authentication failed for user "lakekeeper"`. A second run with
+   `COMPOSE_PROJECT_NAME=bmip-t25` created isolated volumes and succeeded.
+   This is now documented in docs/install.md troubleshooting.
+2. The first replay used the 3-trade fixture; gold DQ failed on
+   `gold-market-hourly-gap` because a single hour cannot satisfy the 24-hour
+   lookback. A 2-hour Binance Vision replay window (2026-11-10 13:00-15:00 UTC,
+   168,153 trades) was generated with `scripts/make_replay_window.py` and used
+   for the dashboard proof. The replay file is gitignored runtime data; the
+   generation command is documented in docs/install.md.
+
+Runtime evidence
+- `make dev-up` (isolated project):
+  - traefik, redpanda, postgres-core, minio, lakekeeper, api: PASS
+  - compose/ps, traefik ping/API, minio live, lakekeeper, API ready: PASS
+  - s3 buckets: artifacts, backups, docs, lakehouse, quarantine
+  - Lakekeeper namespaces: bronze, gold, quarantine, silver
+  - evidence: evidence/deploy/health_20261125T0259_f4d7e9f.md
+
+- `make governance-up`: postgres-gov, marquez, marquez-web healthy.
+- `make governance`: applied 02_w2c.sql; seeded 11 datasets and 3 API keys
+  (viewer, operator, admin; key values intentionally redacted from this log).
+
+- `make e2e-smoke` (after connect-timeout fix):
+  - result: PASS
+  - ingest market and social: exit 0
+  - idempotent second replay: PASS
+  - bronze counts stable: market_trade_raw=3, social_post_raw=2
+  - ledger rows present and checksums stable
+
+- 2-hour replay:
+  - rows ingested: 168,153
+  - batch status: succeeded
+  - `make stream-once`: PASS, 128,158 events processed, 297 OHLCV rows,
+    duplicate=3, quarantine=1, consumer lag=0
+
+- `make gold`:
+  - silver quality: pass
+  - gold quality: pass
+  - published gold.mart_market rows=2 partitions=1
+  - published gold.mart_sentiment rows=1 partitions=1
+  - published gold.mart_ml rows=2 partitions=1
+  - serving: market=2 sentiment=1 registry=11
+
+- API and UI:
+  - GET /health/ready -> 200
+    {"status":"ready","checks":{"lake":true,"serving":true}}
+  - GET /v1/market/latest -> 200, BTCUSDT data at 2026-11-10T14:00:00Z
+  - dashboard http://localhost:8501/_stcore/health -> 200; dashboard shows
+    last price 74,399.99 and volatility 0.001005 (not empty)
+  - catalog http://localhost:8502/_stcore/health -> 200; catalog shows
+    "Dataset (11)"
+  - Marquez http://localhost:3002 -> 200; Marquez API namespaces -> 200
+
+Screenshots
+- evidence/deploy/clean-clone-dashboard.png
+- evidence/deploy/clean-clone-catalog.png
+
+Known limits
+- Only BTCUSDT has market data in this clean replay window; ETH/BNB/SOL/XRP
+  return 200 with `data=null`. The API allowlist still accepts all five symbols.
+- ML registry/champion remains empty, so the dashboard prediction panel says
+  "belum ada model". This is the documented W2-A/C3-B gap.
+- Data timestamp is historical, so the API freshness status is `stale`; this is
+  expected in replay mode and is not a health failure.
+
+Result
+T-25 PASS for clean-clone install, stack health, governance, catalog, dashboard
+non-empty, and API. The two deviations above are documented and reproducible.

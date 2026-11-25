@@ -1,18 +1,15 @@
 id        : SECRETS
-timestamp : 2026-11-21T10:07:38.406497+00:00
-commit    : e7823c5
-command   : gitleaks detect --source .
+timestamp : 2026-11-25T04:06:15.036001+00:00
+commit    : b2eceb1
+command   : gitleaks git + gitleaks dir
 result    : PASS
 owner     : anin
 
-gitleaks exit code: 0
+11:06AM INF 70 commits scanned.
+11:06AM INF scanned ~3038588 bytes (3.04 MB) in 570ms
+11:06AM INF no leaks found
+11:06AM INF scanned ~3183473 bytes (3.18 MB) in 604ms
+11:06AM INF no leaks found
+git exit=0
+dir exit=0
 findings: 0
-â—‹
-    â”‚â•²
-    â”‚ â—‹
-    â—‹ â–‘
-    â–‘    gitleaks
-
-[90m5:07PM[0m [32mINF[0m [1m62 commits scanned.[0m
-[90m5:07PM[0m [32mINF[0m [1mscanned ~2182750 bytes (2.18 MB) in 429ms[0m
-[90m5:07PM[0m [32mINF[0m [1mno leaks found[0m

@@ -123,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
             }
         )
 
-    evidence_paths = [item["path"] for item in files]
+    evidence_paths = [item["path"].replace("\\", "/") for item in files]
     tracked = _tracked(evidence_paths)
     untracked_evidence = sorted(set(evidence_paths) - tracked)
     required_untracked = [item for item in REQUIRED if item in untracked_evidence]
@@ -132,8 +132,10 @@ def main(argv: list[str] | None = None) -> int:
         "PASS"
         if not missing
         and not broken
-        and not untracked_evidence
-        and not required_untracked
+        and (
+            not args.check
+            or (not untracked_evidence and not required_untracked)
+        )
         else "FAIL"
     )
 

@@ -2,10 +2,10 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft W2-D (T-25 versi awal) |
+| Status | W2-D close-out; T-25 PASS dengan deviasi yang tercatat di `evidence/deploy/clean-clone.log` |
 | Target | Windows 11 + Docker Desktop/WSL2, Python 3.11 |
-| Terakhir diuji | 2026-11-24 pada laptop pengembang |
-| Catatan | Clean clone final tetap dijadwalkan di C3-D |
+| Terakhir diuji | 2026-11-25 pada laptop pengembang |
+| Catatan | Clean clone final tetap diulang di C3-D setelah semua perubahan C3 |
 
 Dokumen ini adalah jalur instalasi minimum dari repository kosong sampai stack
 dev sehat. Perintah PowerShell memakai `.\scripts\make.ps1`; di Linux/macOS
@@ -14,7 +14,8 @@ ganti dengan `make`.
 ## 1. Prasyarat
 
 - Windows 11 dengan WSL2 aktif dan Docker Desktop berjalan.
-- Python 3.11 tersedia sebagai `python`.
+- Python 3.11 tersedia sebagai `py -3.11` (di mesin ini `python` menunjuk 3.14;
+  venv proyek harus dibuat dengan 3.11).
 - Git for Windows (menyediakan `sh.exe` untuk `scripts/make.ps1`).
 - GNU Make: `winget install ezwinports.make`.
 - RAM minimal 16 GB; 32 GB disarankan untuk menjalankan seluruh profil.
@@ -26,15 +27,16 @@ ganti dengan `make`.
 ```powershell
 git clone <repository-url> bmip
 Set-Location bmip
-.\scripts\make.ps1 setup
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev,ml,dashboard]" --index-url https://pypi.org/simple
 .\scripts\make.ps1 secrets
 .\scripts\make.ps1 certs
 .\scripts\make.ps1 users
 ```
 
-`setup` membuat `.venv` dan menginstal paket editable
-`.[dev,ml,dashboard]`. `secrets` membuat `.env` dari `.env.example` dengan
-secret acak; perintah ini tidak merotasi `.env` yang sudah ada.
+Jika `python` di mesin sudah 3.11, `.\scripts\make.ps1 setup` boleh dipakai.
+`secrets` membuat `.env` dari `.env.example` dengan secret acak; perintah ini
+tidak merotasi `.env` yang sudah ada.
 
 ## 3. Nyalakan stack dev
 
@@ -97,6 +99,30 @@ Hasil yang diharapkan:
 - API menerima kelima symbol default (`BTCUSDT`, `ETHUSDT`, `BNBUSDT`,
   `SOLUSDT`, `XRPUSDT`); symbol di luar allowlist mengembalikan `400`.
 
+### 5.1 Seed data demo (agar dashboard tidak kosong)
+
+Dashboard membaca `serving.*`, jadi data harus melewati bronze -> silver ->
+gold. Untuk demo, gunakan window replay dua jam (window satu jam tidak lolos
+aturan `gold-market-hourly-gap`):
+
+```powershell
+.\scripts\make.ps1 ingest-once
+.\.venv\Scripts\python.exe scripts\make_replay_window.py `
+  --day 2026-11-10 `
+  --start 2026-11-10T13:00:00Z `
+  --end 2026-11-10T15:00:00Z `
+  --output data/replay/market_20261110T13-15.jsonl
+.\.venv\Scripts\python.exe -m bmip.ingestion.cli market `
+  --replay data/replay/market_20261110T13-15.jsonl --max-records 200000
+.\scripts\make.ps1 stream-once
+.\scripts\make.ps1 gold
+.\scripts\make.ps1 serving
+```
+
+`make_replay_window.py` mengunduh hari Binance Vision dan memotong window;
+file replay tetap gitignored. Tanpa langkah ini, stack sehat tetapi dashboard
+akan kosong karena `serving.*` belum terisi.
+
 ## 6. Dashboard, catalog, dan observability
 
 ```powershell
@@ -133,8 +159,11 @@ terbatas, gunakan `--smoke`; jangan mencampur hasil smoke dengan matriks final.
 | `host.docker.internal:5000` connection refused | MLflow host mati | Jalankan ulang MLflow host; cek `/health`; recreate API dengan override host-ml |
 | API `/health/ready` 503 | Lake atau MLflow tidak siap | Cek `docker ps`, `curl http://127.0.0.1:5000/health`, lalu `doctor` |
 | `Connect to ipv6#[::1]:19092 failed` | Redpanda advertise `localhost`, Windows resolve ke `::1` | Pastikan `broker.address.family=v4` pada producer/consumer; set `REDPANDA_BROKERS=127.0.0.1:19092` |
+| `lakekeeper-migrate` gagal `password authentication failed` | Compose top-level `name: bmip` memakai volume lama dengan secret baru | Untuk clean clone di mesin yang sudah punya stack, set `COMPOSE_PROJECT_NAME=bmip-clean` (volume terpisah) atau hentikan stack lama; jangan pakai volume lama dengan `.env` baru |
+| `psycopg` menggantung di `localhost` | resolve IPv6/Windows; connect tanpa timeout | Kode sekarang menambahkan `connect_timeout=5` ke `POSTGRES_CORE_DSN`; jika memanggil psycopg manual, tambahkan parameter yang sama |
 | DQ `missing-dataset` | Stack/lake belum hidup saat checkpoint | Nyalakan stack, tunggu health, ulangi `quality` |
 | DQ `gold-market-lag` critical | Data historis sparse; event terakhir jauh dari sekarang | Bukan bug ACL; muat window baru atau tandai partial dengan alasan |
+| DQ `gold-market-hourly-gap` critical | Window replay kurang dari dua jam | Pakai window minimal dua jam seperti §5.1 |
 | Training `needs at least three event dates` | `gold.mart_ml` hanya punya dua tanggal berlabel | Tambah window gold berlabel; jangan sintesis data |
 | `PermissionError Forbidden` dari service `process` | ACL Lakekeeper untuk service tersebut belum membaca dataset | Pakai service `ml` untuk DQ read-only atau perbaiki ACL Lakekeeper |
 | Dashboard kosong | Registry kosong / prediction `not_available` / API key salah | Cek `/v1/predict`, registry MLflow, dan header `X-API-Key` |
@@ -143,8 +172,17 @@ terbatas, gunakan `--smoke`; jangan mencampur hasil smoke dengan matriks final.
 | Container exit 137 | Docker Desktop kehabisan memori atau mati | Tutup workload lain, restart Docker Desktop, jalankan `doctor` |
 | `docker compose up` menghapus health API | Override host-ml tidak disertakan | Selalu tambahkan `-f deploy/compose.host-ml.yml` saat menyentuh API |
 
-## 9. Batas versi awal
+## 9. Status T-25
 
-Dokumen ini belum menggantikan clean clone final. Bukti T-25 final harus
-menyertakan log clone baru, instalasi, `doctor`, dashboard tidak kosong, dan
-tidak ada langkah manual yang tidak tercatat di sini.
+T-25 close-out W2 dijalankan pada 2026-11-25 dari commit `b2eceb1`
+(`evidence/deploy/clean-clone.log`). Hasil: PASS dengan dua deviasi yang
+tercatat — isolasi `COMPOSE_PROJECT_NAME` dan seed window replay dua jam untuk
+dashboard. C3-D tetap mengulang clean clone final setelah semua perubahan C3.
+
+Batas yang masih berlaku:
+
+- Registry/champion ML kosong sampai C3-B; panel prediksi menampilkan
+  "belum ada model".
+- Replay historis membuat status freshness `stale`; ini bukan kegagalan health.
+- Hanya pair yang ada di window replay yang memiliki bar; API tetap menerima
+  kelima symbol allowlist.

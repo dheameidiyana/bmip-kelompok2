@@ -67,5 +67,5 @@
 | Registry ML kosong dan data berlabel hanya dua event date | Inference mengembalikan `not_available`; training gagal | partial | C3-B / Dhea memperluas snapshot atau memilih model market-only |
 | DQ `gold-market-lag` critical | Gate gold penuh tidak hijau pada snapshot sekarang | partial | C3-D menjalankan DQ-01..DQ-08 dengan data yang lebih baru |
 | Clean clone T-25 | Instalasi, lint, dan compose config lulus; stack/dashboard belum | partial | C3-D menyelesaikan clone bersih dengan Docker stabil dan dashboard berisi |
-| Coverage T-41 | Gate 40% lulus | pass | 51.30%, 186 test, `evidence/tests/coverage.json` |
+| Coverage T-41 | Gate 40% lulus | pass | 51.36%, 188 test, `evidence/tests/coverage.json` |
 | Benchmark throughput hanya satu laptop | Angka tidak mewakili profil empat node | partial | C3-D menjalankan B1-B4 dan mencatat variance |

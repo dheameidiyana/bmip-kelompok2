@@ -74,13 +74,13 @@
 | T-38 | [`../security/rbac-matrix.md`](../security/rbac-matrix.md) | PASS |
 | T-39 | [`../alerts/T39_20261120T0304_e5369f6.md`](../alerts/T39_20261120T0304_e5369f6.md) | PASS |
 | T-40 | [`../recovery/T40.json`](../recovery/T40.json) | PASS |
-| T-41 | [`../tests/coverage.json`](../tests/coverage.json), [`../tests/T41_20261124T050900Z.txt`](../tests/T41_20261124T050900Z.txt) | PASS (51.30%, 186 tests) |
+| T-41 | [`../tests/coverage.json`](../tests/coverage.json), [`../tests/T41_20261125T040800Z.txt`](../tests/T41_20261125T040800Z.txt) | PASS (51.36%, 188 tests) |
 | T-42 | [`../benchmark/matrix.csv`](../benchmark/matrix.csv) | PARTIAL until full sweep C3-D |
-| T-25 | [`../deploy/clean-clone.log`](../deploy/clean-clone.log) | PARTIAL (clone install/lint/config pass; stack not started) |
+| T-25 | [`../deploy/clean-clone.log`](../deploy/clean-clone.log) | PASS with documented deviations (stack, catalog, dashboard, API) |
 
 ## 3. Known dead-link policy
 
-`make evidence` should fail when a linked file is missing. Until the W2-D
-evidence checker is added, this index is maintained manually and every link was
-verified on 2026-11-24. Rows marked `pending` intentionally point to files that
-do not exist yet and must be updated before the final C3-D freeze.
+`make evidence-check` and CI now fail when a linked file is missing or when an
+evidence file is untracked. This index was last verified on 2026-11-25. Rows
+marked `pending` intentionally point to files that do not exist yet and must be
+updated before the final C3-D freeze.

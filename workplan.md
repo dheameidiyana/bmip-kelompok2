@@ -661,6 +661,14 @@ Dibuat oleh W1-A, dipakai oleh semua slot setelahnya:
 8. Evidence freeze: `evidence/README.md` dengan commit SHA \+ tabel environment; `evidence/compliance/index.md` memetakan F-01…F-20 → file; `docs/spec-mapping.md` versi draft lengkap; tidak ada link mati.  
 9. Tag `w2-d-ok` pada commit yang sama dengan isi evidence. Rehearsal demo dan tag final `v1.0-demo` dilakukan di C3-D, bukan di sini.
 
+**Status close-out (2026-11-25)**
+
+- Kode dan dokumentasi W2-D merge ke `dev` lewat PR #4 (`6a33e33`).
+- Close-out `fix/w2-closeout`: evidence tracked, gitleaks bersih, T-25 PASS
+  dengan dua deviasi tercatat, handoff W2-D dibuat, dan tag `w2-d-ok` dibuat.
+- Gap yang tersisa untuk C3: T-42 penuh, registry ML, clean clone final, dan
+  retensi spool lineage.
+
 **Should**
 
 - Benchmark versi awal: throughput, API latest/range, DQ runtime, training, inference, `resources.csv`.  

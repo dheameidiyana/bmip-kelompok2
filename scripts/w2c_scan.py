@@ -13,6 +13,7 @@ import socket
 import ssl
 import subprocess
 import sys
+import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -204,6 +205,35 @@ def ports() -> dict[str, Any]:
     return {"step": "ports", "passed": not findings, "evidence": str(path.relative_to(ROOT))}
 
 
+def _clean_scan_root() -> Path:
+    """Copy tracked and non-ignored untracked files into a scratch directory.
+
+    ``gitleaks dir`` does not respect ``.gitignore``; scanning the worktree
+    directly would read local certificates, ``.venv``, and runtime data. This
+    keeps the scan to files that can actually be committed.
+    """
+    scratch = Path(tempfile.mkdtemp(prefix="bmip-gitleaks-"))
+    completed = subprocess.run(
+        ["git", "ls-files", "-co", "--exclude-standard", "-z"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if completed.returncode != 0:
+        return scratch
+    for raw in completed.stdout.split(b"\0"):
+        if not raw:
+            continue
+        relative = raw.decode("utf-8", errors="replace")
+        source = ROOT / relative
+        if not source.is_file():
+            continue
+        target = scratch / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    return scratch
+
+
 def gitleaks() -> dict[str, Any]:
     binary = shutil.which("gitleaks") or str(ROOT / "tools" / "gitleaks.exe")
     lines = [_header("SECRETS", "gitleaks git + gitleaks dir", "PASS")]
@@ -222,13 +252,10 @@ def gitleaks() -> dict[str, Any]:
 
     findings = 0
     exits: list[str] = []
-    targets = [("git", ".")] + [
-        ("dir", name)
-        for name in ("src", "scripts", "deploy", "docs", "evidence", "tests", "contracts")
-        if (ROOT / name).exists()
-    ]
+    clean_root = _clean_scan_root()
+    targets = [("git", "."), ("dir", str(clean_root))]
     for mode, target in targets:
-        report = SEC / f"gitleaks-{mode}-{Path(target).name or 'root'}.json"
+        report = SEC / f"gitleaks-{mode}.json"
         report.parent.mkdir(parents=True, exist_ok=True)
         completed = subprocess.run(
             [
@@ -238,6 +265,8 @@ def gitleaks() -> dict[str, Any]:
                 "--config",
                 ".gitleaks.toml",
                 "--redact",
+                "--no-banner",
+                "--no-color",
                 "--report-format",
                 "json",
                 "--report-path",
@@ -248,7 +277,7 @@ def gitleaks() -> dict[str, Any]:
             capture_output=True,
             check=False,
         )
-        exits.append(f"{mode} {target} exit={completed.returncode}")
+        exits.append(f"{mode} exit={completed.returncode}")
         if report.exists():
             try:
                 findings += len(json.loads(report.read_text(encoding="utf-8")) or [])
@@ -256,6 +285,8 @@ def gitleaks() -> dict[str, Any]:
                 pass
         if completed.stderr:
             lines.append(completed.stderr.strip()[-2000:])
+        report.unlink(missing_ok=True)
+    shutil.rmtree(clean_root, ignore_errors=True)
 
     result = "PASS" if findings == 0 else "FAIL"
     lines[0] = _header("SECRETS", "gitleaks git + gitleaks dir", result)

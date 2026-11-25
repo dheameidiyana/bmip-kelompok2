@@ -188,11 +188,12 @@ Traefik v3.7.18. Evidence 2026-11-21; kode fitur W2-C: `85549b1`.
 
 ### W2-D
 
-Environment: branch `slot/w2-d-lois`, base tag `w2-c-ok` (`b3ffb46`), commit
-`6187d41`. Windows 11 / Docker Desktop 29.2.1, Python 3.11.9, MLflow 3.18.0 on
-the host. Dataset snapshot is sparse: `gold.mart_ml` has 42 rows / 16 dates but
-only 9 rows / 2 valid event dates after filtering; sentiment covers four dates.
-Tag `w2-d-ok` is not created yet; it must point to the final evidence commit.
+Environment: branch `slot/w2-d-lois` (base tag `w2-c-ok`, `b3ffb46`), commit
+`6187d41`; close-out branch `fix/w2-closeout`, commit `b2eceb1`. Windows 11 /
+Docker Desktop 29.2.1, Python 3.11.9, MLflow 3.18.0 on the host. Dataset snapshot
+is sparse: `gold.mart_ml` has 42 rows / 16 dates but only 9 rows / 2 valid event
+dates after filtering; sentiment covers four dates. Tag `w2-d-ok` points to the
+final evidence commit.
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |
@@ -202,12 +203,19 @@ Tag `w2-d-ok` is not created yet; it must point to the final evidence commit.
 | T-40 | recovery | `recovery/T40.json` | PASS | 19 services restarted; business tables identical; offsets identical |
 | FAULT | faults | `faults/stream-kill_20261123T182353.json` | PASS | kill stream, 0 duplicates, RTO 88.52 s |
 | FAULT | faults | `faults/minio-kill_20261123T182601.json` | PASS | API `X-Data-Stale`, RTO 42.0 s |
-| T-41 | tests | `tests/coverage.json` | PASS | 51.30% coverage, 186 tests, gate 40% |
-| T-41 | tests | `tests/T41_20261124T050900Z.txt` | PASS | command + totals for the coverage gate |
+| T-41 | tests | `tests/coverage.json` | PASS | 51.36% coverage, 188 tests, gate 40% |
+| T-41 | tests | `tests/T41_20261125T040800Z.txt` | PASS | close-out rerun: 188 tests, 51.36% |
+| T-41 | tests | `tests/T41_20261124T050900Z.txt` | PASS | W2-D original run: 186 tests, 51.30% |
 | T-42 | benchmark | `benchmark/matrix.csv` | PARTIAL | 16 rows: 13 core + 3 throughput; API and throughput pass, ML/DQ partial |
 | T-42 | benchmark | `benchmark/summary.md` | PARTIAL | bottleneck conclusion + partial blockers |
 | T-42 | benchmark | `benchmark/resources.csv` | PASS | 20 container samples from cAdvisor/docker stats |
-| T-25 | deploy | `deploy/clean-clone.log` | PARTIAL | clean clone install/lint/compose pass; stack + dashboard not demonstrated |
+| T-25 | deploy | `deploy/clean-clone.log` | PASS (deviasi) | install, stack, governance, catalog, dashboard, API; dua deviasi tercatat |
+| T-25 | deploy | `deploy/clean-clone-dashboard.png` | PASS | dashboard menampilkan harga dan volatilitas, bukan kosong |
+| T-25 | deploy | `deploy/clean-clone-catalog.png` | PASS | katalog menampilkan 11 dataset |
+| T-25 | deploy | `deploy/health_20261125T0259_f4d7e9f.md` | PASS | clean-clone doctor health |
+| T-25 | e2e | `e2e/SMOKE-W1A_20261125T0323_ab6010e.txt` | PASS | W1-A gate rerun di clean clone |
+| SEC | security | `security/gitleaks.txt` | PASS | git + dir, 0 findings setelah sanitasi |
+| SEC | security | `security/tailscale-acl.json` | PASS | ACL hash + status ringkas; identitas peer diredaksi |
 
 Benchmark highlights:
 

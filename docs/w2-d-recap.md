@@ -6,17 +6,30 @@
 | Branch | `slot/w2-d-lois` |
 | Commit dasar | `6187d41` |
 | Base tag | `w2-c-ok` (`b3ffb46`) |
-| Status keseluruhan | Sebagian besar selesai; T-25 masih PARTIAL dan tag belum dibuat |
-| Tanggal rekap | 2026-11-24 |
+| Status keseluruhan | Selesai dengan partial yang dicatat; close-out 2026-11-25 menutup T-25 dan tag `w2-d-ok` |
+| Tanggal rekap | 2026-11-24 (addendum close-out 2026-11-25) |
+
+## Addendum close-out 2026-11-25
+
+Close-out dikerjakan di branch `fix/w2-closeout`:
+
+- Evidence yang sebelumnya tidak masuk git (`coverage.json`, `clean-clone.log`,
+  19 log verifikasi) diperbaiki lewat `.gitignore` dan checker `--check`.
+- `evidence/security/tailscale-acl.json` disanitasi; gitleaks kini 0 finding
+  pada history dan working tree (allowlist sempit untuk commit lama).
+- T-25 PASS dengan deviasi yang tercatat di `evidence/deploy/clean-clone.log`.
+- `docs/handoff/w2-d.md` dan tag `w2-d-ok` dibuat setelah evidence final.
+- Dokumentasi diselaraskan dengan lima symbol Binance.
+- T-42 penuh dan registry ML tetap menjadi gap C3-D/C3-B.
 
 ## 1. Ringkasan
 
 W2-D menyelesaikan backup/restore, restart persistence, dua fault injection,
 benchmark matrix, coverage gate, evidence checker, serta draft dokumentasi
 instalasi dan spec mapping. Hasil benchmark menunjukkan API dan throughput
-memenuhi target. Blocker utama ada pada data ML yang terlalu sedikit, DQ
-freshness yang memang tertinggal, dan clean clone yang belum diuji sampai
-stack + dashboard hidup.
+memenuhi target. Blocker utama ada pada data ML yang terlalu sedikit dan DQ
+freshness pada window historis; clean clone sudah diuji sampai stack, katalog,
+dashboard, dan API hidup pada close-out 2026-11-25.
 
 ## 2. Hasil per deliverable
 
@@ -28,10 +41,10 @@ stack + dashboard hidup.
 | Fault stream kill | PASS | 0 duplikat setelah restart; RTO 88,52 detik |
 | Fault MinIO stop | PASS | API fallback `X-Data-Stale`; RTO 42,0 detik |
 | T-42 benchmark matrix | PARTIAL | 16 baris; API dan throughput pass; DQ/training/inference/B2 partial |
-| T-41 coverage gate | PASS | 51,30% coverage; 186 test lulus |
-| T-25 clean clone | PARTIAL | Install, lint, dan compose config lulus; stack + dashboard belum |
-| Evidence index | PASS | 170 file, 0 required missing, 0 broken link |
-| Commit/tag | BELUM | Menunggu approval diff final; `w2-d-ok` belum dibuat |
+| T-41 coverage gate | PASS | 51,36% coverage; 188 test lulus |
+| T-25 clean clone | PASS (deviasi) | Install, lint, compose config, stack, governance, katalog, dashboard, API; deviasi di `clean-clone.log` |
+| Evidence index | PASS | File evidence tracked; manifest baru; 0 link mati |
+| Commit/tag | PASS | Close-out `fix/w2-closeout`; tag `w2-d-ok` pada commit evidence |
 
 ## 3. Recovery dan fault injection
 
@@ -122,8 +135,8 @@ python -m pytest --cov=bmip --cov-report=term \
 
 Hasil:
 
-- **186 passed**, 1 warning
-- Coverage: **51,30%**
+- **188 passed**, 1 warning
+- Coverage: **51,36%**
 - Statements: **5.983**
 - Missed: **2.914**
 - Gate 40%: **PASS**
@@ -134,28 +147,28 @@ terpasang di host ini sehingga command dijalankan langsung.
 ## 6. Clean clone T-25
 
 - Evidence: `evidence/deploy/clean-clone.log`
-- Commit clone: `6187d4141d0b43c235656fb47d21dacfa6c7a902`
-- Hasil: **PARTIAL**
+- Commit runtime: `b2eceb1` (clone awal `f4d7e9f`, fast-forward sebelum runtime)
+- Hasil: **PASS dengan dua deviasi tercatat**
 
 Yang lulus:
 
-- `git clone`
-- `python -m venv`
-- Install `.[dev,ml,dashboard]` dengan `--index-url https://pypi.org/simple`
-- `ruff check src scripts tests deploy`
-- `docker compose ... config --quiet`
-- `gen_env.py --merge`
+- `git clone`, venv Python 3.11, install `.[dev,ml,dashboard]`
+- `make secrets certs users`
+- `make dev-up` dengan `COMPOSE_PROJECT_NAME=bmip-t25` (volume terpisah)
+- `make governance-up` + `make governance` (11 dataset, 3 key RBAC)
+- `make e2e-smoke` PASS (market/social, bronze, ledger, idempotensi)
+- `make stream-once` + `make gold` + `make serving`
+- Dashboard tidak kosong, katalog 11 dataset, Marquez dan API hidup
 
-Yang belum lulus:
+Deviasi:
 
-- Full pytest dari clone terhenti karena memori host rendah/akses Windows.
-- Stack clean clone tidak dijalankan karena Docker engine sempat HTTP 500 dan
-  port/volume akan bertabrakan dengan stack utama.
-- Dashboard clean clone belum dibuktikan tidak kosong.
+- `make dev-up` pertama memakai volume `bmip_*` lama dan gagal pada
+  `lakekeeper-migrate`; solusi `COMPOSE_PROJECT_NAME` didokumentasikan.
+- Seed data memakai window replay dua jam; window satu jam gagal
+  `gold-market-hourly-gap`. Perintahnya ada di `docs/install.md` §5.1.
 
 Catatan penting: install awal gagal karena mirror pip lokal tidak menyediakan
-`botocore==1.43.117`; install ulang dengan PyPI eksplisit berhasil. Setup juga
-diubah agar memasang `.[dev,ml,dashboard]`, bukan hanya `.[dev]`.
+`botocore==1.43.117`; install ulang dengan PyPI eksplisit berhasil.
 
 ## 7. Perubahan kode dan konfigurasi
 
@@ -176,6 +189,13 @@ diubah agar memasang `.[dev,ml,dashboard]`, bukan hanya `.[dev]`.
 | `docs/spec-mapping.md` | Rekonstruksi F-01..F-20 + 11 aspek penilaian |
 | `evidence/README.md` | Bagian evidence W2-D |
 | `evidence/compliance/index.md` | Index F-01..F-20 dan test ID |
+| `.gitignore` | Evidence `coverage.json`, `*.log`, dan `logs/` tidak lagi ter-ignore |
+| `scripts/w2d_evidence_check.py` | Mode `--check`, tracked-file check, manifest baru |
+| `src/bmip/common/config.py` | `connect_timeout=5` pada DSN PostgreSQL |
+| `src/bmip/transform/dlq.py` | `broker.address.family=v4` untuk DLQ producer/consumer |
+| `scripts/w2c_scan.py` | Sanitasi Tailscale evidence + gitleaks git/dir |
+| `.gitleaks.toml` | Allowlist sempit untuk histori tailscale yang sudah diredaksi |
+| `ARCHITECTURE.md`, `README.md`, `workplan.md` | Sinkronisasi lima symbol dan status W2 |
 
 ## 8. Evidence final
 
@@ -197,12 +217,13 @@ diubah agar memasang `.[dev,ml,dashboard]`, bukan hanya `.[dev]`.
 
 ## 10. Yang belum selesai
 
-1. Commit kode dan dokumentasi W2-D.
-2. Full T-25 clean clone pada commit tersebut.
-3. Commit evidence T-25.
-4. Tag `w2-d-ok`.
-5. Keputusan akhir apakah `evidence/lineage/spool/events_20261124.jsonl` perlu
-   dipertahankan atau dibersihkan.
+1. T-42 penuh (DQ runtime, training, inference, B2) - C3-D.
+2. Registry/champion ML dan data berlabel - C3-B.
+3. Clean clone final setelah seluruh perubahan C3 - C3-D.
+4. Keputusan retensi `evidence/lineage/spool/events_20261124.jsonl` - C3-D.
+
+Item commit, T-25, evidence T-25, dan tag `w2-d-ok` sudah diselesaikan pada
+close-out 2026-11-25.
 
 ## 11. Rekomendasi urutan close-out
 
@@ -219,7 +240,7 @@ diubah agar memasang `.[dev,ml,dashboard]`, bukan hanya `.[dev]`.
 ## 12. Kesimpulan
 
 W2-D sudah membuktikan recovery, restart persistence, dua fault injection,
-throughput 1.000 trade/s, latency API, coverage 51,30%, dan evidence index yang
-resolvable. Yang belum tertutup adalah clean clone end-to-end dan konsekuensi
-data ML yang terlalu sedikit. Tidak ada klaim PASS untuk T-25 atau T-42 penuh
-sampai kedua hal itu diselesaikan.
+throughput 1.000 trade/s, latency API, coverage 51,36%, evidence index yang
+resolvable, dan clean clone T-25 dengan dua deviasi tercatat. Yang belum
+tertutup adalah T-42 penuh dan konsekuensi data ML yang terlalu sedikit; keduanya
+dijadwalkan di C3-B/C3-D.
