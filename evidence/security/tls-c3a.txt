@@ -1,0 +1,14 @@
+id        : TLS-HSTS
+timestamp : 2026-11-25T05:53:25.669418+00:00
+commit    : b7c5bcd
+command   : python scripts/c3a_scan.py --tls
+result    : PASS
+owner     : anin
+
+subject: ((('commonName', '*.bmip.local'),),)
+issuer: ((('commonName', 'BMIP Local CA'),),)
+notAfter: 2029-02-23T08:52:38
+SAN: (('DNS', 'api.bmip.local'), ('DNS', 'app.bmip.local'), ('DNS', 'catalog.bmip.local'), ('DNS', 'grafana.bmip.local'), ('DNS', 'prometheus.bmip.local'), ('DNS', 'marquez.bmip.local'), ('DNS', 'minio.bmip.local'), ('DNS', 'prefect.bmip.local'), ('DNS', 'mlflow.bmip.local'), ('DNS', 'docs.bmip.local'), ('DNS', 'alertmanager.bmip.local'), ('DNS', 'n1.bmip.local'), ('DNS', 'localhost'), ('IP Address', '127.0.0.1'))
+HTTP -> 301 Location=https://api.bmip.local/
+HTTPS health: 200
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload

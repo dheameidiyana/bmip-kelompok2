@@ -1,0 +1,9 @@
+id        : AUDIT-EXPORT
+timestamp : 2026-11-25T05:53:26.038333+00:00
+commit    : b7c5bcd
+command   : python scripts/c3a_scan.py --audit
+result    : PASS
+owner     : anin
+
+rows: 100
+file: evidence\security\audit.csv

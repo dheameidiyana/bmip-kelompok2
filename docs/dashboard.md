@@ -52,3 +52,14 @@ Backfill menulis silver klines, lalu `make gold` membangun mart dan
   "belum ada model".
 - Data historis membuat status freshness `stale`; ini bukan kegagalan health.
 - Correlation window dibatasi `market_ohlc`/`volatility_range` (limit 500).
+
+## Screenshot
+
+- `evidence/dashboard/w3_overview.png`
+- `evidence/dashboard/w3_market.png`
+- `evidence/dashboard/w3_volatility.png`
+- `evidence/dashboard/w3_correlation.png`
+- `evidence/dashboard/w3_sentiment.png`
+- `evidence/dashboard/w3_quality.png`
+- `evidence/dashboard/w3_catalog.png`
+- `evidence/dashboard/w3_lineage.png`

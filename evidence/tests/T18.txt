@@ -1,0 +1,12 @@
+id        : T-18
+timestamp : 2026-11-25T05:51:22.511471+00:00
+commit    : b7c5bcd
+command   : python scripts/c3a_circuit.py
+result    : PASS
+owner     : anin
+
+toxiproxy up exit=0
+create proxy: 201
+add latency 2000ms: 200
+during latency: {"200": 6, "503": 24}
+after recovery: [503, 503, 503, 503, 200]

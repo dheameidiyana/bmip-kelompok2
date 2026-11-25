@@ -1,0 +1,12 @@
+id        : T-17
+timestamp : 2026-11-25T05:50:53.878694+00:00
+commit    : b7c5bcd
+command   : python scripts/c3a_evidence.py --steps failover
+result    : PASS
+owner     : anin
+
+stop api-2 exit=0
+start api-2 exit=0
+statuses: {"200": 30}
+instances: {"api-1": 30}
+expected: no 5xx while api-2 is down

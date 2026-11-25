@@ -1,0 +1,12 @@
+id        : TRIVY
+timestamp : 2026-11-25T05:53:01.309669+00:00
+commit    : b7c5bcd
+command   : trivy image --severity HIGH,CRITICAL --ignore-unfixed
+result    : PASS
+owner     : anin
+
+--- bmip/api:dev (exit 0) ---
+findings so far: 0
+--- bmip/dashboard:dev (exit 0) ---
+findings so far: 0
+HIGH/CRITICAL findings: 0

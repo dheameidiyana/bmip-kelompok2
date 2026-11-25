@@ -77,6 +77,13 @@
 | T-41 | [`../tests/coverage.json`](../tests/coverage.json), [`../tests/T41_20261125T040800Z.txt`](../tests/T41_20261125T040800Z.txt) | PASS (51.36%, 188 tests) |
 | T-42 | [`../benchmark/matrix.csv`](../benchmark/matrix.csv) | PARTIAL until full sweep C3-D |
 | T-25 | [`../deploy/clean-clone.log`](../deploy/clean-clone.log) | PASS with documented deviations (stack, catalog, dashboard, API) |
+| T-16 | [`../tests/T16.txt`](../tests/T16.txt) | PASS (15 + 15 requests to two replicas) |
+| T-17 | [`../tests/T17.txt`](../tests/T17.txt) | PASS (0 5xx with `api-2` stopped) |
+| T-18 | [`../tests/T18.txt`](../tests/T18.txt) | PASS (latency -> circuit 503 -> recovery) |
+| TRIVY | [`../security/trivy.txt`](../security/trivy.txt) | PASS (0 HIGH/CRITICAL) |
+| RATE | [`../security/rate-limit.txt`](../security/rate-limit.txt) | PASS (200 + 429) |
+| TLS | [`../security/tls-c3a.txt`](../security/tls-c3a.txt) | PASS (TLS + HSTS) |
+| AUDIT | [`../security/audit.csv`](../security/audit.csv) | PASS (100 rows) |
 
 ## 3. Known dead-link policy
 

@@ -1,0 +1,10 @@
+id        : T-16
+timestamp : 2026-11-25T05:50:47.814201+00:00
+commit    : b7c5bcd
+command   : python scripts/c3a_evidence.py --steps lb
+result    : PASS
+owner     : anin
+
+statuses: {"200": 30}
+instances: {"api-1": 15, "api-2": 15}
+distinct replicas: 2

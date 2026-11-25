@@ -231,3 +231,24 @@ Benchmark highlights:
 - Throughput replay: 600.000 messages per run, 0 errors, 0 duplicates,
   999.999 / 999.996 / 999.998 trade/s, p95 3.682 / 3.265 / 4.395 ms.
   Run 3 was rerun clean after the Docker restart; all three runs are consistent.
+
+### C3-A
+
+Environment: branch `slot/c3-a-anin`, base `dev` (`3155aa5`), commit `b7c5bcd`.
+Windows 11 / Docker Desktop 29.2.1, Python 3.11.9, Traefik 3.7.18,
+Toxiproxy 2.12.0, Trivy 0.76.2.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| T-16 | tests | `tests/T16.txt` | PASS | 30 request, 15 ke `api-1`, 15 ke `api-2`; semua 200 |
+| T-17 | tests | `tests/T17.txt` | PASS | `api-2` stop, 30 request ke `api-1`, 0 5xx |
+| T-18 | tests | `tests/T18.txt` | PASS | latency 2s -> 24x503 -> recovery 200 |
+| API2 | deploy | `deploy/api2-health_*.md` | PASS | dua replica healthy |
+| TRIVY | security | `security/trivy.txt` | PASS | 0 HIGH/CRITICAL pada api + dashboard |
+| PORT | security | `security/c3a-port-scan.txt` | PASS | luar loopback hanya 80/443 |
+| RATE | security | `security/rate-limit.txt` | PASS | 296x200 + 304x429 pada router uji |
+| TLS | security | `security/tls-c3a.txt` | PASS | TLS + HSTS `max-age=31536000` |
+| AUDIT | security | `security/audit.csv` | PASS | 100 baris `ops.audit_log` |
+| DASH | dashboard | `dashboard/w3_*.png` | PASS | 8 tab + korelasi 5 symbol |
+| DATA | ml | `ml/backfill_20261125T050308Z.json` | PASS | 108.000 bar, 15 hari, 5 symbol |
+
