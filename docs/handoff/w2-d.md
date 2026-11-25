@@ -44,6 +44,9 @@
 - T-25 memakai fast-forward `f4d7e9f -> b2eceb1` sebelum runtime dan seed replay
   dua jam; bukan clone statis dari commit final. Dampak: C3-D mengulang clean
   clone final setelah semua perubahan C3.
+- 19 log `evidence/verification/**/logs/*` dari manifest lama tidak tersedia di
+  mesin close-out; file itu tidak masuk manifest baru. Dampak: bukti verifikasi
+  W1-B mengandalkan file lain yang sudah tracked; tidak ada klaim pass baru.
 - Hanya BTCUSDT yang punya bar pada window replay T-25; ETH/BNB/SOL/XRP
   mengembalikan 200 `data=null`. API tetap menerima kelima symbol.
 

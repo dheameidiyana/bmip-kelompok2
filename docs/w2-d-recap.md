@@ -13,8 +13,9 @@
 
 Close-out dikerjakan di branch `fix/w2-closeout`:
 
-- Evidence yang sebelumnya tidak masuk git (`coverage.json`, `clean-clone.log`,
-  19 log verifikasi) diperbaiki lewat `.gitignore` dan checker `--check`.
+- `coverage.json` dan `clean-clone.log` dipulihkan/di-generate ulang; 19 log
+  verifikasi W1-B tidak tersedia di mesin ini sehingga dikeluarkan dari manifest
+  baru (bukan klaim pass) dan dicatat di handoff.
 - `evidence/security/tailscale-acl.json` disanitasi; gitleaks kini 0 finding
   pada history dan working tree (allowlist sempit untuk commit lama).
 - T-25 PASS dengan deviasi yang tercatat di `evidence/deploy/clean-clone.log`.
