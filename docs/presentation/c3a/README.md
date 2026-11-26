@@ -3,6 +3,9 @@
 Dua board 1920x1080, gaya sama dengan `docs/presentation/w2c`. Isi hanya bukti;
 teks dibatasi ke label, angka, dan satu baris keterangan.
 
+`c3-a-anin-slides.pptx` berisi dua gambar itu sebagai slide 16:9, siap dibuka
+langsung di PowerPoint.
+
 | File | Isi | Sumber |
 | --- | --- | --- |
 | `01-replika-gateway.png` | Dua replica healthy, LB `wrr` dua server, T-16 bagi rata 15/15, T-17 failover 0 5xx, router baca/tulis + role read-only | `evidence/tests/T16.txt`, `T17.txt`, `deploy/traefik/dynamic/services.yaml`, `scripts/c3a_roles.py` |
