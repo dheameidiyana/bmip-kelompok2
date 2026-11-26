@@ -20,6 +20,9 @@
 - Circuit breaker, retry, rate limit, HSTS, security headers.
 - Toxiproxy profile `chaos`; T-18 PASS.
 - Trivy 0 HIGH/CRITICAL pada `bmip/api:dev` dan `bmip/dashboard:dev`.
+  Scan ulang 2026-11-26 menemukan `libzstd1` HIGH dari base image Debian; runtime
+  stage sekarang menjalankan `apt-get install libzstd1` sebelum pip install, lalu
+  image di-rebuild dan scan kembali 0.
 - Port scan luar loopback hanya 80/443; 429 terbukti; TLS/HSTS PASS.
 - Audit export 100 baris.
 - Tiga runbook: circuit breaker, API fallback, restart loop.

@@ -1,6 +1,6 @@
 id        : TRIVY
-timestamp : 2026-11-25T05:53:01.309669+00:00
-commit    : b7c5bcd
+timestamp : 2026-11-26T01:45:55.685960+00:00
+commit    : c8e362b
 command   : trivy image --severity HIGH,CRITICAL --ignore-unfixed
 result    : PASS
 owner     : anin

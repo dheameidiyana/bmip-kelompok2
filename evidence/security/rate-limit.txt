@@ -1,8 +1,8 @@
 id        : RATE-LIMIT
-timestamp : 2026-11-25T05:53:23.912192+00:00
-commit    : b7c5bcd
+timestamp : 2026-11-26T01:46:21.151262+00:00
+commit    : c8e362b
 command   : python scripts/c3a_scan.py --rate-limit
 result    : PASS
 owner     : anin
 
-status counts: {"200": 296, "429": 304}
+status counts: {"200": 336, "429": 264}

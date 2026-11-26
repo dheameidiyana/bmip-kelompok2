@@ -246,7 +246,7 @@ Python 3.11.9, Traefik 3.7.18, Toxiproxy 2.12.0, Trivy 0.76.2.
 | API2 | deploy | `deploy/api2-health_*.md` | PASS | dua replica healthy |
 | TRIVY | security | `security/trivy.txt` | PASS | 0 HIGH/CRITICAL pada api + dashboard |
 | PORT | security | `security/c3a-port-scan.txt` | PASS | luar loopback hanya 80/443 |
-| RATE | security | `security/rate-limit.txt` | PASS | 296x200 + 304x429 pada router uji |
+| RATE | security | `security/rate-limit.txt` | PASS | 336x200 + 264x429 pada router uji |
 | TLS | security | `security/tls-c3a.txt` | PASS | TLS + HSTS `max-age=31536000` |
 | AUDIT | security | `security/audit.csv` | PASS | 100 baris `ops.audit_log` |
 | DASH | dashboard | `dashboard/w3_*.png` | PASS | 8 tab + korelasi 5 symbol |
