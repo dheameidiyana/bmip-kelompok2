@@ -54,11 +54,20 @@
   `DeleteObject` on the table prefixes.
 - Prefect `compact_iceberg` flow executed with compact + expiry + fixture
   retention (`evidence/storage/prefect-compact-iceberg_20261127T185626Z.json`);
-  the deployment is declared in `prefect.yaml` (daily 01:00 UTC).
+  the deployment is declared in `prefect.yaml` (daily 01:00 UTC). The
+  deployment was **not registered** in the Prefect server: `prefect deploy`
+  timed out, and the evidence above comes from running the flow object
+  locally. C3-D must register it and confirm it appears in the Prefect UI
+  before claiming a scheduled job.
 - Documentation hosting: dbt docs, static GX Data Docs, nginx on 8089, HTTP 200
   (`evidence/deploy/docs-hosting_20261127T132119Z.json`) and S3 upload of 9
   keys to `s3://docs/`
-  (`evidence/deploy/docs-hosting_20261127T185821Z.json`).
+  (`evidence/deploy/docs-hosting_20261127T185821Z.json`). The direct
+  `http://127.0.0.1:8089/` check passed; **`https://docs.bmip.local` through
+  Traefik was not verified** in this slot. C3-D must prove the Traefik route.
+- GX Data Docs is a **static HTML renderer** of `evidence/dq/dq_report.json`,
+  not the official GX 1.x Data Docs output. This is a documented deviation; if
+  the grading requires the official Data Docs, C3-D must generate them.
 
 ## Yang belum jalan / gap
 
@@ -92,7 +101,12 @@
   complete. C3-D may capture the images with a normal browser.
 - PyIceberg 0.12 has no `rewrite_data_files`; compaction uses
   `table.overwrite`. The gold tables already had one file per partition, so the
-  compaction pass was a no-op; orphan removal and retention are real.
+  compaction pass was a no-op; orphan removal and retention are real. The
+  **128 MB target-file policy was not exercised** because no partition had
+  enough small files; C3-D should not claim a rewrite-to-128 MB result.
+- **PR and review are pending.** The branch was not pushed during C3-C (per
+  instruction). Workplan DoD §3.1 requires a push, a PR, and review by at least
+  one other person; C3-D/team must do that after this handoff.
 
 ## Cara menjalankan
 
