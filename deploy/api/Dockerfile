@@ -34,6 +34,8 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels "bmip[ml]" \
     && pip install --no-cache-dir --upgrade "setuptools>=80" "jaraco.context>=6.1.0" "wheel>=0.46.2" \
     && rm -rf /wheels
 
+COPY feature_repo /app/feature_repo
+
 USER 10001:10001
 RUN python -c "import duckdb; c = duckdb.connect(config={'extension_directory': '/app/.duckdb/extensions'}); c.execute('INSTALL iceberg'); c.execute('INSTALL httpfs'); c.close()"
 

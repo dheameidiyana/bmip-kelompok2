@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from dataclasses import replace
@@ -64,7 +64,7 @@ def test_run_batch_rejects_stale_features_and_keeps_old_cache(
     )
     monkeypatch.setattr(
         batch,
-        "latest_feature_row",
+        "latest_features",
         lambda *_args, **_kwargs: {"window_start": stale_ts, "rv_60m": 0.01},
     )
     monkeypatch.setattr(batch.psycopg, "connect", lambda _dsn: connection)
@@ -96,7 +96,7 @@ def test_run_batch_writes_fresh_cache(monkeypatch, tmp_path, settings):
     )
     monkeypatch.setattr(
         batch,
-        "latest_feature_row",
+        "latest_features",
         lambda *_args, **_kwargs: {"window_start": fresh_ts, "rv_60m": 0.01},
     )
     monkeypatch.setattr(batch.psycopg, "connect", lambda _dsn: connection)
@@ -130,7 +130,7 @@ def test_run_batch_uses_configured_as_of(monkeypatch, tmp_path, settings):
             {"get_model_version_by_alias": lambda self, *args: type("V", (), {"version": "2"})()},
         )(),
     )
-    monkeypatch.setattr(batch, "latest_feature_row", latest)
+    monkeypatch.setattr(batch, "latest_features", latest)
     monkeypatch.setattr(batch.psycopg, "connect", lambda _dsn: connection)
 
     result = batch.run_batch(replace(settings, bmip_as_of="2026-11-17T00:00:00Z"))

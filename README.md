@@ -77,6 +77,12 @@ balancer `wrr`, circuit breaker, HSTS, retry/rate limit, Toxiproxy, Trivy,
 port/TLS/429/audit evidence, tiga runbook, dan T-16/T-17/T-18. Detail ada di
 [docs/handoff/c3-a.md](docs/handoff/c3-a.md).
 
+C3-B selesai di branch `slot/c3-b-dhea`: Feast online/offline sources,
+point-in-time parity, feature-age lookup + metrik `bmip_feature_age_seconds`,
+drift report ke `serving.drift_metrics`, drift-trigger retraining otomatis,
+promotion/archive logic, dan E3 per-symbol comparison. Detail dan evidence ada
+di [docs/handoff/c3-b.md](docs/handoff/c3-b.md).
+
 Dashboard v2 memakai delapan tab: Ringkasan, Market, Volatilitas, Korelasi,
 Sentimen, Kualitas, Katalog, dan Lineage. Tab Korelasi memakai return/volatilitas
 lima symbol dan menampilkan jumlah jam sampel; tidak ada klaim kausalitas.

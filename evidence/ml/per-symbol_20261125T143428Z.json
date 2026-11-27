@@ -1,0 +1,529 @@
+{
+  "dataset_id": "mart_ml@3627445140691597595",
+  "id": "C3-B-E3-per-symbol",
+  "inference": [
+    {
+      "difference": -3.341762931086123e-05,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "per_symbol_predicted_rv_next_1h": 0.0003658803761936724,
+      "pooled_predicted_rv_next_1h": 0.00039929800550453365,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "difference": -0.00014252564869821072,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "per_symbol_predicted_rv_next_1h": 0.00034942833008244634,
+      "pooled_predicted_rv_next_1h": 0.000491953978780657,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "difference": 1.5238067135214806e-05,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "per_symbol_predicted_rv_next_1h": 0.0005372957675717771,
+      "pooled_predicted_rv_next_1h": 0.0005220577004365623,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "difference": -8.591316873207688e-05,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "per_symbol_predicted_rv_next_1h": 0.0006487352657131851,
+      "pooled_predicted_rv_next_1h": 0.000734648434445262,
+      "symbol": "SOLUSDT"
+    },
+    {
+      "difference": -1.2282049283385277e-05,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "per_symbol_predicted_rv_next_1h": 0.0006586869130842388,
+      "pooled_predicted_rv_next_1h": 0.000670968962367624,
+      "symbol": "XRPUSDT"
+    }
+  ],
+  "per_symbol": {
+    "BNBUSDT": {
+      "algorithm": "xgboost",
+      "gate": {
+        "baseline_mae": 0.00020097993509907565,
+        "baseline_rmse": 0.00027687431895761545,
+        "directional_accuracy": 0.6785714285714286,
+        "mae": 0.0001968028591653463,
+        "mae_improvement": 0.020783547032544303,
+        "rmse": 0.00031008363454405365,
+        "rmse_change": 0.11994364703619172
+      },
+      "gate_pass": false,
+      "importance": [
+        {
+          "feature": "rv_60m",
+          "importance": 0.18784499168395996,
+          "share": 0.18784497698864147
+        },
+        {
+          "feature": "rv_15m",
+          "importance": 0.15890872478485107,
+          "share": 0.1589087123532483
+        },
+        {
+          "feature": "trade_count_60m",
+          "importance": 0.10442589968442917,
+          "share": 0.1044258915150772
+        },
+        {
+          "feature": "volume_z_60m",
+          "importance": 0.09642644226551056,
+          "share": 0.09642643472196487
+        },
+        {
+          "feature": "vwap_dev",
+          "importance": 0.08977708220481873,
+          "share": 0.08977707518145972
+        },
+        {
+          "feature": "hl_range_1m",
+          "importance": 0.08910194039344788,
+          "share": 0.08910193342290594
+        },
+        {
+          "feature": "rv_5m",
+          "importance": 0.0760287493467331,
+          "share": 0.07602874339892116
+        },
+        {
+          "feature": "ret_60m",
+          "importance": 0.07312113046646118,
+          "share": 0.07312112474611543
+        },
+        {
+          "feature": "ret_15m",
+          "importance": 0.06479974091053009,
+          "share": 0.06479973584117572
+        },
+        {
+          "feature": "ret_5m",
+          "importance": 0.05956537649035454,
+          "share": 0.0595653718304902
+        }
+      ],
+      "test": {
+        "baseline_mae": 0.00018823775747300888,
+        "baseline_rmse": 0.0002693394951997165,
+        "directional_accuracy": 0.6620370370370371,
+        "mae": 0.0001855749679829676,
+        "mae_improvement": 0.014145884044666702,
+        "rmse": 0.00029366543620999643,
+        "rmse_change": 0.09031702161705658
+      },
+      "validation": {
+        "baseline_mae": 0.00012290328892398378,
+        "baseline_rmse": 0.00018803953572489043,
+        "directional_accuracy": 0.6388888888888888,
+        "mae": 0.00012407738921054305,
+        "mae_improvement": -0.009553042044997361,
+        "rmse": 0.00018969713918947045,
+        "rmse_change": 0.008815185903272849
+      }
+    },
+    "BTCUSDT": {
+      "algorithm": "xgboost",
+      "gate": {
+        "baseline_mae": 0.0003599730131284251,
+        "baseline_rmse": 0.0015418223146266257,
+        "directional_accuracy": 0.6964285714285714,
+        "mae": 0.000272797106345123,
+        "mae_improvement": 0.24217345079754893,
+        "rmse": 0.0011420385827238244,
+        "rmse_change": -0.25929299901176656
+      },
+      "gate_pass": true,
+      "importance": [
+        {
+          "feature": "rv_60m",
+          "importance": 0.27467381954193115,
+          "share": 0.27467382363489007
+        },
+        {
+          "feature": "trade_count_60m",
+          "importance": 0.2542256712913513,
+          "share": 0.2542256750796091
+        },
+        {
+          "feature": "rv_15m",
+          "importance": 0.11518947035074234,
+          "share": 0.11518947206719923
+        },
+        {
+          "feature": "hl_range_1m",
+          "importance": 0.10708212107419968,
+          "share": 0.10708212266984765
+        },
+        {
+          "feature": "rv_5m",
+          "importance": 0.1064833402633667,
+          "share": 0.10648334185009214
+        },
+        {
+          "feature": "ret_60m",
+          "importance": 0.07264146208763123,
+          "share": 0.07264146317007338
+        },
+        {
+          "feature": "ret_15m",
+          "importance": 0.0697041004896164,
+          "share": 0.06970410152828845
+        },
+        {
+          "feature": "ret_5m",
+          "importance": 0.0,
+          "share": 0.0
+        },
+        {
+          "feature": "volume_z_60m",
+          "importance": 0.0,
+          "share": 0.0
+        },
+        {
+          "feature": "vwap_dev",
+          "importance": 0.0,
+          "share": 0.0
+        }
+      ],
+      "test": {
+        "baseline_mae": 0.0003152179194765728,
+        "baseline_rmse": 0.0013693952761145473,
+        "directional_accuracy": 0.6851851851851852,
+        "mae": 0.0002514942137275098,
+        "mae_improvement": 0.2021576243345486,
+        "rmse": 0.0010199951277297884,
+        "rmse_change": -0.255149228626032
+      },
+      "validation": {
+        "baseline_mae": 0.00012918750333708038,
+        "baseline_rmse": 0.00020565822580910864,
+        "directional_accuracy": 0.5833333333333334,
+        "mae": 0.00013116605372654364,
+        "mae_improvement": -0.015315338855189061,
+        "rmse": 0.0002107250443952077,
+        "rmse_change": 0.024637082062557908
+      }
+    },
+    "ETHUSDT": {
+      "algorithm": "xgboost",
+      "gate": {
+        "baseline_mae": 0.0002980096800917141,
+        "baseline_rmse": 0.000441591423673733,
+        "directional_accuracy": 0.6547619047619048,
+        "mae": 0.0002758101706014254,
+        "mae_improvement": 0.07449257850770713,
+        "rmse": 0.0004451984513254115,
+        "rmse_change": 0.008168246615096261
+      },
+      "gate_pass": true,
+      "importance": [
+        {
+          "feature": "rv_60m",
+          "importance": 0.23026634752750397,
+          "share": 0.23026633551817874
+        },
+        {
+          "feature": "rv_15m",
+          "importance": 0.17760072648525238,
+          "share": 0.17760071722265316
+        },
+        {
+          "feature": "trade_count_60m",
+          "importance": 0.16536827385425568,
+          "share": 0.16536826522962855
+        },
+        {
+          "feature": "rv_5m",
+          "importance": 0.08310902118682861,
+          "share": 0.08310901685235561
+        },
+        {
+          "feature": "ret_5m",
+          "importance": 0.07647964358329773,
+          "share": 0.0764796395945737
+        },
+        {
+          "feature": "hl_range_1m",
+          "importance": 0.07615090161561966,
+          "share": 0.07615089764404086
+        },
+        {
+          "feature": "volume_z_60m",
+          "importance": 0.07285425812005997,
+          "share": 0.07285425432041451
+        },
+        {
+          "feature": "ret_15m",
+          "importance": 0.06361129879951477,
+          "share": 0.06361129548192718
+        },
+        {
+          "feature": "vwap_dev",
+          "importance": 0.054559580981731415,
+          "share": 0.05455957813622767
+        },
+        {
+          "feature": "ret_60m",
+          "importance": 0.0,
+          "share": 0.0
+        }
+      ],
+      "test": {
+        "baseline_mae": 0.0002930377932997249,
+        "baseline_rmse": 0.00048174079877955723,
+        "directional_accuracy": 0.6574074074074074,
+        "mae": 0.000266744843952656,
+        "mae_improvement": 0.08972545503772603,
+        "rmse": 0.00046833739625449724,
+        "rmse_change": -0.02782285112453873
+      },
+      "validation": {
+        "baseline_mae": 0.00018873629200327914,
+        "baseline_rmse": 0.0003007804575677512,
+        "directional_accuracy": 0.5972222222222222,
+        "mae": 0.0001752653127842986,
+        "mae_improvement": 0.07137460991734702,
+        "rmse": 0.00028793689704516344,
+        "rmse_change": -0.04270078124904357
+      }
+    },
+    "SOLUSDT": {
+      "algorithm": "xgboost",
+      "gate": {
+        "baseline_mae": 0.0002719791188741612,
+        "baseline_rmse": 0.00038388367908117406,
+        "directional_accuracy": 0.6369047619047619,
+        "mae": 0.00025972680794407373,
+        "mae_improvement": 0.045048719110515084,
+        "rmse": 0.0004077410987854335,
+        "rmse_change": 0.06214752281566692
+      },
+      "gate_pass": false,
+      "importance": [
+        {
+          "feature": "rv_60m",
+          "importance": 0.24684588611125946,
+          "share": 0.24684587415681644
+        },
+        {
+          "feature": "trade_count_60m",
+          "importance": 0.1856088787317276,
+          "share": 0.18560886974291763
+        },
+        {
+          "feature": "rv_15m",
+          "importance": 0.12659621238708496,
+          "share": 0.12659620625618592
+        },
+        {
+          "feature": "ret_5m",
+          "importance": 0.0740010067820549,
+          "share": 0.07400100319827706
+        },
+        {
+          "feature": "volume_z_60m",
+          "importance": 0.07397177815437317,
+          "share": 0.07397177457201083
+        },
+        {
+          "feature": "rv_5m",
+          "importance": 0.07215294986963272,
+          "share": 0.072152946375354
+        },
+        {
+          "feature": "hl_range_1m",
+          "importance": 0.06285862624645233,
+          "share": 0.06285862320228629
+        },
+        {
+          "feature": "vwap_dev",
+          "importance": 0.05531952157616615,
+          "share": 0.05531951889710968
+        },
+        {
+          "feature": "ret_60m",
+          "importance": 0.05367003381252289,
+          "share": 0.05367003121334908
+        },
+        {
+          "feature": "ret_15m",
+          "importance": 0.048975154757499695,
+          "share": 0.04897515238569312
+        }
+      ],
+      "test": {
+        "baseline_mae": 0.00025778852253388433,
+        "baseline_rmse": 0.0003798654482451192,
+        "directional_accuracy": 0.6342592592592593,
+        "mae": 0.0002467826849278982,
+        "mae_improvement": 0.04269328012669562,
+        "rmse": 0.00039620177012562386,
+        "rmse_change": 0.04300554829604606
+      },
+      "validation": {
+        "baseline_mae": 0.00021229813801243973,
+        "baseline_rmse": 0.00036415342859089935,
+        "directional_accuracy": 0.6203703703703703,
+        "mae": 0.00018316504235734707,
+        "mae_improvement": 0.137227278241063,
+        "rmse": 0.0003173051497464275,
+        "rmse_change": -0.12864983593797932
+      }
+    },
+    "XRPUSDT": {
+      "algorithm": "xgboost",
+      "gate": {
+        "baseline_mae": 0.00026810502702382267,
+        "baseline_rmse": 0.00037689136905824785,
+        "directional_accuracy": 0.6369047619047619,
+        "mae": 0.00026130115783435894,
+        "mae_improvement": 0.025377626316791007,
+        "rmse": 0.0004040921792588982,
+        "rmse_change": 0.07217148609324218
+      },
+      "gate_pass": false,
+      "importance": [
+        {
+          "feature": "rv_60m",
+          "importance": 0.3491967022418976,
+          "share": 0.34919671655134815
+        },
+        {
+          "feature": "trade_count_60m",
+          "importance": 0.15304569900035858,
+          "share": 0.15304570527189507
+        },
+        {
+          "feature": "rv_15m",
+          "importance": 0.13902506232261658,
+          "share": 0.13902506801961267
+        },
+        {
+          "feature": "rv_5m",
+          "importance": 0.06276146322488785,
+          "share": 0.06276146579673933
+        },
+        {
+          "feature": "ret_5m",
+          "importance": 0.0601288378238678,
+          "share": 0.06012884028783904
+        },
+        {
+          "feature": "hl_range_1m",
+          "importance": 0.05764225870370865,
+          "share": 0.057642261065784364
+        },
+        {
+          "feature": "volume_z_60m",
+          "importance": 0.046987250447273254,
+          "share": 0.04698725237272596
+        },
+        {
+          "feature": "ret_60m",
+          "importance": 0.04477984458208084,
+          "share": 0.044779846417078044
+        },
+        {
+          "feature": "ret_15m",
+          "importance": 0.04337374120950699,
+          "share": 0.04337374298688461
+        },
+        {
+          "feature": "vwap_dev",
+          "importance": 0.0430590994656086,
+          "share": 0.04305910123009277
+        }
+      ],
+      "test": {
+        "baseline_mae": 0.0002592298330360405,
+        "baseline_rmse": 0.00039185781777061903,
+        "directional_accuracy": 0.6574074074074074,
+        "mae": 0.0002504075438998532,
+        "mae_improvement": 0.03403269227489255,
+        "rmse": 0.00040716506701961503,
+        "rmse_change": 0.03906327385806138
+      },
+      "validation": {
+        "baseline_mae": 0.0001868707443750479,
+        "baseline_rmse": 0.0003082133875225033,
+        "directional_accuracy": 0.6111111111111112,
+        "mae": 0.0001677228790173615,
+        "mae_improvement": 0.10246582696356582,
+        "rmse": 0.0002706108751023871,
+        "rmse_change": -0.12200155458000911
+      }
+    }
+  },
+  "per_symbol_aggregate": {
+    "baseline_mae": 0.00026270236516384623,
+    "baseline_rmse": 0.0007039476814716358,
+    "directional_accuracy": 0.6592592592592592,
+    "mae": 0.00024020085089817696,
+    "mae_improvement": 0.08565402238246,
+    "rmse": 0.0005777072961628791,
+    "rmse_change": -0.179332056389255
+  },
+  "pooled": {
+    "model": "e1_xgboost",
+    "per_symbol": {
+      "BNBUSDT": {
+        "baseline_mae": 0.00018823775747300888,
+        "baseline_rmse": 0.0002693394951997165,
+        "directional_accuracy": 0.6712962962962963,
+        "mae": 0.00017035457938289437,
+        "mae_improvement": 0.09500314033797794,
+        "rmse": 0.00025654000179494037,
+        "rmse_change": -0.04752178433870335
+      },
+      "BTCUSDT": {
+        "baseline_mae": 0.0003152179194765728,
+        "baseline_rmse": 0.0013693952761145473,
+        "directional_accuracy": 0.6712962962962963,
+        "mae": 0.00022935102319413352,
+        "mae_improvement": 0.27240486970101,
+        "rmse": 0.0009943455521635013,
+        "rmse_change": -0.2738798143186188
+      },
+      "ETHUSDT": {
+        "baseline_mae": 0.0002930377932997249,
+        "baseline_rmse": 0.00048174079877955723,
+        "directional_accuracy": 0.6296296296296297,
+        "mae": 0.000253270624276745,
+        "mae_improvement": 0.13570662191789462,
+        "rmse": 0.00044233159903195703,
+        "rmse_change": -0.08180581725159987
+      },
+      "SOLUSDT": {
+        "baseline_mae": 0.00025778852253388433,
+        "baseline_rmse": 0.0003798654482451192,
+        "directional_accuracy": 0.6527777777777778,
+        "mae": 0.00023399863656851743,
+        "mae_improvement": 0.09228450410254362,
+        "rmse": 0.00037291066895283486,
+        "rmse_change": -0.0183085335199967
+      },
+      "XRPUSDT": {
+        "baseline_mae": 0.0002592298330360405,
+        "baseline_rmse": 0.00039185781777061903,
+        "directional_accuracy": 0.6481481481481481,
+        "mae": 0.0002444970760189767,
+        "mae_improvement": 0.05683279908225511,
+        "rmse": 0.0003964734658478272,
+        "rmse_change": 0.011778884758425411
+      }
+    },
+    "test": {
+      "baseline_mae": 0.0002627023651638463,
+      "baseline_rmse": 0.0007039476814716358,
+      "directional_accuracy": 0.6546296296296297,
+      "mae": 0.0002262943878882534,
+      "mae_improvement": 0.13859021502484528,
+      "rmse": 0.0005561378730621919,
+      "rmse_change": -0.20997271856971025
+    }
+  },
+  "sha256": "1b1434dfffa55afe5ec163a4a26dc4bff6383e0e9050e7c8561e3404936f6ede",
+  "snapshot_id": "3627445140691597595",
+  "timestamp": "2026-11-25T14:34:28+00:00"
+}

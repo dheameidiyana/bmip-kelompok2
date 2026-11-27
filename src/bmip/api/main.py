@@ -80,6 +80,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         "fallbacks": 0,
         "duration": 0.0,
         "timed": 0,
+        "feature_age_seconds": {},
         "started_epoch": round(started, 3),
     }
 
@@ -142,7 +143,10 @@ def _register_middleware(app: FastAPI) -> None:
                 "ctx_instance": request.app.state.instance,
             },
         )
-        if request.url.path.startswith("/v1"):
+        if (
+            request.url.path.startswith("/v1")
+            and request.app.state.settings.audit_log_enabled
+        ):
             try:
                 from bmip.api import audit
 

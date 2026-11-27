@@ -1,0 +1,25 @@
+{
+  "id": "C3-B-feast",
+  "materialized_end": "2026-11-17T00:00:00+00:00",
+  "materialized_start": "2026-09-18T02:00:00+00:00",
+  "online_probe": {
+    "latency_ms": 60.60620001517236,
+    "result": {
+      "realized_vol_1h": [
+        0.0005707228291649356
+      ],
+      "rv_60m": [
+        0.0005294266988388841
+      ],
+      "sent_mean_1h": [
+        0.0
+      ],
+      "symbol": [
+        "BTCUSDT"
+      ]
+    },
+    "symbol": "BTCUSDT"
+  },
+  "repository": "feature_repo",
+  "timestamp": "2026-11-26T16:31:48+00:00"
+}

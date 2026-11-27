@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "actual": {
+        "archived_version": "2",
+        "champion_after": "6",
+        "champion_before": "2",
+        "decision": "promoted"
+      },
+      "candidate_version": "6",
+      "case": "better challenger accepted",
+      "champion_before": "2",
+      "expected": {
+        "archived_version": "2",
+        "champion_after": "6",
+        "decision": "promoted"
+      },
+      "gate_pass": true,
+      "pass": true
+    },
+    {
+      "actual": {
+        "archived_version": null,
+        "champion_after": "2",
+        "champion_before": "2",
+        "decision": "rejected"
+      },
+      "candidate_version": "7",
+      "case": "worse challenger rejected",
+      "champion_before": "2",
+      "expected": {
+        "archived_version": null,
+        "champion_after": "2",
+        "decision": "rejected"
+      },
+      "gate_pass": false,
+      "pass": true
+    }
+  ],
+  "id": "C3-B-promotion-logic",
+  "note": "Controlled gate-logic fixture; no MLflow alias is changed.",
+  "pass": true,
+  "timestamp": "2026-11-25T14:34:30+00:00"
+}

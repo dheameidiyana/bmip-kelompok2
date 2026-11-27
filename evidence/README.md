@@ -252,3 +252,26 @@ Python 3.11.9, Traefik 3.7.18, Toxiproxy 2.12.0, Trivy 0.76.2.
 | DASH | dashboard | `dashboard/w3_*.png` | PASS | 8 tab + korelasi 5 symbol |
 | DATA | ml | `ml/backfill_20261125T050308Z.json` | PASS | 108.000 bar, 15 hari, 5 symbol |
 
+
+### C3-B
+
+Environment: branch `slot/c3-b-dhea`, base `c3-a-ok` (`c8e362b`). Feast 0.68.0,
+PostgreSQL online store, MLflow 3.18.0, Prefect 3.9.x.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | ml | `ml/feast-apply_20261125T143300Z.json` | PASS | 3 feature views, materialized, online probe ~3.8 ms |
+| CP2 | ml | `ml/pit-parity_20261125T143348Z.json` | PASS | 7.190 rows, identical feature hash |
+| CP2 | ml | `ml/feature-age_20261125T143446Z.json` | PASS | 5 symbols, 3.600 s at replay as-of |
+| CP3 | ml | `ml/drift_20261125T143419Z.json` | PASS | PSI + KS + rolling MAE persisted, trigger required |
+| CP3 | ml | `ml/promotion_20261125T143430Z.json` | PASS | controlled accept/archive and reject paths |
+| CP2 | ml | `ml/feature-age_20261126T230427Z.json` | PASS | feast source, 5 symbols, 3.600 s |
+| CP3 | ml | `ml/drift_20261126T222406Z.json` | PASS | trigger_required true (PSI rv_60m 1.45) |
+| CP3 | ml | `ml/train_20261126T223855Z.json` | PASS | retrain run; challenger rejected |
+| CP3 | ml | `ml/retrain-schedule_20261127T060822Z.png` | PASS | weekly Sunday 02:00 schedule + retrain run |
+| CP3 | ml | `ml/drift-trigger_20261127T061011Z.png` | PASS | drift triggers train (early bug run, fixed) |
+| DRIFT | dashboard | `dashboard/w3_drift.png` | PASS | Grafana BMIP - Drift panels |
+| E3 | ml | `ml/per-symbol_20261125T143428Z.json` | PASS | pooled wins MAE; comparison-only |
+| E3 | ml | `ml/inference-compare_20261125T143428Z.csv` | PASS | latest per-symbol inference comparison |
+| E3 | ml | `ml/inference-compare_20261125T143428Z.png` | PASS | inference bar chart |
+| SUM | experiments | `experiments/E3_vs_pooled.md` | PASS | pooled vs per-symbol table |

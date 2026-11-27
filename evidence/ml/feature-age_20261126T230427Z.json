@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-11-17T00:00:00+00:00",
+  "feature_source": "feast",
+  "id": "C3-B-feature-age",
+  "max_age_seconds": 7200,
+  "symbols": [
+    {
+      "age_seconds": 3600.0,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "status": "ok",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "age_seconds": 3600.0,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "status": "ok",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "age_seconds": 3600.0,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "status": "ok",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "age_seconds": 3600.0,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "status": "ok",
+      "symbol": "SOLUSDT"
+    },
+    {
+      "age_seconds": 3600.0,
+      "feature_ts": "2026-11-16T23:00:00+00:00",
+      "status": "ok",
+      "symbol": "XRPUSDT"
+    }
+  ],
+  "timestamp": "2026-11-26T23:04:27+00:00"
+}

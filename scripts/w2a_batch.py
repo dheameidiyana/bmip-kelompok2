@@ -39,6 +39,17 @@ def _record(registry, result: dict) -> None:
         help="Inference rows that failed in the last batch.",
         kind="counter",
     )
+    for symbol, row in (result.get("symbols") or {}).items():
+        age = row.get("age_seconds")
+        if age is None:
+            continue
+        registry.set(
+            "bmip_feature_age_seconds",
+            float(age),
+            {"symbol": symbol},
+            help="Age of the feature row used for batch inference.",
+            kind="gauge",
+        )
 
 
 def main() -> int:

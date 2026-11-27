@@ -1,0 +1,230 @@
+{
+  "commit": "c8e362b",
+  "daily_mae": [
+    {
+      "count": 5,
+      "date": "2026-11-17",
+      "mae": 0.0002939701691428652,
+      "rmse": 0.00037253995555223073
+    },
+    {
+      "count": 120,
+      "date": "2026-11-18",
+      "mae": 0.00018619632947619239,
+      "rmse": 0.0002798429074704127
+    },
+    {
+      "count": 120,
+      "date": "2026-11-19",
+      "mae": 0.00012724469347303325,
+      "rmse": 0.00018575021036810273
+    },
+    {
+      "count": 120,
+      "date": "2026-11-20",
+      "mae": 0.00024692539423358333,
+      "rmse": 0.00033314158768049386
+    },
+    {
+      "count": 120,
+      "date": "2026-11-21",
+      "mae": 0.00038636155779014155,
+      "rmse": 0.0006247064963323687
+    },
+    {
+      "count": 120,
+      "date": "2026-11-22",
+      "mae": 0.00021469795994563204,
+      "rmse": 0.0003530347799537074
+    },
+    {
+      "count": 120,
+      "date": "2026-11-23",
+      "mae": 0.00031569190786508427,
+      "rmse": 0.0005677951371934627
+    },
+    {
+      "count": 120,
+      "date": "2026-11-24",
+      "mae": 0.00020080603998155798,
+      "rmse": 0.00024938336377426266
+    }
+  ],
+  "dataset_id": "mart_ml@2888713472648101633",
+  "drift_detected": false,
+  "features": [
+    {
+      "drift": false,
+      "feature": "rv_60m",
+      "ks_pvalue": 0.00012961692237435947,
+      "ks_statistic": 0.12511990034257242,
+      "production_mean": 0.0009148079573606176,
+      "psi": 0.09451369736625427,
+      "reference_mean": 0.0010011807113565509
+    },
+    {
+      "drift": false,
+      "feature": "vwap_dev",
+      "ks_pvalue": 0.007255836818596436,
+      "ks_statistic": 0.09539707256306447,
+      "production_mean": 0.0001595703614440472,
+      "psi": 0.0934795234219935,
+      "reference_mean": 0.00025222445947860274
+    },
+    {
+      "drift": false,
+      "feature": "trade_count_60m",
+      "ks_pvalue": 0.0007538363892162393,
+      "ks_statistic": 0.1130862659607599,
+      "production_mean": 80007.25443786982,
+      "psi": 0.07822205017311565,
+      "reference_mean": 97514.76421052632
+    },
+    {
+      "drift": false,
+      "feature": "hl_range_1m",
+      "ks_pvalue": 0.0008847001665366638,
+      "ks_statistic": 0.11192774836499533,
+      "production_mean": 0.0009057391881820466,
+      "psi": 0.07562997122897407,
+      "reference_mean": 0.0010631315060218658
+    },
+    {
+      "drift": false,
+      "feature": "ret_15m",
+      "ks_pvalue": 0.054792420241211524,
+      "ks_statistic": 0.07621301775147929,
+      "production_mean": 0.0004380403316826973,
+      "psi": 0.0648056526191038,
+      "reference_mean": -0.00010807454784289213
+    },
+    {
+      "drift": false,
+      "feature": "rv_5m",
+      "ks_pvalue": 0.06243809511981683,
+      "ks_statistic": 0.07480535658673311,
+      "production_mean": 0.0006687875013480234,
+      "psi": 0.06397714975445744,
+      "reference_mean": 0.0007538744137927349
+    },
+    {
+      "drift": false,
+      "feature": "ret_60m",
+      "ks_pvalue": 0.340641838817307,
+      "ks_statistic": 0.05319215197757708,
+      "production_mean": -0.00036445552578594274,
+      "psi": 0.06293560201728433,
+      "reference_mean": -0.0005838549302616452
+    },
+    {
+      "drift": false,
+      "feature": "ret_5m",
+      "ks_pvalue": 0.00019442647802101485,
+      "ks_statistic": 0.12245406415446901,
+      "production_mean": 0.0002741070947680876,
+      "psi": 0.06257230122857776,
+      "reference_mean": 0.0002883262520503393
+    },
+    {
+      "drift": false,
+      "feature": "rv_15m",
+      "ks_pvalue": 0.0017539820335124585,
+      "ks_statistic": 0.10683276237932109,
+      "production_mean": 0.00082744613801399,
+      "psi": 0.06089550231458561,
+      "reference_mean": 0.0008825696773787736
+    },
+    {
+      "drift": false,
+      "feature": "volume_z_60m",
+      "ks_pvalue": 0.19990149700797227,
+      "ks_statistic": 0.060840859545312986,
+      "production_mean": -0.17593019502614132,
+      "psi": 0.028692741565470952,
+      "reference_mean": -0.026264465462929976
+    },
+    {
+      "drift": false,
+      "feature": "sent_mean_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_pos_share",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_neg_share",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "post_count_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "engagement_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    }
+  ],
+  "flagged_features": [],
+  "id": "C3-B-drift",
+  "limitations": "Production is the most recent seven labelled days in the frozen holdout; the reference is the earlier holdout or validation fallback. Labels are one hour behind the features, so unlabelled recent hours are excluded.",
+  "model": "e1_xgboost",
+  "persisted_rows": 15,
+  "production": {
+    "end": "2026-11-24T23:00:00+00:00",
+    "rows": 845,
+    "split": "holdout-recent",
+    "start": "2026-11-17T23:00:00+00:00",
+    "window_days": 7
+  },
+  "reference": {
+    "end": "2026-11-17T22:00:00+00:00",
+    "rows": 475,
+    "split": "holdout-pre-production",
+    "start": "2026-11-14T00:00:00+00:00"
+  },
+  "rolling_mae_7d": 0.00024648675648851124,
+  "sha256": "54ebd4357f72b341af619cdd283a48ad1885030838f10f2d52f2400a796b52aa",
+  "snapshot_id": "2888713472648101633",
+  "threshold": 0.2,
+  "timestamp": "2026-11-26T22:35:04+00:00",
+  "top5_features": [
+    "rv_60m",
+    "trade_count_60m",
+    "rv_15m",
+    "rv_5m",
+    "ret_5m"
+  ],
+  "top5_psi": {
+    "ret_5m": 0.06257230122857776,
+    "rv_15m": 0.06089550231458561,
+    "rv_5m": 0.06397714975445744,
+    "rv_60m": 0.09451369736625427,
+    "trade_count_60m": 0.07822205017311565
+  },
+  "trigger_required": false
+}

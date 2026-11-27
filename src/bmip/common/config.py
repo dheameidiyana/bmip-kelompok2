@@ -121,6 +121,17 @@ class Settings:
     openlineage_spool_dir: str = "evidence/lineage/spool"
     marquez_url: str = "http://localhost:5002"
     api_key_salt: str = ""
+    feast_repo_path: str = "feature_repo"
+    feast_offline_path: str = "data/feast/offline.parquet"
+    feast_registry_path: str = "data/feast/registry.db"
+    feast_postgres_host: str = "127.0.0.1"
+    feast_postgres_port: int = 5434
+    feast_postgres_database: str = "feast"
+    feast_postgres_schema: str = "public"
+    feast_postgres_user: str = "prefect"
+    feast_postgres_password: str = ""
+    feature_source: str = "gold"
+    audit_log_enabled: bool = True
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -239,6 +250,21 @@ class Settings:
             ),
             marquez_url=os.getenv("MARQUEZ_URL", "http://localhost:5002"),
             api_key_salt=os.getenv("BMIP_API_KEY_HASH_SALT", ""),
+            feast_repo_path=os.getenv("FEAST_REPO_PATH", "feature_repo"),
+            feast_offline_path=os.getenv(
+                "FEAST_OFFLINE_PATH", "data/feast/offline.parquet"
+            ),
+            feast_registry_path=os.getenv(
+                "FEAST_REGISTRY_PATH", "data/feast/registry.db"
+            ),
+            feast_postgres_host=os.getenv("FEAST_POSTGRES_HOST", "127.0.0.1"),
+            feast_postgres_port=int(os.getenv("FEAST_POSTGRES_PORT", "5434")),
+            feast_postgres_database=os.getenv("FEAST_POSTGRES_DATABASE", "feast"),
+            feast_postgres_schema=os.getenv("FEAST_POSTGRES_SCHEMA", "public"),
+            feast_postgres_user=os.getenv("FEAST_POSTGRES_USER", "prefect"),
+            feast_postgres_password=os.getenv("FEAST_POSTGRES_PASSWORD", ""),
+            feature_source=os.getenv("FEATURE_SOURCE", "gold"),
+            audit_log_enabled=_flag("AUDIT_LOG_ENABLED", True),
         )
 
     def minio_credentials(self, service: str) -> tuple[str, str]:

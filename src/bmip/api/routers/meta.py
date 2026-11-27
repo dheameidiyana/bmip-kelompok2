@@ -116,6 +116,18 @@ def metrics(
         lines.append(
             f'bmip_api_requests_total{{status="{status}"}} {state["by_status"][status]}'
         )
+    feature_age = state.get("feature_age_seconds") or {}
+    lines.extend(
+        [
+            "# HELP bmip_feature_age_seconds Age of the feature row used for scoring.",
+            "# TYPE bmip_feature_age_seconds gauge",
+        ]
+    )
+    for symbol in sorted(feature_age):
+        lines.append(
+            f'bmip_feature_age_seconds{{symbol="{symbol}"}} '
+            f"{float(feature_age[symbol]):.3f}"
+        )
     lines.extend(
         [
             "# HELP bmip_api_errors_total Unhandled errors.",

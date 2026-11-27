@@ -19,6 +19,7 @@ from typing import Any
 import psycopg
 from psycopg.errors import InvalidSchemaName, UndefinedTable
 from psycopg.rows import dict_row
+from psycopg.types.json import Jsonb
 
 from bmip.common.config import Settings
 from bmip.serving.freshness import iso
@@ -453,6 +454,75 @@ class ServingRepository:
             LIMIT 1
             """,
             (model_name,),
+        )
+
+    def upsert_drift_metrics(self, rows: Iterable[dict[str, Any]]) -> int:
+        payload = [dict(row) for row in rows]
+        if not payload:
+            return 0
+        columns = (
+            "run_ts",
+            "model_name",
+            "feature",
+            "psi",
+            "ks_statistic",
+            "ks_pvalue",
+            "drift",
+            "reference_rows",
+            "production_rows",
+            "rolling_mae_7d",
+            "window_start",
+            "window_end",
+            "detail",
+        )
+        sql = f"""
+            INSERT INTO serving.drift_metrics ({', '.join(columns)})
+            VALUES ({', '.join(['%s'] * len(columns))})
+            ON CONFLICT (run_ts, model_name, feature) DO UPDATE SET
+                psi = EXCLUDED.psi,
+                ks_statistic = EXCLUDED.ks_statistic,
+                ks_pvalue = EXCLUDED.ks_pvalue,
+                drift = EXCLUDED.drift,
+                reference_rows = EXCLUDED.reference_rows,
+                production_rows = EXCLUDED.production_rows,
+                rolling_mae_7d = EXCLUDED.rolling_mae_7d,
+                window_start = EXCLUDED.window_start,
+                window_end = EXCLUDED.window_end,
+                detail = EXCLUDED.detail
+        """
+        values = []
+        for row in payload:
+            values.append(
+                [
+                    row.get("run_ts"),
+                    row.get("model_name", "volatility_model"),
+                    row["feature"],
+                    row.get("psi"),
+                    row.get("ks_statistic"),
+                    row.get("ks_pvalue"),
+                    bool(row.get("drift", False)),
+                    row.get("reference_rows"),
+                    row.get("production_rows"),
+                    row.get("rolling_mae_7d"),
+                    row.get("window_start"),
+                    row.get("window_end"),
+                    Jsonb(row.get("detail") or {}),
+                ]
+            )
+        with self.connection.cursor() as cursor:
+            cursor.executemany(sql, values)
+        self.connection.commit()
+        return len(payload)
+
+    def latest_drift(self, limit: int = 100) -> list[dict[str, Any]]:
+        return _many(
+            self.connection,
+            """
+            SELECT * FROM serving.drift_metrics
+            ORDER BY run_ts DESC, feature
+            LIMIT %s
+            """,
+            (int(limit),),
         )
 
 

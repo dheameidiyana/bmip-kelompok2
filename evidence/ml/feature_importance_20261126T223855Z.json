@@ -1,0 +1,81 @@
+{
+  "candidate": "e1_xgboost",
+  "features": [
+    {
+      "feature": "rv_60m",
+      "importance": 0.2425168752670288,
+      "share": 0.2425168806877035
+    },
+    {
+      "feature": "trade_count_60m",
+      "importance": 0.1550866961479187,
+      "share": 0.15508669961437657
+    },
+    {
+      "feature": "rv_15m",
+      "importance": 0.12453482300043106,
+      "share": 0.12453482578400132
+    },
+    {
+      "feature": "rv_5m",
+      "importance": 0.08678724616765976,
+      "share": 0.08678724810750592
+    },
+    {
+      "feature": "ret_5m",
+      "importance": 0.07510862499475479,
+      "share": 0.07510862667356343
+    },
+    {
+      "feature": "hl_range_1m",
+      "importance": 0.07456900179386139,
+      "share": 0.0745690034606085
+    },
+    {
+      "feature": "volume_z_60m",
+      "importance": 0.06266579031944275,
+      "share": 0.06266579172013234
+    },
+    {
+      "feature": "symbol_BTCUSDT",
+      "importance": 0.04409043863415718,
+      "share": 0.0440904396196553
+    },
+    {
+      "feature": "vwap_dev",
+      "importance": 0.03321452438831329,
+      "share": 0.03321452513071578
+    },
+    {
+      "feature": "ret_15m",
+      "importance": 0.023867784067988396,
+      "share": 0.023867784601474953
+    },
+    {
+      "feature": "ret_60m",
+      "importance": 0.022575819864869118,
+      "share": 0.022575820369478024
+    },
+    {
+      "feature": "symbol_XRPUSDT",
+      "importance": 0.020801540464162827,
+      "share": 0.020801540929113498
+    },
+    {
+      "feature": "symbol_BNBUSDT",
+      "importance": 0.018544286489486694,
+      "share": 0.018544286903983808
+    },
+    {
+      "feature": "symbol_SOLUSDT",
+      "importance": 0.01563652604818344,
+      "share": 0.01563652639768704
+    },
+    {
+      "feature": "symbol_ETHUSDT",
+      "importance": 0.0,
+      "share": 0.0
+    }
+  ],
+  "timestamp": "20261126T223855Z"
+}

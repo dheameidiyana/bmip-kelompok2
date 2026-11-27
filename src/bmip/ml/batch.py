@@ -14,7 +14,7 @@ import psycopg
 from mlflow.tracking import MlflowClient
 
 from bmip.common.config import Settings
-from bmip.ml.dataset import latest_feature_row
+from bmip.ml.features import latest_features
 from bmip.ml.predictor import VolatilityPredictor
 
 MAX_FEATURE_AGE_SECONDS = 7200
@@ -71,7 +71,7 @@ def run_batch(settings: Settings) -> dict[str, Any]:
     failed = False
     with psycopg.connect(settings.postgres_dsn) as connection:
         for symbol in settings.market_symbols:
-            latest = latest_feature_row(settings, symbol, at=now)
+            latest = latest_features(settings, symbol, at=now)
             if latest is None:
                 failed = True
                 results[symbol] = {"status": "error", "detail": "no feature row"}
@@ -125,6 +125,8 @@ def run_batch(settings: Settings) -> dict[str, Any]:
                     row[feature] = int(feature == f"symbol_{symbol}")
                 if row[feature] is None:
                     row[feature] = 0.0
+            if row.get("trade_count_60m") is not None:
+                row["trade_count_60m"] = int(row["trade_count_60m"])
             frame = pd.DataFrame([row])
             for feature in predictor.features:
                 if feature.startswith("symbol_"):

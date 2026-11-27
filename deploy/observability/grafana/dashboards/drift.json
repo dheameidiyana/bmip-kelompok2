@@ -1,0 +1,120 @@
+{
+  "uid": "bmip-drift",
+  "title": "BMIP - Drift",
+  "tags": [
+    "bmip",
+    "c3-b",
+    "drift"
+  ],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 99,
+      "type": "text",
+      "title": "",
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Drift threshold** PSI >= 0.2. **Source** `serving.drift_metrics`."
+      },
+      "transparent": true
+    },
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "PSI per feature",
+      "description": "Population Stability Index for the latest drift runs.",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 6
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT run_ts AS \"time\", feature, psi\nFROM serving.drift_metrics\nWHERE $__timeFilter(run_ts)\nORDER BY run_ts, feature"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Rolling MAE 7d",
+      "description": "The latest persisted rolling MAE from the drift run.",
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 11
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 10
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "rawSql": "SELECT rolling_mae_7d\nFROM serving.drift_metrics\nWHERE rolling_mae_7d IS NOT NULL\nORDER BY run_ts DESC\nLIMIT 1"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Latest drift rows",
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 11
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "serving"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "rawSql": "SELECT run_ts, feature, psi, ks_statistic, ks_pvalue, drift, rolling_mae_7d\nFROM serving.drift_metrics\nORDER BY run_ts DESC, feature\nLIMIT 100"
+        }
+      ]
+    }
+  ]
+}

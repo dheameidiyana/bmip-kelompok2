@@ -1,0 +1,382 @@
+{
+  "best": "e1_xgboost",
+  "candidates": [
+    {
+      "gate": {
+        "baseline_mae": 0.00027980935484343974,
+        "baseline_rmse": 0.0007665888346403882,
+        "comparison": "persistence-baseline",
+        "directional_accuracy": 0.6595238095238095,
+        "mae": 0.00024042862901093041,
+        "mae_improvement": 0.1407412766972849,
+        "rmse": 0.0006200363659916636,
+        "rmse_change": -0.19117480196208864
+      },
+      "gate_pass": true,
+      "name": "e1_ridge",
+      "per_symbol": {
+        "BNBUSDT": {
+          "baseline_mae": 0.00018823775747300888,
+          "baseline_rmse": 0.0002693394951997165,
+          "directional_accuracy": 0.6666666666666666,
+          "mae": 0.00016959392511374868,
+          "mae_improvement": 0.09904406326097202,
+          "rmse": 0.0002667022883959093,
+          "rmse_change": -0.009791385410638346
+        },
+        "BTCUSDT": {
+          "baseline_mae": 0.0003152179194765728,
+          "baseline_rmse": 0.0013693952761145473,
+          "directional_accuracy": 0.6712962962962963,
+          "mae": 0.00025662474736659326,
+          "mae_improvement": 0.18588147592394166,
+          "rmse": 0.0010569678692824056,
+          "rmse_change": -0.22814990841695273
+        },
+        "ETHUSDT": {
+          "baseline_mae": 0.0002930377932997249,
+          "baseline_rmse": 0.00048174079877955723,
+          "directional_accuracy": 0.6435185185185185,
+          "mae": 0.0002516725337450791,
+          "mae_improvement": 0.14116015237780813,
+          "rmse": 0.0004532733953085665,
+          "rmse_change": -0.059092780896096174
+        },
+        "SOLUSDT": {
+          "baseline_mae": 0.00025778852253388433,
+          "baseline_rmse": 0.0003798654482451192,
+          "directional_accuracy": 0.6574074074074074,
+          "mae": 0.00022605976856756373,
+          "mae_improvement": 0.12308055321644547,
+          "rmse": 0.0003595960873138345,
+          "rmse_change": -0.05335931716065239
+        },
+        "XRPUSDT": {
+          "baseline_mae": 0.0002592298330360405,
+          "baseline_rmse": 0.00039185781777061903,
+          "directional_accuracy": 0.6481481481481481,
+          "mae": 0.00024402145438711333,
+          "mae_improvement": 0.05866754790839517,
+          "rmse": 0.0003907937912360926,
+          "rmse_change": -0.0027153382841254674
+        }
+      },
+      "test": {
+        "baseline_mae": 0.00026270236516384623,
+        "baseline_rmse": 0.0007039476814716358,
+        "directional_accuracy": 0.6574074074074074,
+        "mae": 0.00022959448583601962,
+        "mae_improvement": 0.12602809764265877,
+        "rmse": 0.0005789295451962453,
+        "rmse_change": -0.17759577816072092
+      },
+      "validation": {
+        "baseline_mae": 0.00016799919333036618,
+        "baseline_rmse": 0.0002813276624492702,
+        "directional_accuracy": 0.6064814814814815,
+        "mae": 0.00015388595517792036,
+        "mae_improvement": 0.08400777332717602,
+        "rmse": 0.00024941040320234,
+        "rmse_change": -0.11345226050312635
+      }
+    },
+    {
+      "gate": {
+        "baseline_mae": 0.00027980935484343974,
+        "baseline_rmse": 0.0007665888346403882,
+        "comparison": "persistence-baseline",
+        "directional_accuracy": 0.6547619047619048,
+        "mae": 0.00023923638799465123,
+        "mae_improvement": 0.14500218147277488,
+        "rmse": 0.0005970315337401798,
+        "rmse_change": -0.22118415144899523
+      },
+      "gate_pass": true,
+      "name": "e1_xgboost",
+      "per_symbol": {
+        "BNBUSDT": {
+          "baseline_mae": 0.00018823775747300888,
+          "baseline_rmse": 0.0002693394951997165,
+          "directional_accuracy": 0.6712962962962963,
+          "mae": 0.00017035457938289437,
+          "mae_improvement": 0.09500314033797794,
+          "rmse": 0.00025654000179494037,
+          "rmse_change": -0.04752178433870335
+        },
+        "BTCUSDT": {
+          "baseline_mae": 0.0003152179194765728,
+          "baseline_rmse": 0.0013693952761145473,
+          "directional_accuracy": 0.6712962962962963,
+          "mae": 0.00022935102319413352,
+          "mae_improvement": 0.27240486970101,
+          "rmse": 0.0009943455521635013,
+          "rmse_change": -0.2738798143186188
+        },
+        "ETHUSDT": {
+          "baseline_mae": 0.0002930377932997249,
+          "baseline_rmse": 0.00048174079877955723,
+          "directional_accuracy": 0.6296296296296297,
+          "mae": 0.000253270624276745,
+          "mae_improvement": 0.13570662191789462,
+          "rmse": 0.00044233159903195703,
+          "rmse_change": -0.08180581725159987
+        },
+        "SOLUSDT": {
+          "baseline_mae": 0.00025778852253388433,
+          "baseline_rmse": 0.0003798654482451192,
+          "directional_accuracy": 0.6527777777777778,
+          "mae": 0.00023399863656851743,
+          "mae_improvement": 0.09228450410254362,
+          "rmse": 0.00037291066895283486,
+          "rmse_change": -0.0183085335199967
+        },
+        "XRPUSDT": {
+          "baseline_mae": 0.0002592298330360405,
+          "baseline_rmse": 0.00039185781777061903,
+          "directional_accuracy": 0.6481481481481481,
+          "mae": 0.0002444970760189767,
+          "mae_improvement": 0.05683279908225511,
+          "rmse": 0.0003964734658478272,
+          "rmse_change": 0.011778884758425411
+        }
+      },
+      "test": {
+        "baseline_mae": 0.00026270236516384623,
+        "baseline_rmse": 0.0007039476814716358,
+        "directional_accuracy": 0.6546296296296297,
+        "mae": 0.0002262943878882534,
+        "mae_improvement": 0.13859021502484511,
+        "rmse": 0.0005561378730621919,
+        "rmse_change": -0.20997271856971025
+      },
+      "validation": {
+        "baseline_mae": 0.00016799919333036618,
+        "baseline_rmse": 0.0002813276624492702,
+        "directional_accuracy": 0.5962962962962963,
+        "mae": 0.00015207371316703643,
+        "mae_improvement": 0.09479497994977089,
+        "rmse": 0.0002480003009292756,
+        "rmse_change": -0.11846457340825585
+      }
+    },
+    {
+      "gate": {
+        "baseline_mae": 0.00027980935484343974,
+        "baseline_rmse": 0.0007665888346403882,
+        "comparison": "persistence-baseline",
+        "directional_accuracy": 0.6595238095238095,
+        "mae": 0.00024042862901093041,
+        "mae_improvement": 0.1407412766972849,
+        "rmse": 0.0006200363659916636,
+        "rmse_change": -0.19117480196208864
+      },
+      "gate_pass": true,
+      "name": "e2_ridge",
+      "per_symbol": {
+        "BNBUSDT": {
+          "baseline_mae": 0.00018823775747300888,
+          "baseline_rmse": 0.0002693394951997165,
+          "directional_accuracy": 0.6666666666666666,
+          "mae": 0.00016959392511374866,
+          "mae_improvement": 0.09904406326097218,
+          "rmse": 0.00026670228839590927,
+          "rmse_change": -0.009791385410638547
+        },
+        "BTCUSDT": {
+          "baseline_mae": 0.0003152179194765728,
+          "baseline_rmse": 0.0013693952761145473,
+          "directional_accuracy": 0.6712962962962963,
+          "mae": 0.00025662474736659326,
+          "mae_improvement": 0.18588147592394166,
+          "rmse": 0.0010569678692824056,
+          "rmse_change": -0.22814990841695273
+        },
+        "ETHUSDT": {
+          "baseline_mae": 0.0002930377932997249,
+          "baseline_rmse": 0.00048174079877955723,
+          "directional_accuracy": 0.6435185185185185,
+          "mae": 0.0002516725337450791,
+          "mae_improvement": 0.14116015237780813,
+          "rmse": 0.0004532733953085664,
+          "rmse_change": -0.0590927808960964
+        },
+        "SOLUSDT": {
+          "baseline_mae": 0.00025778852253388433,
+          "baseline_rmse": 0.0003798654482451192,
+          "directional_accuracy": 0.6574074074074074,
+          "mae": 0.0002260597685675637,
+          "mae_improvement": 0.12308055321644558,
+          "rmse": 0.0003595960873138345,
+          "rmse_change": -0.05335931716065239
+        },
+        "XRPUSDT": {
+          "baseline_mae": 0.0002592298330360405,
+          "baseline_rmse": 0.00039185781777061903,
+          "directional_accuracy": 0.6481481481481481,
+          "mae": 0.00024402145438711333,
+          "mae_improvement": 0.05866754790839517,
+          "rmse": 0.0003907937912360926,
+          "rmse_change": -0.0027153382841254674
+        }
+      },
+      "test": {
+        "baseline_mae": 0.00026270236516384623,
+        "baseline_rmse": 0.0007039476814716358,
+        "directional_accuracy": 0.6574074074074074,
+        "mae": 0.00022959448583601962,
+        "mae_improvement": 0.12602809764265877,
+        "rmse": 0.0005789295451962453,
+        "rmse_change": -0.17759577816072092
+      },
+      "validation": {
+        "baseline_mae": 0.00016799919333036618,
+        "baseline_rmse": 0.0002813276624492702,
+        "directional_accuracy": 0.6064814814814815,
+        "mae": 0.00015388595517792033,
+        "mae_improvement": 0.08400777332717617,
+        "rmse": 0.00024941040320234,
+        "rmse_change": -0.11345226050312635
+      }
+    },
+    {
+      "gate": {
+        "baseline_mae": 0.00027980935484343974,
+        "baseline_rmse": 0.0007665888346403882,
+        "comparison": "persistence-baseline",
+        "directional_accuracy": 0.6535714285714286,
+        "mae": 0.00023907869297573955,
+        "mae_improvement": 0.14556576169688823,
+        "rmse": 0.0005987140675264528,
+        "rmse_change": -0.21898931934312152
+      },
+      "gate_pass": true,
+      "name": "e2_xgboost",
+      "per_symbol": {
+        "BNBUSDT": {
+          "baseline_mae": 0.00018823775747300888,
+          "baseline_rmse": 0.0002693394951997165,
+          "directional_accuracy": 0.6712962962962963,
+          "mae": 0.00016970322295258852,
+          "mae_improvement": 0.09846342609068749,
+          "rmse": 0.000255417851147732,
+          "rmse_change": -0.05168808993891349
+        },
+        "BTCUSDT": {
+          "baseline_mae": 0.0003152179194765728,
+          "baseline_rmse": 0.0013693952761145473,
+          "directional_accuracy": 0.6759259259259259,
+          "mae": 0.00022940469224682353,
+          "mae_improvement": 0.2722346095432781,
+          "rmse": 0.0009990120994823393,
+          "rmse_change": -0.27047207120731015
+        },
+        "ETHUSDT": {
+          "baseline_mae": 0.0002930377932997249,
+          "baseline_rmse": 0.00048174079877955723,
+          "directional_accuracy": 0.6296296296296297,
+          "mae": 0.0002540102675750102,
+          "mae_improvement": 0.133182567631461,
+          "rmse": 0.00044331658422631524,
+          "rmse_change": -0.07976117997600773
+        },
+        "SOLUSDT": {
+          "baseline_mae": 0.00025778852253388433,
+          "baseline_rmse": 0.0003798654482451192,
+          "directional_accuracy": 0.6574074074074074,
+          "mae": 0.00023543238595015646,
+          "mae_improvement": 0.08672277711971964,
+          "rmse": 0.00037237840103994196,
+          "rmse_change": -0.019709734696233838
+        },
+        "XRPUSDT": {
+          "baseline_mae": 0.0002592298330360405,
+          "baseline_rmse": 0.00039185781777061903,
+          "directional_accuracy": 0.6435185185185185,
+          "mae": 0.00024468959511313,
+          "mae_improvement": 0.05609014114085021,
+          "rmse": 0.0003957808803754491,
+          "rmse_change": 0.010011444015968372
+        }
+      },
+      "test": {
+        "baseline_mae": 0.00026270236516384623,
+        "baseline_rmse": 0.0007039476814716358,
+        "directional_accuracy": 0.6555555555555556,
+        "mae": 0.00022664803276754175,
+        "mae_improvement": 0.13724403422792772,
+        "rmse": 0.0005576918909718794,
+        "rmse_change": -0.20776514270776733
+      },
+      "validation": {
+        "baseline_mae": 0.00016799919333036618,
+        "baseline_rmse": 0.0002813276624492702,
+        "directional_accuracy": 0.5953703703703703,
+        "mae": 0.00015064805612032556,
+        "mae_improvement": 0.10328107454611428,
+        "rmse": 0.00024588340422668144,
+        "rmse_change": -0.1259892394299482
+      }
+    }
+  ],
+  "dataset_id": "mart_ml@3627445140691597595",
+  "feature_importance": [
+    {
+      "feature": "rv_60m",
+      "importance": 0.35601937770843506,
+      "share": 0.356019369750782
+    },
+    {
+      "feature": "rv_5m",
+      "importance": 0.12765811383724213,
+      "share": 0.12765811098386098
+    },
+    {
+      "feature": "rv_15m",
+      "importance": 0.1187099739909172,
+      "share": 0.11870997133754257
+    },
+    {
+      "feature": "hl_range_1m",
+      "importance": 0.08345769345760345,
+      "share": 0.08345769159217868
+    },
+    {
+      "feature": "ret_15m",
+      "importance": 0.039511192589998245,
+      "share": 0.03951119170685429
+    },
+    {
+      "feature": "trade_count_60m",
+      "importance": 0.037408072501420975,
+      "share": 0.03740807166528542
+    },
+    {
+      "feature": "vwap_dev",
+      "importance": 0.03554819896817207,
+      "share": 0.03554819817360793
+    },
+    {
+      "feature": "symbol_XRPUSDT",
+      "importance": 0.03305172175168991,
+      "share": 0.033051721012926374
+    },
+    {
+      "feature": "ret_5m",
+      "importance": 0.03249034658074379,
+      "share": 0.032490345854527966
+    },
+    {
+      "feature": "symbol_BTCUSDT",
+      "importance": 0.031122121959924698,
+      "share": 0.031122121264291078
+    }
+  ],
+  "gate_comparison": "persistence-baseline",
+  "gate_pass": true,
+  "registry": null,
+  "selection_note": "E2 did not add signal because sentiment coverage is 0.07%; the market-only E1 candidate is promoted per the H0 policy.",
+  "sentiment_coverage": 0.0006954102920723226,
+  "sha256": "1b1434dfffa55afe5ec163a4a26dc4bff6383e0e9050e7c8561e3404936f6ede",
+  "snapshot_id": "3627445140691597595",
+  "timestamp": "20261125T123044Z"
+}

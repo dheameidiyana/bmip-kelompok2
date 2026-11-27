@@ -13,7 +13,7 @@ import pandas as pd
 
 from bmip.api.models import PredictRequest
 from bmip.common.config import Settings
-from bmip.ml.dataset import latest_feature_row
+from bmip.ml.features import latest_features
 
 MARKET_FEATURES = {
     "ret_5m",
@@ -61,7 +61,7 @@ class VolatilityPredictor:
         if self.cache is not None:
             latest = self.cache.get(payload.symbol)
         else:
-            latest = latest_feature_row(
+            latest = latest_features(
                 self.settings,
                 payload.symbol,
                 at=payload.window_start or datetime.now(UTC),
@@ -85,6 +85,8 @@ class VolatilityPredictor:
             return None
         for feature in missing:
             row[feature] = 0.0
+        if row.get("trade_count_60m") is not None:
+            row["trade_count_60m"] = int(row["trade_count_60m"])
         row.setdefault("window_start", feature_ts)
         return row
 

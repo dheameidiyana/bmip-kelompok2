@@ -61,6 +61,25 @@ deployments:
         timezone: UTC
         active: true
 
+  - name: refresh-feast
+    version: "1"
+    description: Materialize the latest gold features into the Feast online store.
+    tags:
+      - bmip
+      - c3-b
+      - ml
+      - feast
+    entrypoint: src/bmip/flows/ml.py:refresh_feast_flow
+    parameters: {}
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1
+    schedules:
+      - cron: "55 * * * *"
+        timezone: UTC
+        active: true
+
   - name: infer-volatility
     version: "1"
     description: Score the latest feature row for every symbol and persist predictions.
@@ -97,7 +116,26 @@ deployments:
     schedules:
       - cron: "0 2 * * 0"
         timezone: UTC
-        active: false
+        active: true
+
+  - name: drift-report
+    version: "1"
+    description: Compute PSI/KS drift, persist serving.drift_metrics, and trigger training.
+    tags:
+      - bmip
+      - c3-b
+      - ml
+      - drift
+    entrypoint: src/bmip/flows/ml.py:drift_report_flow
+    parameters: {}
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1
+    schedules:
+      - cron: "30 3 * * *"
+        timezone: UTC
+        active: true
 
   - name: backfill-gold
     version: "1"

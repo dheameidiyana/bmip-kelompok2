@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -22,13 +23,20 @@ from mlflow.tracking import MlflowClient
 
 from bmip.common.config import get_settings
 from bmip.ml.dataset import (
+    load_frozen_snapshot,
     load_mart_ml,
     save_snapshot,
     sentiment_coverage,
     write_metadata,
 )
+from bmip.ml.features import feast_training_frame
 from bmip.ml.metrics import baseline_metrics
-from bmip.ml.registry import record_decision, upsert_model_metric
+from bmip.ml.registry import (
+    archive_champion_metrics,
+    promotion_plan,
+    record_decision,
+    upsert_model_metric,
+)
 from bmip.ml.training import (
     SEED,
     XGB_PARAMS,
@@ -46,6 +54,20 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
+
+
+def latest_snapshot_path() -> Path:
+    paths = sorted((ROOT / "data" / "ml" / "snapshots").glob("mart_ml_*.parquet"))
+    if not paths:
+        raise FileNotFoundError("no frozen mart_ml snapshot")
+    return paths[-1]
+
+
+def latest_metadata_path() -> Path:
+    paths = sorted((ROOT / "evidence" / "ml").glob("dataset_*.json"))
+    if not paths:
+        raise FileNotFoundError("no dataset metadata")
+    return paths[-1]
 
 
 def git_sha() -> str:
@@ -74,8 +96,12 @@ def load_champion() -> tuple[Any, tuple[str, ...]] | None:
         return None
 
 
-def candidate_metrics(prefix: str, values: dict[str, float]) -> dict[str, float]:
-    return {f"{prefix}_{key}": float(value) for key, value in values.items()}
+def candidate_metrics(prefix: str, values: dict[str, Any]) -> dict[str, float]:
+    return {
+        f"{prefix}_{key}": float(value)
+        for key, value in values.items()
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
+    }
 
 
 def run_candidate(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[str, Any]:
@@ -135,6 +161,14 @@ def log_best(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[str, A
     example = validation[list(features)].head(2)
     predicted = candidate.model.predict(example)
     signature = infer_signature(example, predicted)
+    client = MlflowClient()
+    champion_before = None
+    try:
+        champion_before = client.get_model_version_by_alias(
+            REGISTERED_MODEL, "champion"
+        )
+    except Exception:  # noqa: BLE001 - first registration has no champion
+        champion_before = None
     with mlflow.start_run(run_name=f"registered_{candidate.name}") as run:
         mlflow.set_tags(
             {
@@ -174,8 +208,19 @@ def log_best(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[str, A
             "feature_importance.json",
         )
         version = str(info.registered_model_version)
-        client = MlflowClient()
+        champion_version = (
+            str(champion_before.version) if champion_before else None
+        )
+        plan = promotion_plan(
+            gate_pass=candidate.gate_pass,
+            champion_before=champion_version,
+            candidate_version=version,
+        )
         client.set_registered_model_alias(REGISTERED_MODEL, "challenger", version)
+        if plan["archived_version"]:
+            client.set_registered_model_alias(
+                REGISTERED_MODEL, "archived", str(plan["archived_version"])
+            )
         if candidate.gate_pass:
             client.set_registered_model_alias(REGISTERED_MODEL, "champion", version)
         return {
@@ -183,6 +228,7 @@ def log_best(candidate: Candidate, snapshot, frame: pd.DataFrame) -> dict[str, A
             "version": version,
             "gate_pass": candidate.gate_pass,
             "champion": candidate.gate_pass,
+            **plan,
         }
 
 
@@ -331,11 +377,22 @@ def main() -> int:
     parser.add_argument("--no-mlflow", action="store_true")
     parser.add_argument("--ignore-champion", action="store_true")
     parser.add_argument("--snapshot", type=Path, default=None)
+    parser.add_argument(
+        "--feature-source",
+        choices=("gold", "feast"),
+        default=os.getenv("TRAIN_FEATURE_SOURCE", "gold"),
+    )
     args = parser.parse_args()
 
     settings = get_settings()
-    frame, snapshot_id = load_mart_ml(settings)
-    snapshot = save_snapshot(settings, frame, snapshot_id)
+    if args.feature_source == "feast":
+        source = args.snapshot or latest_snapshot_path()
+        base = load_frozen_snapshot(source, latest_metadata_path())
+        frame = feast_training_frame(settings, base)
+        snapshot = replace(base, frame=frame, row_count=len(frame))
+    else:
+        frame, snapshot_id = load_mart_ml(settings)
+        snapshot = save_snapshot(settings, frame, snapshot_id)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     metadata_path = ROOT / "evidence" / "ml" / f"dataset_{stamp}.json"
     write_metadata(snapshot, metadata_path)
@@ -428,9 +485,13 @@ def main() -> int:
             alias="champion" if registry["champion"] else "challenger",
             metrics=serving_metrics,
         )
+        if registry["champion"]:
+            archive_champion_metrics(
+                settings, new_champion_version=registry["version"]
+            )
         record_decision(
             settings,
-            champion_version=registry["version"] if registry["champion"] else None,
+            champion_version=registry.get("champion_after"),
             challenger_version=registry["version"],
             decision="promoted" if registry["champion"] else "rejected",
             reason=selection_note,

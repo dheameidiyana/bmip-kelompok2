@@ -1,0 +1,27 @@
+{
+  "actual_hash": "6174feff1e0b69caa93b00ac9061dbff357e5ef42022360ecce25973a9927dfa",
+  "actual_rows": 7190,
+  "expected_hash": "6174feff1e0b69caa93b00ac9061dbff357e5ef42022360ecce25973a9927dfa",
+  "expected_rows": 7190,
+  "id": "C3-B-pit-parity",
+  "max_abs_diff": {
+    "engagement_1h": 0.0,
+    "hl_range_1m": 0.0,
+    "post_count_1h": 0.0,
+    "ret_15m": 0.0,
+    "ret_5m": 0.0,
+    "ret_60m": 0.0,
+    "rv_15m": 0.0,
+    "rv_5m": 0.0,
+    "rv_60m": 0.0,
+    "sent_mean_1h": 0.0,
+    "sent_neg_share": 0.0,
+    "sent_pos_share": 0.0,
+    "trade_count_60m": 0.0,
+    "volume_z_60m": 0.0,
+    "vwap_dev": 0.0
+  },
+  "pass": true,
+  "snapshot_id": "3627445140691597595",
+  "timestamp": "2026-11-25T14:33:48+00:00"
+}

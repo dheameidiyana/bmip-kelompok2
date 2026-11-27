@@ -1,0 +1,238 @@
+{
+  "commit": "c8e362b",
+  "daily_mae": [
+    {
+      "count": 5,
+      "date": "2026-11-09",
+      "mae": 9.042144450270895e-05,
+      "rmse": 0.00010232290517912344
+    },
+    {
+      "count": 120,
+      "date": "2026-11-10",
+      "mae": 0.00030479856470278454,
+      "rmse": 0.00133010807533733
+    },
+    {
+      "count": 120,
+      "date": "2026-11-11",
+      "mae": 0.0001718734302580725,
+      "rmse": 0.0002373694211524902
+    },
+    {
+      "count": 120,
+      "date": "2026-11-12",
+      "mae": 0.0001507298960940828,
+      "rmse": 0.0002451787559455696
+    },
+    {
+      "count": 120,
+      "date": "2026-11-13",
+      "mae": 0.00023708662362534878,
+      "rmse": 0.00031460697635769564
+    },
+    {
+      "count": 120,
+      "date": "2026-11-14",
+      "mae": 0.00036634737664442127,
+      "rmse": 0.0005382773715876713
+    },
+    {
+      "count": 120,
+      "date": "2026-11-15",
+      "mae": 0.00028432965374805243,
+      "rmse": 0.000400379689365624
+    },
+    {
+      "count": 120,
+      "date": "2026-11-16",
+      "mae": 0.0001594891708897964,
+      "rmse": 0.00024588256429731146
+    }
+  ],
+  "dataset_id": "mart_ml@3627445140691597595",
+  "drift_detected": true,
+  "features": [
+    {
+      "drift": true,
+      "feature": "rv_60m",
+      "ks_pvalue": 4.11514417529104e-18,
+      "ks_statistic": 0.3284904947752738,
+      "production_mean": 0.0009043004350497465,
+      "psi": 1.4530190416553108,
+      "reference_mean": 0.0006455195705364399
+    },
+    {
+      "drift": true,
+      "feature": "rv_15m",
+      "ks_pvalue": 1.0801217779097244e-18,
+      "ks_statistic": 0.33377816945738387,
+      "production_mean": 0.0007787256605795763,
+      "psi": 1.3229523828174314,
+      "reference_mean": 0.0006006292080021841
+    },
+    {
+      "drift": true,
+      "feature": "rv_5m",
+      "ks_pvalue": 3.29853548019703e-20,
+      "ks_statistic": 0.34707289437240335,
+      "production_mean": 0.0006860238813845126,
+      "psi": 0.8097908690328203,
+      "reference_mean": 0.000554736256427096
+    },
+    {
+      "drift": true,
+      "feature": "hl_range_1m",
+      "ks_pvalue": 9.662508869508887e-17,
+      "ks_statistic": 0.31572453732846534,
+      "production_mean": 0.0008833744453975461,
+      "psi": 0.6864684314650363,
+      "reference_mean": 0.0005781599409934205
+    },
+    {
+      "drift": true,
+      "feature": "trade_count_60m",
+      "ks_pvalue": 1.2361184895832434e-09,
+      "ks_statistic": 0.23794536069495154,
+      "production_mean": 84143.49467455622,
+      "psi": 0.6432169480256588,
+      "reference_mean": 45772.39574468085
+    },
+    {
+      "drift": true,
+      "feature": "ret_5m",
+      "ks_pvalue": 0.0005728542045932279,
+      "ks_statistic": 0.1476772000503588,
+      "production_mean": -2.642097534575693e-05,
+      "psi": 0.3503386951617267,
+      "reference_mean": -0.00034457400852358765
+    },
+    {
+      "drift": true,
+      "feature": "vwap_dev",
+      "ks_pvalue": 0.0005211654877518691,
+      "ks_statistic": 0.14853329976079566,
+      "production_mean": 7.969741226645042e-05,
+      "psi": 0.20888827302277313,
+      "reference_mean": -0.0002804206442762772
+    },
+    {
+      "drift": false,
+      "feature": "ret_60m",
+      "ks_pvalue": 0.009579414526654258,
+      "ks_statistic": 0.11937555079944605,
+      "production_mean": -0.0009038206213776502,
+      "psi": 0.1532726523828648,
+      "reference_mean": -0.0006562267455458449
+    },
+    {
+      "drift": false,
+      "feature": "ret_15m",
+      "ks_pvalue": 0.04995516555826391,
+      "ks_statistic": 0.09908095178144279,
+      "production_mean": -3.0515764314400864e-05,
+      "psi": 0.14164305533379296,
+      "reference_mean": -0.0005442661935321924
+    },
+    {
+      "drift": false,
+      "feature": "volume_z_60m",
+      "ks_pvalue": 0.5732861396269031,
+      "ks_statistic": 0.056653657308321795,
+      "production_mean": -0.12873737680962047,
+      "psi": 0.03902772127885391,
+      "reference_mean": -0.14603510140708473
+    },
+    {
+      "drift": false,
+      "feature": "sent_mean_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.005917159763313609,
+      "production_mean": 0.0015106508875739647,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_pos_share",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.005917159763313609,
+      "production_mean": 0.0029585798816568047,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_neg_share",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "post_count_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.005917159763313609,
+      "production_mean": 0.011834319526627219,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "engagement_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.005917159763313609,
+      "production_mean": 0.05325443786982249,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    }
+  ],
+  "flagged_features": [
+    "rv_60m",
+    "rv_15m",
+    "rv_5m",
+    "hl_range_1m",
+    "trade_count_60m",
+    "ret_5m",
+    "vwap_dev"
+  ],
+  "id": "C3-B-drift",
+  "limitations": "Production is the most recent seven labelled days in the frozen holdout; the reference is the earlier holdout or validation fallback. Labels are one hour behind the features, so unlabelled recent hours are excluded.",
+  "model": "e1_xgboost",
+  "persisted_rows": 15,
+  "production": {
+    "end": "2026-11-16T23:00:00+00:00",
+    "rows": 845,
+    "split": "holdout-recent",
+    "start": "2026-11-09T23:00:00+00:00",
+    "window_days": 7
+  },
+  "reference": {
+    "end": "2026-11-09T22:00:00+00:00",
+    "rows": 235,
+    "split": "holdout-pre-production",
+    "start": "2026-11-08T00:00:00+00:00"
+  },
+  "rolling_mae_7d": 0.00022063452005815847,
+  "sha256": "1b1434dfffa55afe5ec163a4a26dc4bff6383e0e9050e7c8561e3404936f6ede",
+  "snapshot_id": "3627445140691597595",
+  "threshold": 0.2,
+  "timestamp": "2026-11-26T22:24:00+00:00",
+  "top5_features": [
+    "rv_60m",
+    "rv_5m",
+    "rv_15m",
+    "hl_range_1m",
+    "ret_15m"
+  ],
+  "top5_psi": {
+    "hl_range_1m": 0.6864684314650363,
+    "ret_15m": 0.14164305533379296,
+    "rv_15m": 1.3229523828174314,
+    "rv_5m": 0.8097908690328203,
+    "rv_60m": 1.4530190416553108
+  },
+  "trigger_required": true
+}

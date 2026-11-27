@@ -1,0 +1,20 @@
+{
+  "cache_dir": "data\\replay\\klines",
+  "counts": {
+    "BNBUSDT": 11520,
+    "BTCUSDT": 11520,
+    "ETHUSDT": 11520,
+    "SOLUSDT": 11520,
+    "XRPUSDT": 11520
+  },
+  "end": "2026-11-24",
+  "rows": 57600,
+  "start": "2026-11-17",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ]
+}

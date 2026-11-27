@@ -175,6 +175,7 @@ def settings(monkeypatch) -> Settings:
     monkeypatch.setenv("BMIP_API_KEY", API_KEY)
     monkeypatch.setenv("API_AUTH_REQUIRED", "true")
     monkeypatch.setenv("BMIP_AS_OF", "")
+    monkeypatch.setenv("AUDIT_LOG_ENABLED", "false")
     return Settings.from_env()
 
 

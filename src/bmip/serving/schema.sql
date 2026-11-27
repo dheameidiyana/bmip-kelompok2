@@ -175,3 +175,23 @@ CREATE TABLE IF NOT EXISTS serving.model_decisions (
     metrics            jsonb       NOT NULL DEFAULT '{}'::jsonb,
     PRIMARY KEY (model_name, decision_ts)
 );
+
+CREATE TABLE IF NOT EXISTS serving.drift_metrics (
+    run_ts            timestamptz NOT NULL,
+    model_name        text        NOT NULL DEFAULT 'volatility_model',
+    feature           text        NOT NULL,
+    psi               double precision,
+    ks_statistic      double precision,
+    ks_pvalue         double precision,
+    drift             boolean     NOT NULL DEFAULT false,
+    reference_rows    integer,
+    production_rows   integer,
+    rolling_mae_7d    double precision,
+    window_start      timestamptz,
+    window_end        timestamptz,
+    detail            jsonb       NOT NULL DEFAULT '{}'::jsonb,
+    PRIMARY KEY (run_ts, model_name, feature)
+);
+
+CREATE INDEX IF NOT EXISTS drift_metrics_run_idx
+    ON serving.drift_metrics (run_ts DESC);

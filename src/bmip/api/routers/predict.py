@@ -110,6 +110,10 @@ def predict(
         now,
         settings.freshness_predictions_slo_seconds,
     )
+    if feature_ts is not None:
+        request.app.state.metrics.setdefault("feature_age_seconds", {})[symbol] = max(
+            0.0, (now - feature_ts).total_seconds()
+        )
     response.headers["X-Data-Stale"] = "true" if stale else "false"
     repository.insert_prediction(
         symbol=symbol,

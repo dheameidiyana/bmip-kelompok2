@@ -5,6 +5,7 @@ COMPOSE_DEV := docker compose --env-file .env -f deploy/compose.base.yml -f depl
 COMPOSE_TWO := $(COMPOSE_DEV) -f deploy/compose.two-node.yml
 STREAM_GROUP ?= ohlcv-builder-replay
 PREFECT_WORK_POOL ?= local-process
+C3B_AS_OF ?= 2026-11-17T00:00:00Z
 
 ifeq ($(OS),Windows_NT)
 PYTHON := .venv/Scripts/python.exe
@@ -14,7 +15,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check c3a-roles c3a-services c3a-up c3a-chaos c3a-scan c3a-evidence c3a-circuit
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check c3a-roles c3a-services c3a-up c3a-chaos c3a-scan c3a-evidence c3a-circuit c3b-feast-build c3b-feast-apply c3b-parity c3b-drift c3b-per-symbol c3b-promotion c3b-feature-age c3b-evidence
 
 help:
 	@echo "BMIP targets:"
@@ -57,6 +58,11 @@ help:
 	@echo "  c3a-scan     Trivy, port, rate-limit, TLS, and audit evidence"
 	@echo "  c3a-evidence T-16/T-17 replica evidence"
 	@echo "  c3a-circuit  T-18 circuit-breaker evidence"
+	@echo "  c3b-feast-build Build Feast offline sources"
+	@echo "  c3b-feast-apply Apply and materialize Feast"
+	@echo "  c3b-parity   Verify Feast point-in-time parity"
+	@echo "  c3b-drift    Persist drift metrics and trigger status"
+	@echo "  c3b-per-symbol Compare pooled vs per-symbol models"
 	@echo "  serving      Load gold into the serving schema (W1-D)"
 	@echo "  serving-counts  Print serving table counts"
 	@echo "  api-dev      Run the Query API on the host (uvicorn, port 8000)"
@@ -288,6 +294,30 @@ c3a-evidence: $(PYTHON)
 
 c3a-circuit: $(PYTHON)
 	$(PYTHON) scripts/c3a_circuit.py
+
+c3b-feast-build: $(PYTHON)
+	$(PYTHON) scripts/c3b_feast_build.py
+
+c3b-feast-apply: $(PYTHON)
+	$(PYTHON) scripts/c3b_feast.py
+
+c3b-parity: $(PYTHON)
+	$(PYTHON) scripts/c3b_parity.py
+
+c3b-drift: $(PYTHON)
+	$(PYTHON) scripts/c3b_drift.py
+
+c3b-per-symbol: $(PYTHON)
+	$(PYTHON) scripts/c3b_per_symbol.py
+
+c3b-promotion: $(PYTHON)
+	$(PYTHON) scripts/c3b_promotion_check.py
+
+c3b-feature-age: $(PYTHON)
+	$(PYTHON) scripts/c3b_feature_age.py --as-of $(C3B_AS_OF)
+
+c3b-evidence: c3b-feast-build c3b-feast-apply c3b-parity c3b-drift c3b-per-symbol c3b-promotion c3b-feature-age
+	@echo "C3-B evidence refreshed"
 
 OBS_SERVICES := prometheus alertmanager pushgateway postgres-exporter cadvisor notify grafana
 

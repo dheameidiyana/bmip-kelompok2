@@ -36,6 +36,46 @@ def upsert_model_metric(
         connection.commit()
 
 
+def promotion_plan(
+    *,
+    gate_pass: bool,
+    champion_before: str | None,
+    candidate_version: str,
+) -> dict[str, str | None]:
+    archived = (
+        champion_before
+        if gate_pass
+        and champion_before is not None
+        and champion_before != candidate_version
+        else None
+    )
+    return {
+        "decision": "promoted" if gate_pass else "rejected",
+        "champion_before": champion_before,
+        "champion_after": candidate_version if gate_pass else champion_before,
+        "archived_version": archived,
+    }
+
+
+def archive_champion_metrics(
+    settings: Settings,
+    *,
+    new_champion_version: str,
+) -> None:
+    with psycopg.connect(settings.postgres_dsn) as connection:
+        connection.execute(
+            """
+            UPDATE serving.model_metrics
+            SET alias = 'archived', created_at = now()
+            WHERE model_name = %s
+              AND alias = 'champion'
+              AND version <> %s
+            """,
+            (MODEL_NAME, new_champion_version),
+        )
+        connection.commit()
+
+
 def record_decision(
     settings: Settings,
     *,
