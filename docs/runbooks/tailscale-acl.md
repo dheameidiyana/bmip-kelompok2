@@ -1,50 +1,62 @@
-# Runbook: Tailscale ACL (W2-C)
+# Runbook: Tailscale ACL (C3-C final)
 
-The ACL is deny-by-default: only the ports in `deploy/tailscale/acl.json` are
-allowed, and nothing is exposed to the public internet.
+`deploy/tailscale/acl.json` is the final ACL. It is deny-by-default and
+port-level least privilege: only the ports in the file are allowed.
 
-## Apply
+## Tags
 
-1. Tag each device in the Tailscale admin console:
-   - N1/N2 platform nodes: `tag:bmip-core`
-   - N3/N4 UI and observability nodes: `tag:bmip-ui`
-   - analyst, lecturer, guest laptops: `tag:bmip-user`
-2. Open **Access controls**, paste `deploy/tailscale/acl.json`, save.
-3. Confirm the tailnet device list has a `100.64.x.x` address for every node.
+Tag each device in the Tailscale admin console:
 
-## Verify
+| Tag | Device |
+| --- | --- |
+| `tag:bmip-n1` | edge, ingress, storage, API replica |
+| `tag:bmip-n2` | processing, Prefect, MLflow, API replica |
+| `tag:bmip-n3` | governance, UI, catalog, docs |
+| `tag:bmip-n4` | Prometheus, Grafana, Loki, exporters |
+| `tag:bmip-user` | analyst and lecturer laptops |
+
+## Allowed matrix
+
+| Source | Destination | Ports |
+| --- | --- | --- |
+| user | n1 | 443 |
+| n1 | n2 | 8000, 4200, 5000, 5432 |
+| n2 | n1 | 8000, 5432, 9000, 8181, 9092, 9101 |
+| n1 | n3 | 5002, 8501, 8502, 3002, 8089 |
+| n2 | n3 | 5002 |
+| n3 | n1 | 8000 |
+| n4 | n1 | 8000, 5432, 8080, 9000, 9101, 9644 |
+| n4 | n2 | 8000, 5432, 8080 |
+| n4 | n3 | 5432, 8080 |
+| n1/n2/n3 | n4 | 3100, 9091 |
+
+Everything else is denied.
+
+## Validate offline
+
+```powershell
+.\scripts\make.ps1 c3c-acl
+```
+
+Writes `evidence/security/tailscale-acl_<ts>.json` with:
+
+- `offline_validation: PASS` - JSON parser, known tags, required allows, and
+  required denies (user cannot reach 5432/8000; N3 cannot reach storage ports);
+- `live_test` - `not_run` with a reason when Tailscale is logged out, or
+  `status_only` when the tailnet is up.
+
+## Live test (C3-D)
+
+The C3-C run had `tailscale status` = `NeedsLogin`, so the live cross-node
+test is **not claimed**. Lois (C3-D) must run:
 
 ```powershell
 tailscale status
 tailscale ping n1
 Test-NetConnection 100.64.0.11 -Port 443
-Test-NetConnection 100.64.0.11 -Port 5433   # must fail for tag:bmip-user
-```
-
-Record the JSON output:
-
-```powershell
+Test-NetConnection 100.64.0.11 -Port 5432   # must fail from tag:bmip-user
 tailscale status --json > evidence/security/tailscale-status_<ts>.json
 ```
 
-## What is allowed
-
-| Source | Destination | Ports |
-| --- | --- | --- |
-| `tag:bmip-user` | `tag:bmip-core` / `tag:bmip-ui` | 443 |
-| `tag:bmip-core` | `tag:bmip-core` | 443, 5433, 5435, 8000, 8181, 9000, 9090, 3000, 5002 |
-| `tag:bmip-core` | `tag:bmip-ui` | 3000, 3002, 8501, 8502 |
-| `tag:bmip-ui` | `tag:bmip-core` | 8000, 9000, 8181, 5433 |
-
-Everything else is dropped.
-
-## Fallback
-
-If Tailscale is not logged in on the demo machine (risk G1 in the workplan):
-
-- run the single-node demo with `BMIP_BIND_ADDRESS=127.0.0.1` and Traefik on
-  `80`/`443`;
-- keep the ACL file as the reviewed configuration;
-- record `tailscale status` failure in `evidence/security/tailscale-acl.md` and
-  state the limitation in the handoff. Do not claim a cross-node test that was
-  not run.
+Then update `docs/handoff/c3-c.md` or the compliance index with the result. Do
+not mark F-17 fully PASS for the live ACL until this runs.

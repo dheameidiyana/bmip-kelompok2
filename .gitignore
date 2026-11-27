@@ -4,6 +4,10 @@
 !.env.example
 deploy/env/*.env
 !deploy/env/*.env.example
+!deploy/env/node1.env
+!deploy/env/node2.env
+!deploy/env/node3.env
+!deploy/env/node4.env
 deploy/**/certs/
 deploy/traefik/users.htpasswd
 *.pem
@@ -51,3 +55,7 @@ desktop.ini
 # Build artifacts
 dist/
 build/
+# Generated documentation site (make docs). Source of truth is the registry.
+docs/_site/*
+!docs/_site/.gitkeep
+!docs/_site/README.md

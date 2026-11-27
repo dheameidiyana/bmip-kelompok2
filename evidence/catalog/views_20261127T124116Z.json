@@ -1,0 +1,35 @@
+{
+  "id": "CP2-catalog-views",
+  "timestamp": "2026-11-27T12:41:17.312368+00:00",
+  "commit": "eedb5ee",
+  "command": "python scripts/c3c_catalog.py",
+  "result": "PASS",
+  "owner": "vio",
+  "views": {
+    "search": {
+      "datasets": 11,
+      "queries": 5
+    },
+    "detail": {
+      "datasets": 11,
+      "schemas_endpoint": "/v1/dataset/{id}/schema"
+    },
+    "lineage": {
+      "datasets": 11,
+      "lineage_endpoint": "/v1/lineage/{id}"
+    },
+    "quality": {
+      "status": "pass",
+      "failures": 0
+    },
+    "governance": {
+      "datasets": 11,
+      "missing_owner": 0,
+      "missing_description": 0,
+      "deprecated": 0
+    }
+  },
+  "freshness_rows": 4,
+  "search_evidence": "evidence\\catalog\\search_20261127T124116Z.txt",
+  "failures": []
+}

@@ -1,0 +1,24 @@
+id        : CP3-lifecycle-retention
+timestamp : 2026-11-27T15:59:31.146511+00:00
+commit    : eedb5ee
+command   : python scripts/c3c_lifecycle.py
+result    : PASS
+owner     : vio
+
+Retention policy: bronze 14 days, silver 30 days, gold 90 days.
+Production retention is dry-run in this run; the apply path is proven on the fixture table below (user decision for C3-C).
+
+| table | files before | files after | snaps before | snaps after | old partitions | old rows |
+| --- | --- | --- | --- | --- | --- | --- |
+| gold.mart_market | 1 | 1 | 1 | 1 | 0 | 0 |
+| gold.mart_ml | 2 | 2 | 1 | 1 | 0 | 0 |
+| gold.mart_sentiment | 1 | 1 | 1 | 1 | 0 | 0 |
+
+Fixture retention:
+- table: silver.c3c_retention_probe
+- cutoff: 2026-11-13
+- rows before/after: 3 / 2
+- expected after: 2
+- result: PASS
+
+compaction evidence: evidence\storage\compaction_20261127T155958Z.json

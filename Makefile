@@ -1,8 +1,13 @@
 .DEFAULT_GOAL := help
 SHELL := /bin/sh
 
-COMPOSE_DEV := docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml
-COMPOSE_TWO := $(COMPOSE_DEV) -f deploy/compose.two-node.yml
+COMPOSE_DEV := docker compose --env-file .env -f deploy/compose.base.yml -f deploy/compose.dev.yml --profile n1 --profile n2 --profile n3 --profile n4
+COMPOSE_TWO := docker compose --env-file .env --env-file deploy/env/node1.env -f deploy/compose.base.yml -f deploy/compose.node1.yml -f deploy/compose.node2.yml --profile n1 --profile n2 --profile promtail
+COMPOSE_NODE1 := docker compose --env-file .env --env-file deploy/env/node1.env -f deploy/compose.base.yml -f deploy/compose.node1.yml
+COMPOSE_NODE2 := docker compose --env-file .env --env-file deploy/env/node2.env -f deploy/compose.base.yml -f deploy/compose.node2.yml
+COMPOSE_NODE3 := docker compose --env-file .env --env-file deploy/env/node3.env -f deploy/compose.base.yml -f deploy/compose.node3.yml
+COMPOSE_NODE4 := docker compose --env-file .env --env-file deploy/env/node4.env -f deploy/compose.base.yml -f deploy/compose.node4.yml
+COMPOSE_CLUSTER := docker compose --env-file .env --env-file deploy/env/node1.env -f deploy/compose.base.yml
 STREAM_GROUP ?= ohlcv-builder-replay
 PREFECT_WORK_POOL ?= local-process
 C3B_AS_OF ?= 2026-11-17T00:00:00Z
@@ -15,7 +20,7 @@ PYTHON := .venv/bin/python
 PYTHON_BOOT ?= python3.11
 endif
 
-.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check c3a-roles c3a-services c3a-up c3a-chaos c3a-scan c3a-evidence c3a-circuit c3b-feast-build c3b-feast-apply c3b-parity c3b-drift c3b-per-symbol c3b-promotion c3b-feature-age c3b-evidence
+.PHONY: help setup secrets dev-up dev-down reset doctor health bootstrap compose-config two-node-config node1-config node2-config node3-config node4-config three-node-config four-node-config node1-up node2-up node3-up node4-up node1-down node2-down node3-down node4-down two-node-local lint test ci ingest-once ingest-live replay evidence-cp2 evidence-cp3 stream stream-once stream-lag evidence-w1b-cp1 evidence-w1b-cp2 transform prefect-deploy prefect-worker quality gold evidence-w1c e2e-smoke smoke test-cov benchmark backup restore evidence serving serving-counts api-dev dashboard-dev evidence-api evidence-api-faults e2e-m1 reconcile openapi obs-up obs-down evidence-w2b drill-w2b reconcile-w2b metrics-check certs users governance governance-up catalog-dev evidence-w2c trace-w2c scan-w2c evidence-check c3a-roles c3a-services c3a-up c3a-chaos c3a-scan c3a-evidence c3a-circuit c3b-feast-build c3b-feast-apply c3b-parity c3b-drift c3b-per-symbol c3b-promotion c3b-feature-age c3b-evidence docs c3c-nodes c3c-acl c3c-loki c3c-migrate c3c-governance c3c-catalog c3c-lifecycle c3c-docs c3c-evidence
 
 help:
 	@echo "BMIP targets:"
@@ -29,6 +34,19 @@ help:
 	@echo "  bootstrap    Create MinIO buckets/users and Lakekeeper namespaces"
 	@echo "  compose-config  Validate dev compose and write evidence"
 	@echo "  two-node-config Validate the two-node overlay"
+	@echo "  node1-up     Start N1 (edge, storage, query)"
+	@echo "  node2-up     Start N2 (processing, orchestration, ML)"
+	@echo "  node3-up     Start N3 (governance, UI, docs)"
+	@echo "  node4-up     Start N4 (observability, security)"
+	@echo "  three-node-config / four-node-config  Validate a composed cluster"
+	@echo "  two-node-local  Run N1+N2 on one host for the C3-C live check"
+	@echo "  c3c-acl      Validate the final Tailscale ACL matrix (C3-C)"
+	@echo "  c3c-loki     Write Loki/Promtail evidence (C3-C)"
+	@echo "  c3c-migrate  Apply the C3-C catalog search/governance migration"
+	@echo "  c3c-catalog  Write catalog view and search evidence (C3-C)"
+	@echo "  c3c-governance  Run the governance workflow and metadata test"
+	@echo "  c3c-lifecycle   Compact, expire, and enforce retention (C3-C)"
+	@echo "  c3c-docs     Build and host dbt/GX docs (C3-C)"
 	@echo "  lint         Run ruff and sqlfluff"
 	@echo "  test         Run unit and contract tests"
 	@echo "  ci           Local mirror of the CI gate"
@@ -109,6 +127,7 @@ governance: $(PYTHON)
 	@$(PYTHON) scripts/w2c_migrate.py
 	@$(PYTHON) scripts/w2c_seed_registry.py
 	@$(PYTHON) scripts/w2c_seed_keys.py
+	@$(PYTHON) scripts/c3c_migrate.py
 
 governance-up: certs users
 	$(COMPOSE_DEV) --profile governance up -d postgres-gov marquez marquez-web
@@ -154,8 +173,79 @@ compose-config: secrets
 	echo "dev compose config valid"
 
 two-node-config: secrets
-	@$(COMPOSE_TWO) --profile two-node config --quiet
+	@$(COMPOSE_TWO) config --quiet
 	@echo "two-node compose config valid"
+
+node1-config: secrets
+	@$(COMPOSE_NODE1) --profile n1 --profile promtail config --quiet
+	@echo "node1 compose config valid"
+
+node2-config: secrets
+	@$(COMPOSE_NODE2) --profile n2 --profile promtail config --quiet
+	@echo "node2 compose config valid"
+
+node3-config: secrets
+	@$(COMPOSE_NODE3) --profile n3 --profile governance --profile docs --profile promtail config --quiet
+	@echo "node3 compose config valid"
+
+node4-config: secrets
+	@$(COMPOSE_NODE4) --profile n4 --profile loki --profile promtail config --quiet
+	@echo "node4 compose config valid"
+
+three-node-config: secrets
+	@BMIP_BIND_ADDRESS=127.0.0.1 BMIP_EDGE_BIND_ADDRESS=127.0.0.1 \
+		$(COMPOSE_CLUSTER) -f deploy/compose.node1.yml -f deploy/compose.node2.yml \
+		-f deploy/compose.node3.yml --profile n1 --profile n2 --profile n3 \
+		--profile governance --profile docs --profile promtail config --quiet
+	@echo "three-node compose config valid"
+
+four-node-config: secrets
+	@BMIP_BIND_ADDRESS=127.0.0.1 BMIP_EDGE_BIND_ADDRESS=127.0.0.1 \
+		$(COMPOSE_CLUSTER) -f deploy/compose.node1.yml -f deploy/compose.node2.yml \
+		-f deploy/compose.node3.yml -f deploy/compose.node4.yml \
+		--profile n1 --profile n2 --profile n3 --profile n4 \
+		--profile governance --profile docs --profile loki --profile promtail config --quiet
+	@echo "four-node compose config valid"
+
+node1-up: node1-config
+	$(COMPOSE_NODE1) --profile n1 --profile promtail --profile bootstrap up -d
+
+node2-up: node2-config
+	$(COMPOSE_NODE2) --profile n2 --profile promtail up -d
+
+node3-up: node3-config
+	$(COMPOSE_NODE3) --profile n3 --profile governance --profile docs --profile promtail up -d
+
+node4-up: node4-config
+	$(COMPOSE_NODE4) --profile n4 --profile loki --profile promtail up -d
+
+node1-down:
+	$(COMPOSE_NODE1) --profile n1 --profile promtail --profile bootstrap down --remove-orphans
+
+node2-down:
+	$(COMPOSE_NODE2) --profile n2 --profile promtail down --remove-orphans
+
+node3-down:
+	$(COMPOSE_NODE3) --profile n3 --profile governance --profile docs --profile promtail down --remove-orphans
+
+node4-down:
+	$(COMPOSE_NODE4) --profile n4 --profile loki --profile promtail down --remove-orphans
+
+# Live C3-C check: N1+N2 on one host. This proves the role split and the
+# cross-node env wiring, not a real two-laptop network; the handoff says so.
+two-node-local: secrets
+	BMIP_BIND_ADDRESS=127.0.0.1 BMIP_EDGE_BIND_ADDRESS=127.0.0.1 \
+	BMIP_N1_HOST=127.0.0.1 BMIP_N2_HOST=127.0.0.1 \
+	BMIP_N3_HOST=127.0.0.1 BMIP_N4_HOST=127.0.0.1 \
+	BMIP_API_2_HOST_PORT=8001 BMIP_PG_ML_PORT=5434 \
+		$(COMPOSE_TWO) --profile bootstrap up -d
+
+two-node-local-down:
+	BMIP_BIND_ADDRESS=127.0.0.1 BMIP_EDGE_BIND_ADDRESS=127.0.0.1 \
+	BMIP_N1_HOST=127.0.0.1 BMIP_N2_HOST=127.0.0.1 \
+	BMIP_N3_HOST=127.0.0.1 BMIP_N4_HOST=127.0.0.1 \
+	BMIP_API_2_HOST_PORT=8001 BMIP_PG_ML_PORT=5434 \
+		$(COMPOSE_TWO) --profile bootstrap down --remove-orphans
 
 lint: $(PYTHON)
 	$(PYTHON) -m ruff check src scripts tests deploy
@@ -338,3 +428,36 @@ drill-w2b: $(PYTHON)
 
 reconcile-w2b: $(PYTHON)
 	$(PYTHON) scripts/w2b_evidence.py --steps reconcile
+
+c3c-nodes: $(PYTHON)
+	$(PYTHON) scripts/c3c_nodes.py
+
+c3c-nodes-live: $(PYTHON)
+	$(PYTHON) scripts/c3c_nodes.py --live
+
+c3c-acl: $(PYTHON)
+	$(PYTHON) scripts/c3c_acl.py
+
+c3c-loki: $(PYTHON)
+	$(PYTHON) scripts/c3c_loki.py
+
+c3c-migrate: $(PYTHON)
+	$(PYTHON) scripts/c3c_migrate.py
+
+c3c-governance: $(PYTHON)
+	$(PYTHON) scripts/c3c_governance.py workflow
+	$(PYTHON) scripts/c3c_governance.py metadata-test
+
+c3c-catalog: $(PYTHON)
+	$(PYTHON) scripts/c3c_catalog.py
+
+c3c-lifecycle: $(PYTHON)
+	$(PYTHON) scripts/c3c_lifecycle.py
+
+docs: c3c-docs
+
+c3c-docs: $(PYTHON)
+	$(PYTHON) scripts/c3c_docs.py --serve
+
+c3c-evidence: c3c-nodes c3c-acl c3c-loki c3c-migrate c3c-governance c3c-catalog c3c-lifecycle c3c-docs
+	@echo "C3-C evidence refreshed"

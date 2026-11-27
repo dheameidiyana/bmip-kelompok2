@@ -1,0 +1,10 @@
+id        : metadata_consistency
+timestamp : 2026-11-27T12:39:30.997228+00:00
+commit    : eedb5ee
+command   : python scripts/c3c_governance.py metadata-test
+result    : PASS
+owner     : vio
+
+datasets          : 11
+serving_datasets  : 11
+failures          : 0

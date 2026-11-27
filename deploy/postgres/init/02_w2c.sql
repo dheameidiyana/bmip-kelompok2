@@ -1,6 +1,8 @@
 -- W2-C governance metadata, RBAC, audit, backfill queue, and lineage cache.
 -- Idempotent: safe on a fresh postgres-core volume and on an existing one.
 
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE SCHEMA IF NOT EXISTS ops;
 
 CREATE TABLE IF NOT EXISTS ops.dataset_registry (
@@ -23,6 +25,12 @@ CREATE TABLE IF NOT EXISTS ops.dataset_registry (
     columns             jsonb,
     auto_classification text
                         CHECK (auto_classification IS NULL OR auto_classification IN ('public', 'internal', 'confidential', 'restricted', 'pii')),
+    status              text        NOT NULL DEFAULT 'active'
+                        CHECK (status IN ('active', 'deprecated', 'retired')),
+    deprecated_at       timestamptz,
+    removal_date        date,
+    contract_version    text,
+    change_note         text,
     updated_at          timestamptz NOT NULL DEFAULT now()
 );
 

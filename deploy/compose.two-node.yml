@@ -1,3 +1,7 @@
-# C3-A keeps the API replicas in compose.base.yml so the dev and two-node
-# overlays share one definition. Node-specific overrides belong here later.
+# The two-node profile is now expressed by the role overlays, not by a separate
+# body of service definitions:
+#   docker compose --env-file .env --env-file deploy/env/node1.env \
+#     -f deploy/compose.base.yml -f deploy/compose.node1.yml -f deploy/compose.node2.yml \
+#     --profile n1 --profile n2 --profile promtail up -d
+# Keep this file as the documented seam for a future two-node-only override.
 services: {}

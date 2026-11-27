@@ -235,6 +235,13 @@ Respons memuat `meta.freshness` (`ok`/`warn`/`stale`/`unknown`) dan header
 `BMIP_AS_OF` mengaktifkan jam replay yang selalu dilaporkan sebagai
 `clock: replay`, bukan waktu dinding.
 
+C3-C selesai di branch `slot/c3-c-vio` (base `slot/c3-b-dhea`): profil
+`n1`..`n4`, ACL final, katalog lima view dengan `tsvector` + `pg_trgm`,
+governance workflow, lifecycle Iceberg, dan hosting docs. Loki/Promtail sudah
+dikonfigurasi tetapi image-nya belum bisa di-pull dari Docker Hub; uji live
+Tailscale juga belum dijalankan (`NeedsLogin`). Keduanya dicatat sebagai gap di
+[docs/handoff/c3-c.md](docs/handoff/c3-c.md).
+
 ## Model branch
 
 | Branch | Fungsi |
@@ -250,6 +257,8 @@ Respons memuat `meta.freshness` (`ok`/`warn`/`stale`/`unknown`) dan header
 | `slot/w2-c-anin` | Pekerjaan W2-C |
 | `slot/w2-d-lois` | Pekerjaan W2-D |
 | `slot/c3-a-anin` | Pekerjaan C3-A |
+| `slot/c3-b-dhea` | Pekerjaan C3-B |
+| `slot/c3-c-vio` | Pekerjaan C3-C |
 | `fix/w2-closeout` | Perbaikan evidence, gitleaks, dan dokumentasi 5 symbol |
 
 Alur: branch slot -> PR ke `dev` (review minimal 1 orang) -> PR `dev` ke `main` saat

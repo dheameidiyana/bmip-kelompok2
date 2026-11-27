@@ -1,0 +1,72 @@
+# N4 - observability and security. Use with compose.base.yml:
+#   ... --profile n4 --profile loki --profile promtail up -d
+services:
+  prometheus:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_PROMETHEUS_PORT:-9090}:9090"
+    mem_limit: 512m
+    cpus: 0.50
+    extra_hosts:
+      - "api:${BMIP_N1_HOST}"
+      - "api-2:${BMIP_N2_HOST}"
+      - "postgres-core:${BMIP_N1_HOST}"
+      - "postgres-ml:${BMIP_N2_HOST}"
+      - "postgres-gov:${BMIP_N3_HOST}"
+      - "redpanda:${BMIP_N1_HOST}"
+      - "minio:${BMIP_N1_HOST}"
+
+  alertmanager:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_ALERTMANAGER_PORT:-9093}:9093"
+    mem_limit: 128m
+    cpus: 0.25
+
+  pushgateway:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_PUSHGATEWAY_PORT:-9091}:9091"
+    mem_limit: 128m
+    cpus: 0.25
+
+  postgres-exporter:
+    depends_on: !reset []
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_EXPORTER_PORT:-9187}:9187"
+    mem_limit: 128m
+    cpus: 0.25
+    extra_hosts:
+      - "postgres-core:${BMIP_N1_HOST}"
+
+  cadvisor:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_CADVISOR_PORT:-8088}:8080"
+    mem_limit: 256m
+    cpus: 0.50
+    networks:
+      - edge
+      - data
+
+  grafana:
+    depends_on: !override
+      prometheus:
+        condition: service_healthy
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_GRAFANA_PORT:-3000}:3000"
+    mem_limit: 512m
+    cpus: 0.50
+    environment:
+      GRAFANA_ROOT_URL: https://grafana.bmip.local
+    extra_hosts:
+      - "postgres-core:${BMIP_N1_HOST}"
+
+  loki:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_LOKI_PORT:-3100}:3100"
+    mem_limit: 512m
+    cpus: 0.50
+    networks:
+      - edge
+      - data
+
+  promtail:
+    mem_limit: 128m
+    cpus: 0.25

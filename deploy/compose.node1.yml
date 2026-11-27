@@ -1,0 +1,67 @@
+# N1 - edge, ingestion, storage, query. Use with compose.base.yml:
+#   docker compose --env-file .env --env-file deploy/env/node1.env \
+#     -f deploy/compose.base.yml -f deploy/compose.node1.yml \
+#     --profile n1 --profile promtail up -d
+services:
+  traefik:
+    ports:
+      - "${BMIP_EDGE_BIND_ADDRESS:-0.0.0.0}:80:80"
+      - "${BMIP_EDGE_BIND_ADDRESS:-0.0.0.0}:443:443"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8082:8082"
+    mem_limit: 256m
+    cpus: 0.50
+    extra_hosts:
+      - "dashboard:${BMIP_N3_HOST}"
+      - "catalog:${BMIP_N3_HOST}"
+      - "docs:${BMIP_N3_HOST}"
+      - "marquez-web:${BMIP_N3_HOST}"
+      - "grafana:${BMIP_N4_HOST}"
+      - "prometheus:${BMIP_N4_HOST}"
+      - "prefect-server:${BMIP_N2_HOST}"
+      - "mlflow:${BMIP_N2_HOST}"
+      - "api-2:${BMIP_N2_HOST}"
+
+  redpanda:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_REDPANDA_EXTERNAL_PORT:-19092}:19092"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_REDPANDA_ADMIN_PORT:-9644}:9644"
+    mem_limit: 1536m
+    cpus: 1.50
+
+  postgres-core:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_PG_CORE_PORT:-5432}:5432"
+    mem_limit: 512m
+    cpus: 1.00
+
+  minio:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_MINIO_PORT:-9000}:9000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_MINIO_CONSOLE_PORT:-9001}:9001"
+    mem_limit: 768m
+    cpus: 1.00
+
+  lakekeeper:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_LAKEKEEPER_PORT:-8181}:8181"
+    mem_limit: 512m
+    cpus: 1.00
+
+  api:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_API_PORT:-8000}:8000"
+    mem_limit: 700m
+    cpus: 1.00
+    environment:
+      MARQUEZ_URL: http://${BMIP_N3_HOST}:${BMIP_MARQUEZ_PORT:-5002}
+
+  cadvisor:
+    mem_limit: 256m
+    cpus: 0.50
+    networks:
+      - edge
+      - data
+
+  promtail:
+    extra_hosts:
+      - "loki:${BMIP_N4_HOST}"

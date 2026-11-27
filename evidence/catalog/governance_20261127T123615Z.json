@@ -1,0 +1,105 @@
+{
+  "id": "C3C-governance-workflow",
+  "timestamp": "2026-11-27T12:36:14.972449+00:00",
+  "commit": "nogit",
+  "command": "python scripts/c3c_governance.py workflow",
+  "result": "PASS",
+  "owner": "vio",
+  "actor": "vio",
+  "role": "admin",
+  "probe": "serving.c3c_governance_probe",
+  "steps": [
+    {
+      "action": "register",
+      "id": "serving.c3c_governance_probe",
+      "audit_id": 8,
+      "serving_rows": 12
+    },
+    {
+      "action": "change",
+      "id": "serving.c3c_governance_probe",
+      "audit_id": 9,
+      "serving_rows": 12
+    },
+    {
+      "action": "deprecate",
+      "id": "serving.c3c_governance_probe",
+      "audit_id": 10,
+      "serving_rows": 12
+    },
+    {
+      "action": "delete",
+      "id": "serving.c3c_governance_probe",
+      "audit_id": 11,
+      "serving_rows": 11
+    }
+  ],
+  "audit": [
+    {
+      "id": 8,
+      "ts": "2026-11-27T12:36:01.525650+00:00",
+      "actor": "vio",
+      "role": "admin",
+      "action": "governance.register",
+      "target": "serving.c3c_governance_probe",
+      "method": "CLI",
+      "path": "governance:governance.register",
+      "status": 200
+    },
+    {
+      "id": 9,
+      "ts": "2026-11-27T12:36:11.061583+00:00",
+      "actor": "vio",
+      "role": "admin",
+      "action": "governance.change",
+      "target": "serving.c3c_governance_probe",
+      "method": "CLI",
+      "path": "governance:governance.change",
+      "status": 200
+    },
+    {
+      "id": 10,
+      "ts": "2026-11-27T12:36:13.851072+00:00",
+      "actor": "vio",
+      "role": "admin",
+      "action": "governance.deprecate",
+      "target": "serving.c3c_governance_probe",
+      "method": "CLI",
+      "path": "governance:governance.deprecate",
+      "status": 200
+    },
+    {
+      "id": 11,
+      "ts": "2026-11-27T12:36:14.688784+00:00",
+      "actor": "vio",
+      "role": "admin",
+      "action": "governance.delete",
+      "target": "serving.c3c_governance_probe",
+      "method": "CLI",
+      "path": "governance:governance.delete",
+      "status": 200
+    }
+  ],
+  "metadata": {
+    "id": "metadata_consistency",
+    "timestamp": "2026-11-27T12:36:14.906119+00:00",
+    "datasets": 11,
+    "serving_datasets": 11,
+    "failures": [],
+    "result": "PASS"
+  },
+  "gaps": {
+    "datasets": 11,
+    "gaps": {
+      "missing_owner": [],
+      "missing_description": [],
+      "missing_classification": [],
+      "retention_mismatch": [],
+      "past_removal": [],
+      "deprecated": [],
+      "serving_mismatch": []
+    }
+  },
+  "probe_rows_left": 0,
+  "registry_rows": 11
+}

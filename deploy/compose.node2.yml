@@ -1,0 +1,43 @@
+# N2 - processing, orchestration, ML. Use with compose.base.yml.
+services:
+  postgres-ml:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_PG_ML_PORT:-5432}:5432"
+    mem_limit: 512m
+    cpus: 1.00
+
+  prefect-server:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_PREFECT_PORT:-4200}:4200"
+    mem_limit: 1024m
+    cpus: 1.50
+    environment:
+      PREFECT_UI_API_URL: http://${BMIP_N2_HOST}:${BMIP_PREFECT_PORT:-4200}/api
+
+  api-2:
+    # postgres-core, minio, and lakekeeper live on N1; a node-local compose
+    # project must not require them at start. The API retries its reads.
+    depends_on: !reset []
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_API_2_HOST_PORT:-8000}:8000"
+    mem_limit: 700m
+    cpus: 1.00
+    environment:
+      MARQUEZ_URL: http://${BMIP_N3_HOST}:${BMIP_MARQUEZ_PORT:-5002}
+    extra_hosts:
+      - "postgres-core:${BMIP_N1_HOST}"
+      - "minio:${BMIP_N1_HOST}"
+      - "lakekeeper:${BMIP_N1_HOST}"
+      - "redpanda:${BMIP_N1_HOST}"
+      - "marquez:${BMIP_N3_HOST}"
+
+  cadvisor:
+    mem_limit: 256m
+    cpus: 0.50
+    networks:
+      - edge
+      - data
+
+  promtail:
+    extra_hosts:
+      - "loki:${BMIP_N4_HOST}"

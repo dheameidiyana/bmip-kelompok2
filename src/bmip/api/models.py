@@ -141,6 +141,10 @@ class DatasetOut(BaseModel):
     contains_pii: bool = False
     tags: list[str] = Field(default_factory=list)
     auto_classification: str | None = None
+    status: str = "active"
+    deprecated_at: datetime | None = None
+    removal_date: date | None = None
+    contract_version: str | None = None
 
 
 class DatasetPage(BaseModel):

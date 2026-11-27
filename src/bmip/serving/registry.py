@@ -62,6 +62,10 @@ class Dataset:
     contains_pii: bool = False
     tags: tuple[str, ...] = field(default_factory=tuple)
     auto_classification: str = ""
+    status: str = "active"
+    deprecated_at: str = ""
+    removal_date: str = ""
+    contract_version: str = ""
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -81,6 +85,10 @@ class Dataset:
             "contains_pii": bool(self.contains_pii),
             "tags": list(self.tags),
             "auto_classification": self.auto_classification or None,
+            "status": self.status or "active",
+            "deprecated_at": self.deprecated_at or None,
+            "removal_date": self.removal_date or None,
+            "contract_version": self.contract_version or None,
         }
 
     def row(self) -> dict[str, Any]:
@@ -136,6 +144,10 @@ def parse_registry(payload: dict[str, Any]) -> list[Dataset]:
                 contains_pii=bool(raw.get("contains_pii", False)),
                 tags=tuple(str(tag) for tag in raw.get("tags") or ()),
                 auto_classification=str(raw.get("auto_classification") or ""),
+                status=str(raw.get("status") or "active"),
+                deprecated_at=str(raw.get("deprecated_at") or ""),
+                removal_date=str(raw.get("removal_date") or ""),
+                contract_version=str(raw.get("contract_version") or ""),
             )
         )
     return datasets
@@ -159,6 +171,10 @@ def _row_to_dataset(row: dict[str, Any]) -> Dataset:
         contains_pii=bool(row.get("contains_pii", False)),
         tags=tuple(str(tag) for tag in row.get("tags") or ()),
         auto_classification=str(row.get("auto_classification") or ""),
+        status=str(row.get("status") or "active"),
+        deprecated_at=str(row.get("deprecated_at") or ""),
+        removal_date=str(row.get("removal_date") or ""),
+        contract_version=str(row.get("contract_version") or ""),
     )
 
 
@@ -177,7 +193,8 @@ def _from_database(settings: Settings | None) -> list[Dataset] | None:
                 """
                 SELECT id, name, layer, domain, kind, location, description,
                        owner, classification, retention_days, refresh_schedule,
-                       sla, license, contains_pii, tags, auto_classification
+                       sla, license, contains_pii, tags, auto_classification,
+                       status, deprecated_at, removal_date, contract_version
                 FROM ops.dataset_registry
                 ORDER BY layer, id
                 """

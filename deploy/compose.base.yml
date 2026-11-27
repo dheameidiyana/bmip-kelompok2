@@ -14,6 +14,7 @@ x-healthcheck: &default-healthcheck
 
 services:
   traefik:
+    profiles: ["n1"]
     image: traefik:v3.7.18
     restart: unless-stopped
     user: "1000:1000"
@@ -35,6 +36,7 @@ services:
     logging: *default-logging
 
   redpanda:
+    profiles: ["n1"]
     image: redpandadata/redpanda:v26.2.6
     restart: unless-stopped
     command:
@@ -63,6 +65,7 @@ services:
     logging: *default-logging
 
   postgres-core:
+    profiles: ["n1"]
     image: postgres:16.15-alpine
     restart: unless-stopped
     environment:
@@ -86,6 +89,7 @@ services:
     logging: *default-logging
 
   postgres-ml:
+    profiles: ["n2"]
     image: postgres:16.15-alpine
     restart: unless-stopped
     environment:
@@ -155,7 +159,7 @@ services:
     environment:
       MARQUEZ_HOST: marquez
       MARQUEZ_PORT: "5000"
-      WEB_PORT: "3000"
+      WEB_PORT: "3002"
     networks:
       - edge
     depends_on:
@@ -163,6 +167,7 @@ services:
     logging: *default-logging
 
   prefect-server:
+    profiles: ["n2"]
     image: prefecthq/prefect:3.9.2-python3.12
     restart: unless-stopped
     command: ["prefect", "server", "start", "--host", "0.0.0.0"]
@@ -191,6 +196,7 @@ services:
     logging: *default-logging
 
   minio-perms:
+    profiles: ["n1"]
     image: elestio/minio@sha256:25348a257f1ece1b192f25f6cd9854618fa86422ac87b494b5d4e629c556d4bd
     restart: "no"
     user: "0:0"
@@ -202,6 +208,7 @@ services:
     logging: *default-logging
 
   minio:
+    profiles: ["n1"]
     image: elestio/minio@sha256:25348a257f1ece1b192f25f6cd9854618fa86422ac87b494b5d4e629c556d4bd
     restart: unless-stopped
     user: "1000:1000"
@@ -260,6 +267,7 @@ services:
     logging: *default-logging
 
   lakekeeper-migrate:
+    profiles: ["n1"]
     image: quay.io/lakekeeper/catalog@sha256:b02a882df48042020c473a79b980a643fcc883a6f9c21b74c5b7cc8eabeec9fe
     restart: "no"
     command: ["migrate"]
@@ -277,6 +285,7 @@ services:
     logging: *default-logging
 
   lakekeeper:
+    profiles: ["n1"]
     image: quay.io/lakekeeper/catalog@sha256:b02a882df48042020c473a79b980a643fcc883a6f9c21b74c5b7cc8eabeec9fe
     restart: unless-stopped
     command: ["serve"]
@@ -332,6 +341,7 @@ services:
     logging: *default-logging
 
   api:
+    profiles: ["n1"]
     build:
       context: ..
       dockerfile: deploy/api/Dockerfile
@@ -388,6 +398,7 @@ services:
     logging: *default-logging
 
   api-2:
+    profiles: ["n2"]
     image: bmip/api:dev
     restart: unless-stopped
     user: "10001:10001"
@@ -442,6 +453,7 @@ services:
     logging: *default-logging
 
   dashboard:
+    profiles: ["n3"]
     build:
       context: ..
       dockerfile: deploy/dashboard/Dockerfile
@@ -473,6 +485,7 @@ services:
 
 
   catalog:
+    profiles: ["n3"]
     build:
       context: ..
       dockerfile: deploy/dashboard/Dockerfile
@@ -506,6 +519,7 @@ services:
 
 
   prometheus:
+    profiles: ["n4"]
     image: prom/prometheus:v2.55.1
     restart: unless-stopped
     command:
@@ -533,6 +547,7 @@ services:
     logging: *default-logging
 
   alertmanager:
+    profiles: ["n4"]
     image: prom/alertmanager:v0.27.0
     restart: unless-stopped
     command:
@@ -554,6 +569,7 @@ services:
     logging: *default-logging
 
   pushgateway:
+    profiles: ["n4"]
     image: prom/pushgateway:v1.9.0
     restart: unless-stopped
     command:
@@ -572,6 +588,7 @@ services:
     logging: *default-logging
 
   postgres-exporter:
+    profiles: ["n4"]
     image: prometheuscommunity/postgres-exporter:v0.16.0
     restart: unless-stopped
     environment:
@@ -585,6 +602,7 @@ services:
     logging: *default-logging
 
   cadvisor:
+    profiles: ["n1", "n2", "n3", "n4"]
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     restart: unless-stopped
     privileged: true
@@ -601,6 +619,7 @@ services:
     logging: *default-logging
 
   notify:
+    profiles: ["n4"]
     build:
       context: ./notify
       dockerfile: Dockerfile
@@ -629,6 +648,7 @@ services:
     logging: *default-logging
 
   grafana:
+    profiles: ["n4"]
     image: grafana/grafana:11.3.0
     restart: unless-stopped
     user: "472:472"
@@ -666,6 +686,53 @@ services:
       start_period: 20s
     logging: *default-logging
 
+  loki:
+    profiles: ["loki"]
+    image: grafana/loki:3.3.2
+    restart: unless-stopped
+    command:
+      - -config.file=/etc/loki/loki.yml
+    volumes:
+      - ./observability/loki.yml:/etc/loki/loki.yml:ro
+      - loki-data:/loki
+    networks:
+      - data
+    logging: *default-logging
+
+  promtail:
+    profiles: ["promtail"]
+    image: grafana/promtail:3.3.2
+    restart: unless-stopped
+    command:
+      - -config.file=/etc/promtail/promtail.yml
+      - -config.expand-env=true
+    environment:
+      BMIP_NODE: ${BMIP_NODE:-n1}
+    volumes:
+      - ./observability/promtail.yml:/etc/promtail/promtail.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../logs:/var/log/bmip:ro
+    networks:
+      - data
+    logging: *default-logging
+
+  docs:
+    profiles: ["docs"]
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - ../docs/_site:/usr/share/nginx/html:ro
+      - ./docs/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - edge
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8089/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging: *default-logging
+
 networks:
   edge:
     driver: bridge
@@ -683,3 +750,4 @@ volumes:
   alertmanager-data:
   pushgateway-data:
   grafana-data:
+  loki-data:

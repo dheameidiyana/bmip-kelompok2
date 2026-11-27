@@ -1,0 +1,39 @@
+{
+  "id": "CP3-docs-hosting",
+  "timestamp": "2026-11-27T13:22:09.584527+00:00",
+  "commit": "eedb5ee",
+  "command": "python scripts/c3c_docs.py --serve --upload",
+  "result": "PASS",
+  "owner": "vio",
+  "datasets": 11,
+  "dbt": {
+    "returncode": 0,
+    "target": "dbt/target",
+    "copied": [
+      "index.html",
+      "manifest.json",
+      "catalog.json",
+      "graph_summary.json"
+    ],
+    "stderr_tail": "skipped"
+  },
+  "uploaded": [],
+  "serve_error": "",
+  "http": {
+    "/": {
+      "status": 200,
+      "ok": true
+    },
+    "/gx/": {
+      "status": 200,
+      "ok": true
+    },
+    "/dbt/": {
+      "status": 200,
+      "ok": true
+    }
+  },
+  "screenshot": null,
+  "data_dictionary": "docs/data-dictionary.md",
+  "site": "docs/_site"
+}

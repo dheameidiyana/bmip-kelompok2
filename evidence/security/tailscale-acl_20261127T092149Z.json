@@ -1,0 +1,83 @@
+{
+  "id": "CP1-tailscale-acl",
+  "timestamp": "2026-11-27T09:21:49.429673+00:00",
+  "commit": "eedb5ee",
+  "command": "python scripts/c3c_acl.py",
+  "result": "PASS",
+  "owner": "vio",
+  "acl_file": "deploy\\tailscale\\acl.json",
+  "offline_validation": "PASS",
+  "live_test": "not_run",
+  "live_reason": "tailscale backend state is NeedsLogin; login required",
+  "live_status": {
+    "live_test": "not_run",
+    "reason": "tailscale backend state is NeedsLogin; login required",
+    "backend_state": "NeedsLogin"
+  },
+  "required_allow": 15,
+  "required_deny": 7,
+  "missing_allow": [],
+  "unexpected_allow": [],
+  "problems": [],
+  "matrix": {
+    "tag:bmip-n1 -> tag:bmip-n2": [
+      4200,
+      5000,
+      5432,
+      8000
+    ],
+    "tag:bmip-n1 -> tag:bmip-n3": [
+      3002,
+      5002,
+      8089,
+      8501,
+      8502
+    ],
+    "tag:bmip-n1 -> tag:bmip-n4": [
+      3100,
+      9091
+    ],
+    "tag:bmip-n2 -> tag:bmip-n1": [
+      5432,
+      8000,
+      8181,
+      9000,
+      9092,
+      9101
+    ],
+    "tag:bmip-n2 -> tag:bmip-n3": [
+      5002
+    ],
+    "tag:bmip-n2 -> tag:bmip-n4": [
+      3100,
+      9091
+    ],
+    "tag:bmip-n3 -> tag:bmip-n1": [
+      8000
+    ],
+    "tag:bmip-n3 -> tag:bmip-n4": [
+      3100,
+      9091
+    ],
+    "tag:bmip-n4 -> tag:bmip-n1": [
+      5432,
+      8000,
+      8080,
+      9000,
+      9101,
+      9644
+    ],
+    "tag:bmip-n4 -> tag:bmip-n2": [
+      5432,
+      8000,
+      8080
+    ],
+    "tag:bmip-n4 -> tag:bmip-n3": [
+      5432,
+      8080
+    ],
+    "tag:bmip-user -> tag:bmip-n1": [
+      443
+    ]
+  }
+}

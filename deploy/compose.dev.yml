@@ -111,7 +111,7 @@ services:
 
   marquez-web:
     ports:
-      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:3002:3000"
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:3002:3002"
     mem_limit: 256m
     cpus: 0.50
 
@@ -168,3 +168,15 @@ services:
       - "${BMIP_BIND_ADDRESS:-127.0.0.1}:3000:3000"
     mem_limit: 512m
     cpus: 0.50
+
+  loki:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:3100:3100"
+    mem_limit: 512m
+    cpus: 0.50
+
+  docs:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:8089:8089"
+    mem_limit: 64m
+    cpus: 0.25

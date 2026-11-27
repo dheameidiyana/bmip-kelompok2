@@ -1,0 +1,53 @@
+# Promtail ships Docker container logs and BMIP host job logs to Loki.
+# Labels stay low-cardinality: service, node, level (ARCHITECTURE 16.2).
+# `run_id` and `request_id` are intentionally NOT labels; they stay in the
+# JSON line so a query can grep them without exploding the series count.
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+  log_level: info
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 15s
+    relabel_configs:
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "^/?(?:bmip-)?(.+)-[0-9]+$"
+        target_label: service
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "^/?(?:bmip-)?(.+)-[0-9]+$"
+        target_label: container
+      - target_label: node
+        replacement: "${BMIP_NODE}"
+      - source_labels: ["__meta_docker_container_log_stream"]
+        target_label: stream
+    pipeline_stages:
+      - json:
+          expressions:
+            level: severity
+            message: message
+      - labels:
+          level:
+
+  - job_name: bmip-host-jobs
+    static_configs:
+      - targets: [localhost]
+        labels:
+          node: "${BMIP_NODE}"
+          __path__: /var/log/bmip/*.jsonl
+    pipeline_stages:
+      - json:
+          expressions:
+            level: severity
+            service: service
+      - labels:
+          level:
+          service:

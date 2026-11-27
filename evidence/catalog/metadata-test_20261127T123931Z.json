@@ -1,0 +1,11 @@
+{
+  "id": "metadata_consistency",
+  "timestamp": "2026-11-27T12:39:30.997228+00:00",
+  "datasets": 11,
+  "serving_datasets": 11,
+  "failures": [],
+  "result": "PASS",
+  "commit": "eedb5ee",
+  "command": "python scripts/c3c_governance.py metadata-test",
+  "owner": "vio"
+}

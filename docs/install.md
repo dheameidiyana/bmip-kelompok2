@@ -20,7 +20,7 @@ ganti dengan `make`.
 - GNU Make: `winget install ezwinports.make`.
 - RAM minimal 16 GB; 32 GB disarankan untuk menjalankan seluruh profil.
 - Port host yang harus kosong: 80, 443, 8000, 8501, 8502, 9000, 9001, 19092,
-  5000, 5433, 5434, 5435, 8181, 8080, 8088, 9090, 9093.
+  5000, 5433, 5434, 5435, 8181, 8080, 8088, 9090, 9093, 3100, 8089.
 
 ## 2. Clone dan setup
 
@@ -50,9 +50,21 @@ tidak merotasi `.env` yang sudah ada.
 `dev-up` menjalankan compose dasar + dev, menunggu health, bootstrap MinIO dan
 Lakekeeper, lalu menulis evidence health. `governance-up` menyalakan
 `postgres-gov` + Marquez + Marquez web (profil `governance`), sedangkan
-`governance` menjalankan migrasi `ops`, seed registry 11 dataset, dan seed API
-key RBAC. Tanpa dua langkah itu, lineage UI, katalog database, dan key
-viewer/operator/admin tidak tersedia.
+`governance` menjalankan migrasi `ops`, seed registry 11 dataset, seed API
+key RBAC, dan migrasi katalog C3-C. Tanpa dua langkah itu, lineage UI, katalog
+database, dan key viewer/operator/admin tidak tersedia.
+
+Profil node C3-C memakai overlay yang sama:
+
+```powershell
+.\scripts\make.ps1 node1-config node2-config node3-config node4-config
+.\scripts\make.ps1 three-node-config four-node-config
+.\scripts\make.ps1 node1-up
+```
+
+N3 membutuhkan profil `governance` dan `docs`; target Make sudah menambahkannya.
+`docs.bmip.local` dilayani service `docs` pada port 8089; jalankan
+`.\scripts\make.ps1 docs` untuk membangun dan memeriksanya.
 
 Market memakai lima pair default:
 `BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT`. Ubah `MARKET_SYMBOLS` di `.env`

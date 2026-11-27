@@ -16,6 +16,7 @@ import logging
 import os
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 _state: dict[str, str] = {
@@ -46,11 +47,19 @@ class JsonFormatter(logging.Formatter):
 def configure_logging(level: str | None = None, service: str | None = None) -> None:
     if service:
         _state["service"] = service
+    formatter = JsonFormatter()
     handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(JsonFormatter())
+    handler.setFormatter(formatter)
     root = logging.getLogger()
     root.handlers.clear()
     root.addHandler(handler)
+    log_file = os.getenv("BMIP_LOG_FILE")
+    if log_file:
+        path = Path(log_file)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        file_handler = logging.FileHandler(path, encoding="utf-8")
+        file_handler.setFormatter(formatter)
+        root.addHandler(file_handler)
     root.setLevel((level or os.getenv("BMIP_LOG_LEVEL", "INFO")).upper())
 
 

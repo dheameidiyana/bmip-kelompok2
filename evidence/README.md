@@ -283,3 +283,34 @@ synthetic drift evidence added 2026-11-27.
 | CP3 | ml | `ml/T21.json` | PASS | rerun 2026-11-27; challenger v9 rejected, champion v2 |
 | CP3 | ml | `ml/drift-synthetic_20261127T040246Z.json` | PASS | synthetic drift; trigger_required true; PSI ~8 |
 | BATCH | ml | `ml/predictions_20261118T093616Z.json` | PASS | stale age 120962 s > 7200 s rejected (`status=error`) |
+
+### C3-C
+
+Environment: branch `slot/c3-c-vio`, base `slot/c3-b-dhea` (`eedb5ee`).
+Windows 11 / Docker Desktop 29.7.2, Python 3.11.9, PyIceberg 0.12.0,
+Streamlit 1.67.0, dbt 1.12.7.
+
+| ID | Area | File | Status | Catatan |
+| --- | --- | --- | --- | --- |
+| CP1 | deploy | `deploy/compose-3node.yml` | PASS | `docker compose config` 3 node |
+| CP1 | deploy | `deploy/compose-4node.yml` | PASS | `docker compose config` 4 node |
+| CP1 | deploy | `deploy/nodes_20261127T164629Z.json` | PASS | placement + four node configs |
+| CP1 | deploy | `deploy/two-node-live_20261127T165614Z.json` | PASS | N1+N2 services live; N1 host-port proxy gap recorded |
+| CP1 | security | `security/tailscale-acl_20261127T092149Z.json` | PASS offline | live test not run: `NeedsLogin` |
+| CP1 | logs | `observability/loki.yml`, `observability/promtail.yml` | PARTIAL | config ready; image pull from Docker Hub timed out |
+| CP2 | catalog | `catalog/migration_20261127T121956Z.json` | PASS | pg_trgm + tsvector + governance columns |
+| CP2 | catalog | `catalog/governance_20261127T123615Z.json` | PASS | register/change/deprecate/delete + audit |
+| CP2 | catalog | `catalog/metadata-test_20261127T123931Z.txt` | PASS | 11 datasets, serving parity |
+| CP2 | catalog | `catalog/search_20261127T124116Z.txt` | PASS | 5 search queries, 11 datasets |
+| CP2 | catalog | `catalog/views_20261127T124116Z.json` | PASS | five views, quality pass |
+| CP3 | deploy | `deploy/docs-hosting_20261127T132119Z.json` | PASS | nginx 8089 + dbt/GX HTTP 200 |
+| CP3 | storage | `storage/compaction_20261127T155958Z.json`, `storage/retention_20261127T155958Z.txt` | PASS | 3 gold tables, fixture retention 3 -> 2 |
+| DOC | docs | `../docs/data-dictionary.md` | PASS | 11 dataset, live schemas |
+
+Loki/Promtail runtime evidence is missing because `grafana/loki:3.3.2` and
+`grafana/promtail:3.3.2` could not be resolved from Docker Hub. The config is
+committed; C3-D must pull the images and run `make c3c-loki`. Do not claim a
+Loki screenshot before that.
+
+The live Tailscale ACL test remains **not run** because `tailscale status` was
+`NeedsLogin`; only the offline allow/deny matrix is evidenced.

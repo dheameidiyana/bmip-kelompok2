@@ -1,49 +1,72 @@
 {
+  "//": "BMIP final ACL (C3-C). Deny-by-default: only the ports below are allowed. Tag each device in the Tailscale admin console.",
   "tagOwners": {
-    "tag:bmip-core": ["autogroup:admin"],
-    "tag:bmip-ui": ["autogroup:admin"],
+    "tag:bmip-n1": ["autogroup:admin"],
+    "tag:bmip-n2": ["autogroup:admin"],
+    "tag:bmip-n3": ["autogroup:admin"],
+    "tag:bmip-n4": ["autogroup:admin"],
     "tag:bmip-user": ["autogroup:admin"]
   },
   "acls": [
     {
+      "//": "Users reach the UI only through Traefik on N1.",
       "action": "accept",
       "src": ["tag:bmip-user"],
-      "dst": ["tag:bmip-core:443", "tag:bmip-ui:443"]
+      "dst": ["tag:bmip-n1:443"]
     },
     {
+      "//": "N1 reaches the N2 API replica, Prefect, MLflow, and Postgres ML.",
       "action": "accept",
-      "src": ["tag:bmip-core"],
-      "dst": [
-        "tag:bmip-core:443",
-        "tag:bmip-core:5433",
-        "tag:bmip-core:5435",
-        "tag:bmip-core:8000",
-        "tag:bmip-core:8181",
-        "tag:bmip-core:9000",
-        "tag:bmip-core:9090",
-        "tag:bmip-core:3000",
-        "tag:bmip-core:5002"
-      ]
+      "src": ["tag:bmip-n1"],
+      "dst": ["tag:bmip-n2:8000,4200,5000,5432"]
     },
     {
+      "//": "N2 jobs reach core storage, broker, API, and stream metrics.",
       "action": "accept",
-      "src": ["tag:bmip-core"],
-      "dst": [
-        "tag:bmip-ui:3000",
-        "tag:bmip-ui:3002",
-        "tag:bmip-ui:8501",
-        "tag:bmip-ui:8502"
-      ]
+      "src": ["tag:bmip-n2"],
+      "dst": ["tag:bmip-n1:8000,5432,9000,8181,9092,9101"]
     },
     {
+      "//": "N1 Traefik routes UI and documentation hosts on N3.",
       "action": "accept",
-      "src": ["tag:bmip-ui"],
-      "dst": [
-        "tag:bmip-core:8000",
-        "tag:bmip-core:9000",
-        "tag:bmip-core:8181",
-        "tag:bmip-core:5433"
-      ]
+      "src": ["tag:bmip-n1"],
+      "dst": ["tag:bmip-n3:5002,8501,8502,3002,8089"]
+    },
+    {
+      "//": "N2 lineage emitters and API replica reach Marquez on N3.",
+      "action": "accept",
+      "src": ["tag:bmip-n2"],
+      "dst": ["tag:bmip-n3:5002"]
+    },
+    {
+      "//": "N3 UI reads only the API on N1.",
+      "action": "accept",
+      "src": ["tag:bmip-n3"],
+      "dst": ["tag:bmip-n1:8000"]
+    },
+    {
+      "//": "N4 scrapes N1 metrics, logs, and core Postgres.",
+      "action": "accept",
+      "src": ["tag:bmip-n4"],
+      "dst": ["tag:bmip-n1:8000,5432,8080,9000,9101,9644"]
+    },
+    {
+      "//": "N4 scrapes N2 metrics and Postgres ML.",
+      "action": "accept",
+      "src": ["tag:bmip-n4"],
+      "dst": ["tag:bmip-n2:8000,5432,8080"]
+    },
+    {
+      "//": "N4 scrapes N3 container metrics and governance Postgres.",
+      "action": "accept",
+      "src": ["tag:bmip-n4"],
+      "dst": ["tag:bmip-n3:5432,8080"]
+    },
+    {
+      "//": "Promtail on every node pushes to Loki; jobs push batch metrics to N4.",
+      "action": "accept",
+      "src": ["tag:bmip-n1", "tag:bmip-n2", "tag:bmip-n3"],
+      "dst": ["tag:bmip-n4:3100,9091"]
     }
   ]
 }

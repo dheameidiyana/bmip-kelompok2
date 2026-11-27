@@ -1,0 +1,13 @@
+{
+  "id": "CP1-node-profiles",
+  "timestamp": "2026-11-27T16:46:29.436145+00:00",
+  "commit": "eedb5ee",
+  "command": "python scripts/c3c_nodes.py",
+  "result": "PASS",
+  "owner": "vio",
+  "configs": {
+    "3node": "evidence\\deploy\\compose-3node.yml",
+    "4node": "evidence\\deploy\\compose-4node.yml"
+  },
+  "problems": []
+}

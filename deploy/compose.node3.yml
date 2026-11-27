@@ -1,0 +1,57 @@
+# N3 - governance, UI, documentation. Use with compose.base.yml:
+#   ... --profile n3 --profile governance --profile docs --profile promtail
+services:
+  postgres-gov:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_PG_GOV_PORT:-5432}:5432"
+    mem_limit: 256m
+    cpus: 0.50
+
+  marquez:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_MARQUEZ_PORT:-5002}:5000"
+    mem_limit: 768m
+    cpus: 1.00
+
+  marquez-web:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_MARQUEZ_WEB_PORT:-3002}:3002"
+    mem_limit: 256m
+    cpus: 0.50
+    environment:
+      WEB_PORT: "3002"
+
+  dashboard:
+    depends_on: !reset []
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_DASHBOARD_PORT:-8501}:8501"
+    mem_limit: 384m
+    cpus: 0.50
+    extra_hosts:
+      - "api:${BMIP_N1_HOST}"
+
+  catalog:
+    depends_on: !reset []
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_CATALOG_PORT:-8502}:8502"
+    mem_limit: 384m
+    cpus: 0.50
+    extra_hosts:
+      - "api:${BMIP_N1_HOST}"
+
+  docs:
+    ports:
+      - "${BMIP_BIND_ADDRESS:-127.0.0.1}:${BMIP_DOCS_PORT:-8089}:8089"
+    mem_limit: 64m
+    cpus: 0.25
+
+  cadvisor:
+    mem_limit: 256m
+    cpus: 0.50
+    networks:
+      - edge
+      - data
+
+  promtail:
+    extra_hosts:
+      - "loki:${BMIP_N4_HOST}"

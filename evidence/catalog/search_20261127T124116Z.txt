@@ -1,0 +1,21 @@
+id        : CP2-catalog-search
+timestamp : 2026-11-27T12:41:16.957930+00:00
+commit    : eedb5ee
+command   : python scripts/c3c_catalog.py
+result    : PASS
+owner     : vio
+
+api       : http://127.0.0.1:8000
+datasets  : 11
+layers    : ['bronze', 'gold', 'serving', 'silver']
+statuses  : ['active']
+
+| query | params | count | ids |
+| --- | --- | --- | --- |
+| name-mart | {"q": "mart"} | 3 | gold.mart_market, gold.mart_ml, gold.mart_sentiment |
+| name-sentiment | {"q": "sentiment"} | 2 | gold.mart_sentiment, silver.social_sentiment |
+| owner-vio | {"owner": "vio"} | 4 | gold.mart_market, gold.mart_sentiment, silver.social_post, silver.social_sentiment |
+| tag-streaming | {"q": "streaming"} | 1 | bronze.market_trade_raw |
+| description-prediction | {"q": "prediction"} | 1 | serving.predictions |
+
+failures: none

@@ -110,6 +110,22 @@ http:
       middlewares: [ui-headers]
       priority: 20
 
+    mlflow-host:
+      rule: "Host(`mlflow.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: mlflow
+      middlewares: [ui-headers]
+      priority: 20
+
+    docs-host:
+      rule: "Host(`docs.bmip.local`)"
+      entryPoints: [websecure]
+      tls: {}
+      service: docs
+      middlewares: [ui-headers]
+      priority: 20
+
   services:
     dashboard:
       loadBalancer:
@@ -169,6 +185,24 @@ http:
           timeout: 3s
         servers:
           - url: "http://prefect-server:4200"
+
+    mlflow:
+      loadBalancer:
+        healthCheck:
+          path: /health
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://mlflow:5000"
+
+    docs:
+      loadBalancer:
+        healthCheck:
+          path: /
+          interval: 10s
+          timeout: 3s
+        servers:
+          - url: "http://docs:8089"
 
   middlewares:
     api-rate-limit:

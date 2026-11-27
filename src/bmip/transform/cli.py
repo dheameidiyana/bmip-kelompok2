@@ -133,7 +133,7 @@ def _replay(args: argparse.Namespace, settings: Settings) -> int:
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    configure_logging(service="stream")
+    configure_logging(service="stream-processor")
     set_run_id(
         os.getenv("BMIP_RUN_ID") or f"stream-{int(time.time())}"
     )

@@ -152,3 +152,27 @@ deployments:
       name: local-process
       work_queue_name: default
     concurrency_limit: 1
+
+  - name: compact_iceberg
+    version: "1"
+    description: Compact Iceberg files, expire 7-day snapshots, and report retention.
+    tags:
+      - bmip
+      - c3-c
+      - lifecycle
+      - storage
+    entrypoint: src/bmip/flows/maintenance.py:compact_iceberg_flow
+    parameters:
+      compact: true
+      expire: true
+      orphans: true
+      apply_retention: []
+      as_of: null
+    work_pool:
+      name: local-process
+      work_queue_name: default
+    concurrency_limit: 1
+    schedules:
+      - cron: "0 1 * * *"
+        timezone: UTC
+        active: true

@@ -152,8 +152,19 @@ CREATE TABLE IF NOT EXISTS serving.catalog_datasets (
     contains_pii     boolean     NOT NULL DEFAULT false,
     tags             text[],
     auto_classification text,
+    status           text        NOT NULL DEFAULT 'active',
+    deprecated_at    timestamptz,
+    removal_date     date,
+    contract_version text,
     schema_json      jsonb,
-    updated_at       timestamptz NOT NULL DEFAULT now()
+    updated_at       timestamptz NOT NULL DEFAULT now(),
+    search_vector    tsvector GENERATED ALWAYS AS (
+        to_tsvector(
+            'simple',
+            coalesce(id, '') || ' ' || coalesce(name, '') || ' ' ||
+            coalesce(description, '') || ' ' || coalesce(owner, '')
+        )
+    ) STORED
 );
 
 CREATE TABLE IF NOT EXISTS serving.model_metrics (

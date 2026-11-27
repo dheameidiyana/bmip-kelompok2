@@ -1,0 +1,132 @@
+{
+  "tables": {
+    "gold.mart_market": {
+      "status": "ok",
+      "retention_plan": {
+        "cutoff": "2026-08-29",
+        "old_partitions": 0,
+        "old_rows": 0,
+        "old_dates": []
+      },
+      "compaction": {
+        "before": {
+          "files": 1,
+          "bytes": 6589,
+          "avg_bytes": 6589.0,
+          "snapshots": 1
+        },
+        "after": {
+          "files": 1,
+          "bytes": 6589,
+          "avg_bytes": 6589.0,
+          "snapshots": 1
+        },
+        "candidates": 0,
+        "rewritten": [],
+        "skipped": "already at one file per partition"
+      },
+      "snapshots": {
+        "cutoff": "2026-11-20T15:59:45.230860+00:00",
+        "before": 1,
+        "after": 1,
+        "error": null
+      },
+      "final": {
+        "files": 1,
+        "bytes": 6589,
+        "avg_bytes": 6589.0,
+        "snapshots": 1
+      }
+    },
+    "gold.mart_ml": {
+      "status": "ok",
+      "retention_plan": {
+        "cutoff": "2026-08-29",
+        "old_partitions": 0,
+        "old_rows": 0,
+        "old_dates": []
+      },
+      "compaction": {
+        "before": {
+          "files": 2,
+          "bytes": 19107,
+          "avg_bytes": 9553.5,
+          "snapshots": 1
+        },
+        "after": {
+          "files": 2,
+          "bytes": 19107,
+          "avg_bytes": 9553.5,
+          "snapshots": 1
+        },
+        "candidates": 0,
+        "rewritten": [],
+        "skipped": "already at one file per partition"
+      },
+      "snapshots": {
+        "cutoff": "2026-11-20T15:59:49.247433+00:00",
+        "before": 1,
+        "after": 1,
+        "error": null
+      },
+      "final": {
+        "files": 2,
+        "bytes": 19107,
+        "avg_bytes": 9553.5,
+        "snapshots": 1
+      }
+    },
+    "gold.mart_sentiment": {
+      "status": "ok",
+      "retention_plan": {
+        "cutoff": "2026-08-29",
+        "old_partitions": 0,
+        "old_rows": 0,
+        "old_dates": []
+      },
+      "compaction": {
+        "before": {
+          "files": 1,
+          "bytes": 6414,
+          "avg_bytes": 6414.0,
+          "snapshots": 1
+        },
+        "after": {
+          "files": 1,
+          "bytes": 6414,
+          "avg_bytes": 6414.0,
+          "snapshots": 1
+        },
+        "candidates": 0,
+        "rewritten": [],
+        "skipped": "already at one file per partition"
+      },
+      "snapshots": {
+        "cutoff": "2026-11-20T15:59:51.809253+00:00",
+        "before": 1,
+        "after": 1,
+        "error": null
+      },
+      "final": {
+        "files": 1,
+        "bytes": 6414,
+        "avg_bytes": 6414.0,
+        "snapshots": 1
+      }
+    }
+  },
+  "fixture_retention": {
+    "cutoff": "2026-11-13",
+    "before_rows": 3,
+    "after_rows": 2,
+    "old_partitions": 1,
+    "old_dates": [
+      "2026-10-28"
+    ],
+    "table": "silver.c3c_retention_probe",
+    "expected_after": 2,
+    "result": "PASS"
+  },
+  "started_at": "2026-11-27T15:59:31.146511+00:00",
+  "finished_at": "2026-11-27T15:59:58.696603+00:00"
+}

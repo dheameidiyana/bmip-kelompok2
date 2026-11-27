@@ -1,0 +1,23 @@
+{
+  "id": "C3C-migrate",
+  "commit": "eedb5ee",
+  "dsn_schema": "postgres-core",
+  "pg_trgm": "1.6",
+  "catalog_columns": [
+    "removal_date",
+    "search_vector",
+    "status"
+  ],
+  "indexes": [
+    "catalog_datasets_description_trgm_idx",
+    "catalog_datasets_name_trgm_idx",
+    "catalog_datasets_owner_trgm_idx",
+    "catalog_datasets_pkey",
+    "catalog_datasets_search_idx",
+    "dataset_registry_layer_idx",
+    "dataset_registry_pkey",
+    "dataset_registry_status_idx"
+  ],
+  "serving_pending": false,
+  "result": "PASS"
+}

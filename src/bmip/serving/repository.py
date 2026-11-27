@@ -323,10 +323,12 @@ class ServingRepository:
         params: list[Any] = []
         if q:
             clauses.append(
-                "(id ILIKE %s OR name ILIKE %s OR description ILIKE %s "
-                "OR owner ILIKE %s OR array_to_string(tags, ' ') ILIKE %s)"
+                "(search_vector @@ websearch_to_tsquery('simple', %s) "
+                "OR id ILIKE %s OR name ILIKE %s OR description ILIKE %s "
+                "OR owner ILIKE %s OR array_to_string(tags, ' ') ILIKE %s "
+                "OR similarity(name, %s) > 0.2)"
             )
-            params.extend([f"%{q}%"] * 5)
+            params.extend([q, f"%{q}%", f"%{q}%", f"%{q}%", f"%{q}%", f"%{q}%", q])
         if domain:
             clauses.append("domain = %s")
             params.append(domain)
@@ -724,9 +726,10 @@ class ServingRepository:
                         (id, name, layer, domain, kind, location, description,
                          owner, classification, retention_days, refresh_schedule,
                          sla, license, contains_pii, tags, auto_classification,
+                         status, deprecated_at, removal_date, contract_version,
                          schema_json, updated_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s::jsonb, now())
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, now())
                     ON CONFLICT (id) DO UPDATE SET
                         name = EXCLUDED.name,
                         layer = EXCLUDED.layer,
@@ -743,6 +746,10 @@ class ServingRepository:
                         contains_pii = EXCLUDED.contains_pii,
                         tags = EXCLUDED.tags,
                         auto_classification = EXCLUDED.auto_classification,
+                        status = EXCLUDED.status,
+                        deprecated_at = EXCLUDED.deprecated_at,
+                        removal_date = EXCLUDED.removal_date,
+                        contract_version = EXCLUDED.contract_version,
                         schema_json = COALESCE(
                             EXCLUDED.schema_json, serving.catalog_datasets.schema_json
                         ),
@@ -765,6 +772,10 @@ class ServingRepository:
                         bool(row.get("contains_pii", False)),
                         list(row.get("tags") or ()),
                         row.get("auto_classification"),
+                        row.get("status") or "active",
+                        row.get("deprecated_at") or None,
+                        row.get("removal_date") or None,
+                        row.get("contract_version"),
                         json.dumps(row.get("schema")) if row.get("schema") else None,
                     ),
                 )

@@ -142,8 +142,10 @@ def test_tailscale_acl_is_deny_by_default() -> None:
         (ROOT / "deploy" / "tailscale" / "acl.json").read_text(encoding="utf-8")
     )
     assert set(acl["tagOwners"]) == {
-        "tag:bmip-core",
-        "tag:bmip-ui",
+        "tag:bmip-n1",
+        "tag:bmip-n2",
+        "tag:bmip-n3",
+        "tag:bmip-n4",
         "tag:bmip-user",
     }
     for rule in acl["acls"]:

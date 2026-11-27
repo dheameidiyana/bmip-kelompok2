@@ -1,0 +1,59 @@
+{
+  "id": "CP1-two-node-live",
+  "timestamp": "2026-11-27T16:56:16.276749+00:00",
+  "commit": "eedb5ee",
+  "command": "python scripts/c3c_nodes.py --live",
+  "result": "PASS",
+  "owner": "vio",
+  "scope": "N1+N2 on one host; not a two-laptop tailnet test",
+  "running_services": [
+    "alertmanager",
+    "api",
+    "api-2",
+    "cadvisor",
+    "grafana",
+    "lakekeeper",
+    "lakekeeper-bootstrap",
+    "minio",
+    "minio-init",
+    "notify",
+    "postgres-core",
+    "postgres-exporter",
+    "postgres-ml",
+    "prefect-server",
+    "prometheus",
+    "pushgateway",
+    "redpanda",
+    "traefik"
+  ],
+  "missing_services": {
+    "n1": [],
+    "n2": []
+  },
+  "checks": [
+    {
+      "url": "http://127.0.0.1:9000/minio/health/live",
+      "status": 0,
+      "ok": false,
+      "error": "ConnectError: [WinError 10061] No connection could be made because the target machine actively refused it"
+    },
+    {
+      "url": "http://127.0.0.1:8181/health",
+      "status": 0,
+      "ok": false,
+      "error": "ConnectError: [WinError 10061] No connection could be made because the target machine actively refused it"
+    },
+    {
+      "url": "http://127.0.0.1:8001/health/live",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4200/api/health",
+      "status": 200,
+      "ok": true
+    }
+  ],
+  "error": null,
+  "kept_running": false
+}

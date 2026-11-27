@@ -1,6 +1,22 @@
-# C3-A source of truth for the API replica list.
-# `make c3a-services` renders deploy/traefik/dynamic/services.yaml from this file.
-# Keep this file small so the server list has one obvious owner.
+# C3-C source of truth for cluster addresses, service placement, and the API
+# replica list. `make c3a-services` renders the Traefik API servers from this
+# file. Compose files read the same addresses from deploy/env/node*.env; keep
+# those values in sync when a laptop changes its 100.x address.
+
+nodes:
+  n1:
+    address: 100.64.0.11
+    roles: [edge, ingestion, storage, query]
+  n2:
+    address: 100.64.0.12
+    roles: [processing, orchestration, ml]
+  n3:
+    address: 100.64.0.13
+    roles: [governance, ui, docs]
+  n4:
+    address: 100.64.0.14
+    roles: [observability, security]
+
 api:
   health_check:
     path: /health/ready
@@ -9,11 +25,39 @@ api:
   replicas:
     - api
     - api-2
+
 primary:
   server: api:8000
+
 chaos:
   server: toxiproxy:8666
   health_check:
     path: /health/live
     interval: 10s
     timeout: 3s
+
+services:
+  traefik: {node: n1, port: 443, url: "https://api.bmip.local"}
+  api: {node: n1, port: 8000, url: "http://api:8000"}
+  api-2: {node: n2, port: 8000, url: "http://api-2:8000"}
+  redpanda: {node: n1, port: 9092}
+  minio: {node: n1, port: 9000}
+  minio-console: {node: n1, port: 9001, url: "https://minio.bmip.local"}
+  postgres-core: {node: n1, port: 5432}
+  lakekeeper: {node: n1, port: 8181}
+  stream-processor: {node: n1, port: 9101}
+  postgres-ml: {node: n2, port: 5432}
+  prefect: {node: n2, port: 4200, url: "https://prefect.bmip.local"}
+  mlflow: {node: n2, port: 5000, url: "https://mlflow.bmip.local"}
+  postgres-gov: {node: n3, port: 5432}
+  marquez: {node: n3, port: 5002}
+  marquez-web: {node: n3, port: 3002, url: "https://marquez.bmip.local"}
+  dashboard: {node: n3, port: 8501, url: "https://app.bmip.local"}
+  catalog: {node: n3, port: 8502, url: "https://catalog.bmip.local"}
+  docs: {node: n3, port: 8089, url: "https://docs.bmip.local"}
+  prometheus: {node: n4, port: 9090, url: "https://prometheus.bmip.local"}
+  alertmanager: {node: n4, port: 9093}
+  pushgateway: {node: n4, port: 9091}
+  postgres-exporter: {node: n4, port: 9187}
+  grafana: {node: n4, port: 3000, url: "https://grafana.bmip.local"}
+  loki: {node: n4, port: 3100}
