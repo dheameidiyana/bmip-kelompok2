@@ -1,5 +1,5 @@
 {
-  "challenger_version": "4",
+  "challenger_version": "9",
   "champion_after": "2",
   "champion_before": "2",
   "checks": {
@@ -10,17 +10,17 @@
   "gate_pass": false,
   "id": "T-21",
   "metrics": {
-    "baseline_mae": 0.00023923638799465123,
-    "baseline_rmse": 0.0005970315337401798,
-    "champion_mae": 0.00023923638799465123,
-    "champion_rmse": 0.0005970315337401798,
+    "baseline_mae": 0.0002362122502466688,
+    "baseline_rmse": 0.0003964953411951258,
+    "champion_mae": 0.0002362122502466688,
+    "champion_rmse": 0.0003964953411951258,
     "comparison": "champion",
-    "directional_accuracy": 0.49047619047619045,
-    "mae": 0.0003946648322761135,
-    "mae_improvement": -0.6496856334619853,
-    "rmse": 0.0007521219246635194,
-    "rmse_change": 0.2597691782739785
+    "directional_accuracy": 0.49404761904761907,
+    "mae": 0.0003864894646587095,
+    "mae_improvement": -0.6361956852581145,
+    "rmse": 0.0005979362761996662,
+    "rmse_change": 0.5080537249122583
   },
   "pass": true,
-  "timestamp": "2026-11-18T09:33:43.480373+00:00"
+  "timestamp": "2026-11-27T04:01:34.178353+00:00"
 }

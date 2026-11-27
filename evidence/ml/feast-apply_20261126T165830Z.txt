@@ -1,0 +1,11 @@
+C3-B Feast apply and materialization
+repository         : feature_repo
+materialized start : 2026-09-18T02:00:00+00:00
+materialized end   : 2026-11-17T00:00:00+00:00
+online probe       : symbol=BTCUSDT
+online latency_ms  : 35.05890001542866
+online rv_60m      : 0.0005294266988388841
+online realized_vol_1h : 0.0005707228291649356
+online sent_mean_1h    : 0.0
+timestamp          : 2026-11-26T16:58:30+00:00
+result             : PASS (feast apply + materialize ok, online read < 50 ms)

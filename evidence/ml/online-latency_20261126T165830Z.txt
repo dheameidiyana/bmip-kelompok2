@@ -1,0 +1,6 @@
+C3-B Feast online read latency
+timestamp    : 2026-11-26T16:58:30+00:00
+symbol       : BTCUSDT
+latency_ms   : 35.05890001542866
+threshold_ms : 50
+result       : PASS

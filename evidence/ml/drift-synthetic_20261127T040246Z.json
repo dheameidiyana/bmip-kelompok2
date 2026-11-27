@@ -1,0 +1,230 @@
+{
+  "baseline_mae": 0.00024002451689649856,
+  "baseline_top5_psi": {
+    "ret_5m": 0.06257230122857776,
+    "rv_15m": 0.06089550231458561,
+    "rv_5m": 0.06397714975445744,
+    "rv_60m": 0.09451369736625427,
+    "trade_count_60m": 0.07822205017311565
+  },
+  "commit": "2972901",
+  "dataset_id": "mart_ml@2888713472648101633",
+  "drift_detected": true,
+  "features": [
+    {
+      "drift": true,
+      "feature": "rv_5m",
+      "ks_pvalue": 3.5e-323,
+      "ks_statistic": 0.9873684210526316,
+      "production_mean": 0.003205189104409635,
+      "psi": 8.262979465251716,
+      "reference_mean": 0.0007538744137927349
+    },
+    {
+      "drift": true,
+      "feature": "rv_15m",
+      "ks_pvalue": 3e-323,
+      "ks_statistic": 0.9894736842105263,
+      "production_mean": 0.0036274306443500803,
+      "psi": 8.262979465251716,
+      "reference_mean": 0.0008825696773787736
+    },
+    {
+      "drift": true,
+      "feature": "rv_60m",
+      "ks_pvalue": 1e-323,
+      "ks_statistic": 0.9978947368421053,
+      "production_mean": 0.003862496563408495,
+      "psi": 8.262979465251716,
+      "reference_mean": 0.0010011807113565509
+    },
+    {
+      "drift": true,
+      "feature": "trade_count_60m",
+      "ks_pvalue": 4.4e-323,
+      "ks_statistic": 0.9831578947368421,
+      "production_mean": 571278.5749310887,
+      "psi": 8.262979465251716,
+      "reference_mean": 97514.76421052632
+    },
+    {
+      "drift": true,
+      "feature": "ret_5m",
+      "ks_pvalue": 3.4161422894884617e-258,
+      "ks_statistic": 0.8926689504827157,
+      "production_mean": 0.007045195933770739,
+      "psi": 6.2235555946855925,
+      "reference_mean": 0.0002883262520503393
+    },
+    {
+      "drift": false,
+      "feature": "vwap_dev",
+      "ks_pvalue": 0.007255836818596436,
+      "ks_statistic": 0.09539707256306447,
+      "production_mean": 0.0001595703614440472,
+      "psi": 0.0934795234219935,
+      "reference_mean": 0.00025222445947860274
+    },
+    {
+      "drift": false,
+      "feature": "hl_range_1m",
+      "ks_pvalue": 0.0008847001665366638,
+      "ks_statistic": 0.11192774836499533,
+      "production_mean": 0.0009057391881820466,
+      "psi": 0.07562997122897407,
+      "reference_mean": 0.0010631315060218658
+    },
+    {
+      "drift": false,
+      "feature": "ret_15m",
+      "ks_pvalue": 0.054792420241211524,
+      "ks_statistic": 0.07621301775147929,
+      "production_mean": 0.0004380403316826973,
+      "psi": 0.0648056526191038,
+      "reference_mean": -0.00010807454784289213
+    },
+    {
+      "drift": false,
+      "feature": "ret_60m",
+      "ks_pvalue": 0.340641838817307,
+      "ks_statistic": 0.05319215197757708,
+      "production_mean": -0.00036445552578594274,
+      "psi": 0.06293560201728433,
+      "reference_mean": -0.0005838549302616452
+    },
+    {
+      "drift": false,
+      "feature": "volume_z_60m",
+      "ks_pvalue": 0.19990149700797227,
+      "ks_statistic": 0.060840859545312986,
+      "production_mean": -0.17593019502614132,
+      "psi": 0.028692741565470952,
+      "reference_mean": -0.026264465462929976
+    },
+    {
+      "drift": false,
+      "feature": "sent_mean_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_pos_share",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "sent_neg_share",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "post_count_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    },
+    {
+      "drift": false,
+      "feature": "engagement_1h",
+      "ks_pvalue": 1.0,
+      "ks_statistic": 0.0,
+      "production_mean": 0.0,
+      "psi": 0.0,
+      "reference_mean": 0.0
+    }
+  ],
+  "flagged_features": [
+    "rv_5m",
+    "rv_15m",
+    "rv_60m",
+    "trade_count_60m",
+    "ret_5m"
+  ],
+  "id": "C3-B-drift-synthetic",
+  "injected_mae": 0.0005220847268676934,
+  "injected_top5_psi": {
+    "ret_5m": 6.2235555946855925,
+    "rv_15m": 8.262979465251716,
+    "rv_5m": 8.262979465251716,
+    "rv_60m": 8.262979465251716,
+    "trade_count_60m": 8.262979465251716
+  },
+  "injection": {
+    "factor": 1.5,
+    "features": {
+      "ret_5m": {
+        "factor": 1.5,
+        "offset": 0.006634035291618608,
+        "reference_mean": 0.0002883262520503393,
+        "reference_std": 0.002115236346522756
+      },
+      "rv_15m": {
+        "factor": 1.5,
+        "offset": 0.0023862614373290954,
+        "reference_mean": 0.0008825696773787736,
+        "reference_std": 0.0005012305866501074
+      },
+      "rv_5m": {
+        "factor": 1.5,
+        "offset": 0.0022020078523875995,
+        "reference_mean": 0.0007538744137927349,
+        "reference_std": 0.00048271114619828816
+      },
+      "rv_60m": {
+        "factor": 1.5,
+        "offset": 0.002490284627367569,
+        "reference_mean": 0.0010011807113565509,
+        "reference_std": 0.0004963679720036727
+      },
+      "trade_count_60m": {
+        "factor": 1.5,
+        "offset": 451267.69327428413,
+        "reference_mean": 97514.76421052632,
+        "reference_std": 117917.6430212526
+      }
+    },
+    "kind": "synthetic-feature-shift",
+    "std_offset": 3.0
+  },
+  "limitations": "Controlled offline injection: the recent seven labelled holdout days are perturbed by a synthetic shift to prove the drift gate and retrain trigger. No live traffic or database rows are modified; the production drift report uses the unperturbed window.",
+  "model": "e1_xgboost",
+  "production": {
+    "end": "2026-11-24T23:00:00+00:00",
+    "rows": 845,
+    "split": "holdout-recent",
+    "start": "2026-11-17T23:00:00+00:00",
+    "window_days": 7
+  },
+  "reference": {
+    "end": "2026-11-17T22:00:00+00:00",
+    "rows": 475,
+    "split": "holdout-pre-production",
+    "start": "2026-11-14T00:00:00+00:00"
+  },
+  "sha256": "54ebd4357f72b341af619cdd283a48ad1885030838f10f2d52f2400a796b52aa",
+  "snapshot_id": "2888713472648101633",
+  "threshold": 0.2,
+  "timestamp": "2026-11-27T04:02:46+00:00",
+  "top5_features": [
+    "rv_60m",
+    "trade_count_60m",
+    "rv_15m",
+    "rv_5m",
+    "ret_5m"
+  ],
+  "trigger_required": true
+}

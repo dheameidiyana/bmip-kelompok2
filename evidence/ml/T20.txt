@@ -1,11 +1,11 @@
 T-20 model reproducibility
-dataset_id       : mart_ml@3627445140691597595
-snapshot_id      : 3627445140691597595
-sha256           : 1b1434dfffa55afe5ec163a4a26dc4bff6383e0e9050e7c8561e3404936f6ede
+dataset_id       : mart_ml@2888713472648101633
+snapshot_id      : 2888713472648101633
+sha256           : 54ebd4357f72b341af619cdd283a48ad1885030838f10f2d52f2400a796b52aa
 reference model  : e1_xgboost
-reference MAE    : 0.000151633151
+reference MAE    : 0.000189162707
 retrained model  : e1_xgboost
-retrained MAE    : 0.000151633151
+retrained MAE    : 0.000189162707
 relative delta   : 0.00000000%
 tolerance        : 1.00%
 result           : PASS

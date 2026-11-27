@@ -3,7 +3,7 @@
 - Owner: Dhea
 - Branch: `slot/c3-b-dhea`
 - Base: `c3-a-ok` (`c8e362b`)
-- Status: PASS (CP1/CP2/CP3) - live accepted challenger deferred
+- Status: PASS (CP1/CP2/CP3, T-20/T-21 rerun 2026-11-27) - live accepted challenger deferred
 - Date: 2026-11-25 (closed 2026-11-27)
 
 ## Status
@@ -22,7 +22,9 @@
   retrain (`0 2 * * 0`) and daily drift (`30 3 * * *`) schedules are active.
   Live positive promotion is deferred - the current champion already wins, so
   the accept/archive path is proven by `promotion_20261125T143430Z.json` and
-  T-21.
+  T-21. T-20/T-21 were rerun on 2026-11-27 (`T20.txt` delta 0%, `T21.json`
+  challenger v9 rejected) and the synthetic drift report
+  `drift-synthetic_20261127T040246Z.json` trips `trigger_required=true`.
 - E3: COMPLETE - pooled and per-symbol models trained on the same snapshot;
   pooled wins on test MAE and per-symbol inference differs by symbol.
 
@@ -41,6 +43,14 @@
   perlu rebuild image.
 - Grafana `BMIP - Drift` ter-provision (`drift.json`); panel PSI, Rolling MAE,
   dan latest rows menampilkan data `serving.drift_metrics`.
+- T-20/T-21 dijalankan ulang 2026-11-27: `evidence/ml/T20.txt` PASS (delta
+  0.00000000%) dan `evidence/ml/T21.json` PASS (challenger v9 ditolak, champion
+  v2 tetap).
+- Injeksi drift sintetis: `scripts/c3b_drift_synthetic.py` menulis
+  `evidence/ml/drift-synthetic_20261127T040246Z.json` (`trigger_required=true`,
+  PSI top-5 0.06 -> ~8, MAE 0.00024 -> 0.00052).
+- Format evidence CP1/CP2 dilengkapi: `feast-apply_20261126T165830Z.txt`,
+  `online-latency_20261126T165830Z.txt`, `feature-age_20261126T230427Z.png`.
 
 ## Yang sudah jalan
 
@@ -106,14 +116,21 @@ Feast scripts default to `127.0.0.1:5434`; the API container uses
 ## Gap tersisa
 
 - Live accepted challenger melalui MLflow: ditunda (defer). Champion saat ini
-  sudah model E1 market-only; challenger live (v7, v8) ditolak gate 5% MAE.
+  sudah model E1 market-only; challenger live (v7, v8, v9) ditolak gate 5% MAE.
   Jalur accept/archive tetap dibuktikan fixture
   `promotion_20261125T143430Z.json` dan T-21.
-- Injeksi drift sintetis eksplisit (workplan no.5) belum dibuat sebagai skrip;
-  trigger sudah dibuktikan dengan drift nyata pada snapshot lama
-  (`snapshot 3627445140691597595`).
-- Bukti penolakan prediksi saat feature age > 2 jam (`status=error`) belum
-  berupa evidence runner terpisah; logika ada di `src/bmip/ml/batch.py`.
+
+Tidak ada gap lain: injeksi drift sintetis sudah dibuat
+(`drift-synthetic_20261127T040246Z.json`) dan penolakan prediksi stale sudah
+terbukti (`predictions_20261118T093616Z.json`, `status=error`, age 120962 s >
+7200 s).
+
+## Serah terima ke Vio (C3-C)
+
+Vio melanjutkan dari branch `slot/c3-b-dhea` (tidak di-merge ke `dev`):
+`git fetch origin slot/c3-b-dhea` lalu `git checkout slot/c3-b-dhea`. Item
+live-accept di atas adalah defer yang diketahui; C3-C sendiri bergantung pada
+W1-A, W2-B, dan W2-C.
 
 ## Bukti
 
@@ -128,8 +145,15 @@ Feast scripts default to `127.0.0.1:5434`; the API container uses
 - `evidence/experiments/E3_vs_pooled.md`
 - `evidence/experiments/E1_vs_E2.md`
 - `evidence/ml/feature-age_20261126T230427Z.json`
+- `evidence/ml/feature-age_20261126T230427Z.png`
+- `evidence/ml/feast-apply_20261126T165830Z.txt`
+- `evidence/ml/online-latency_20261126T165830Z.txt`
 - `evidence/ml/drift_20261126T222406Z.json`
+- `evidence/ml/drift-synthetic_20261127T040246Z.json`
 - `evidence/ml/train_20261126T223855Z.json`
+- `evidence/ml/T20.txt`
+- `evidence/ml/T21.json`
+- `evidence/ml/predictions_20261118T093616Z.json`
 - `evidence/ml/deployments-schedules_20261127T055745Z.png`
 - `evidence/ml/retrain-schedule_20261127T060822Z.png`
 - `evidence/ml/drift-trigger_20261127T061011Z.png`

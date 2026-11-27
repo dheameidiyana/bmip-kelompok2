@@ -256,7 +256,8 @@ Python 3.11.9, Traefik 3.7.18, Toxiproxy 2.12.0, Trivy 0.76.2.
 ### C3-B
 
 Environment: branch `slot/c3-b-dhea`, base `c3-a-ok` (`c8e362b`). Feast 0.68.0,
-PostgreSQL online store, MLflow 3.18.0, Prefect 3.9.x.
+PostgreSQL online store, MLflow 3.18.0, Prefect 3.9.x. T-20/T-21 rerun and
+synthetic drift evidence added 2026-11-27.
 
 | ID | Area | File | Status | Catatan |
 | --- | --- | --- | --- | --- |
@@ -275,3 +276,10 @@ PostgreSQL online store, MLflow 3.18.0, Prefect 3.9.x.
 | E3 | ml | `ml/inference-compare_20261125T143428Z.csv` | PASS | latest per-symbol inference comparison |
 | E3 | ml | `ml/inference-compare_20261125T143428Z.png` | PASS | inference bar chart |
 | SUM | experiments | `experiments/E3_vs_pooled.md` | PASS | pooled vs per-symbol table |
+| CP1 | ml | `ml/feast-apply_20261126T165830Z.txt` | PASS | feast apply + materialize; online read 35 ms |
+| CP1 | ml | `ml/online-latency_20261126T165830Z.txt` | PASS | online latency 35.06 ms < 50 ms |
+| CP2 | ml | `ml/feature-age_20261126T230427Z.png` | PASS | 5 symbols, 3600 s < 7200 s |
+| CP3 | ml | `ml/T20.txt` | PASS | rerun 2026-11-27; delta 0.00000000% |
+| CP3 | ml | `ml/T21.json` | PASS | rerun 2026-11-27; challenger v9 rejected, champion v2 |
+| CP3 | ml | `ml/drift-synthetic_20261127T040246Z.json` | PASS | synthetic drift; trigger_required true; PSI ~8 |
+| BATCH | ml | `ml/predictions_20261118T093616Z.json` | PASS | stale age 120962 s > 7200 s rejected (`status=error`) |
