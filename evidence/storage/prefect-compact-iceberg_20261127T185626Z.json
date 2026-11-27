@@ -1,0 +1,152 @@
+{
+  "id": "CP3-prefect-compact-iceberg",
+  "timestamp": "2026-11-27T18:56:26.681358+00:00",
+  "commit": "8d1f7c3",
+  "command": "python scripts/c3c_prefect.py",
+  "result": "PASS",
+  "owner": "vio",
+  "deployment": "compact_iceberg in prefect.yaml (cron 0 1 * * *)",
+  "parameters": {
+    "compact": true,
+    "expire": true,
+    "orphans": false,
+    "apply_retention": [],
+    "tables": [
+      "gold.mart_market",
+      "gold.mart_ml",
+      "gold.mart_sentiment"
+    ]
+  },
+  "flow_result": {
+    "tables": {
+      "gold.mart_market": {
+        "status": "ok",
+        "retention_plan": {
+          "cutoff": "2026-08-29",
+          "old_partitions": 0,
+          "old_rows": 0,
+          "old_dates": []
+        },
+        "compaction": {
+          "before": {
+            "files": 1,
+            "bytes": 6589,
+            "avg_bytes": 6589.0,
+            "snapshots": 1
+          },
+          "after": {
+            "files": 1,
+            "bytes": 6589,
+            "avg_bytes": 6589.0,
+            "snapshots": 1
+          },
+          "candidates": 0,
+          "rewritten": [],
+          "skipped": "already at one file per partition"
+        },
+        "snapshots": {
+          "cutoff": "2026-11-20T18:55:23.388264+00:00",
+          "before": 1,
+          "after": 1,
+          "error": null
+        },
+        "final": {
+          "files": 1,
+          "bytes": 6589,
+          "avg_bytes": 6589.0,
+          "snapshots": 1
+        }
+      },
+      "gold.mart_ml": {
+        "status": "ok",
+        "retention_plan": {
+          "cutoff": "2026-08-29",
+          "old_partitions": 0,
+          "old_rows": 0,
+          "old_dates": []
+        },
+        "compaction": {
+          "before": {
+            "files": 2,
+            "bytes": 19107,
+            "avg_bytes": 9553.5,
+            "snapshots": 1
+          },
+          "after": {
+            "files": 2,
+            "bytes": 19107,
+            "avg_bytes": 9553.5,
+            "snapshots": 1
+          },
+          "candidates": 0,
+          "rewritten": [],
+          "skipped": "already at one file per partition"
+        },
+        "snapshots": {
+          "cutoff": "2026-11-20T18:55:46.796039+00:00",
+          "before": 1,
+          "after": 1,
+          "error": null
+        },
+        "final": {
+          "files": 2,
+          "bytes": 19107,
+          "avg_bytes": 9553.5,
+          "snapshots": 1
+        }
+      },
+      "gold.mart_sentiment": {
+        "status": "ok",
+        "retention_plan": {
+          "cutoff": "2026-08-29",
+          "old_partitions": 0,
+          "old_rows": 0,
+          "old_dates": []
+        },
+        "compaction": {
+          "before": {
+            "files": 1,
+            "bytes": 6414,
+            "avg_bytes": 6414.0,
+            "snapshots": 1
+          },
+          "after": {
+            "files": 1,
+            "bytes": 6414,
+            "avg_bytes": 6414.0,
+            "snapshots": 1
+          },
+          "candidates": 0,
+          "rewritten": [],
+          "skipped": "already at one file per partition"
+        },
+        "snapshots": {
+          "cutoff": "2026-11-20T18:55:47.861835+00:00",
+          "before": 1,
+          "after": 1,
+          "error": null
+        },
+        "final": {
+          "files": 1,
+          "bytes": 6414,
+          "avg_bytes": 6414.0,
+          "snapshots": 1
+        }
+      }
+    },
+    "fixture_retention": {
+      "cutoff": "2026-11-13",
+      "before_rows": 3,
+      "after_rows": 2,
+      "old_partitions": 1,
+      "old_dates": [
+        "2026-10-28"
+      ],
+      "table": "silver.c3c_retention_probe",
+      "expected_after": 2,
+      "result": "PASS"
+    },
+    "started_at": "2026-11-27T18:54:49.210646+00:00",
+    "finished_at": "2026-11-27T18:56:25.434134+00:00"
+  }
+}

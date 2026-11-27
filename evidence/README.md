@@ -296,15 +296,19 @@ Streamlit 1.67.0, dbt 1.12.7.
 | CP1 | deploy | `deploy/compose-4node.yml` | PASS | `docker compose config` 4 node |
 | CP1 | deploy | `deploy/nodes_20261127T164629Z.json` | PASS | placement + four node configs |
 | CP1 | deploy | `deploy/two-node-live_20261127T165614Z.json` | PASS | N1+N2 services live; N1 host-port proxy gap recorded |
-| CP1 | security | `security/tailscale-acl_20261127T092149Z.json` | PASS offline | live test not run: `NeedsLogin` |
+| CP1 | security | `security/tailscale-acl_20261127T092149Z.json` | PASS offline | live test deferred to C3-D joint work: `NeedsLogin` |
 | CP1 | logs | `observability/loki.yml`, `observability/promtail.yml` | PARTIAL | config ready; image pull from Docker Hub timed out |
+| CP1 | e2e | `e2e/SMOKE-W1A_20261127T1833_8d1f7c3.txt` | PASS | health + replay + bronze + ledger + idempotence |
 | CP2 | catalog | `catalog/migration_20261127T121956Z.json` | PASS | pg_trgm + tsvector + governance columns |
 | CP2 | catalog | `catalog/governance_20261127T123615Z.json` | PASS | register/change/deprecate/delete + audit |
 | CP2 | catalog | `catalog/metadata-test_20261127T123931Z.txt` | PASS | 11 datasets, serving parity |
 | CP2 | catalog | `catalog/search_20261127T124116Z.txt` | PASS | 5 search queries, 11 datasets |
 | CP2 | catalog | `catalog/views_20261127T124116Z.json` | PASS | five views, quality pass |
 | CP3 | deploy | `deploy/docs-hosting_20261127T132119Z.json` | PASS | nginx 8089 + dbt/GX HTTP 200 |
+| CP3 | deploy | `deploy/docs-hosting_20261127T185821Z.json` | PASS | 9 keys uploaded to `s3://docs/` |
 | CP3 | storage | `storage/compaction_20261127T155958Z.json`, `storage/retention_20261127T155958Z.txt` | PASS | 3 gold tables, fixture retention 3 -> 2 |
+| CP3 | storage | `storage/orphans_20261127T195321Z.json`, `storage/orphans_20261127T195612Z.json` | PASS | 103 + 3 orphan files removed; 0 remaining |
+| CP3 | storage | `storage/prefect-compact-iceberg_20261127T185626Z.json` | PASS | flow Completed with compact + expiry + fixture |
 | DOC | docs | `../docs/data-dictionary.md` | PASS | 11 dataset, live schemas |
 
 Loki/Promtail runtime evidence is missing because `grafana/loki:3.3.2` and
@@ -312,5 +316,7 @@ Loki/Promtail runtime evidence is missing because `grafana/loki:3.3.2` and
 committed; C3-D must pull the images and run `make c3c-loki`. Do not claim a
 Loki screenshot before that.
 
-The live Tailscale ACL test remains **not run** because `tailscale status` was
-`NeedsLogin`; only the offline allow/deny matrix is evidenced.
+The live Tailscale ACL test is deferred to C3-D as joint work with Vio because
+`tailscale status` was `NeedsLogin`; only the offline allow/deny matrix is
+evidenced. PNG screenshots for catalog/docs are also missing; JSON/text
+evidence is complete.

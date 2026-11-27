@@ -1,0 +1,52 @@
+{
+  "id": "CP3-docs-hosting",
+  "timestamp": "2026-11-27T18:58:21.287155+00:00",
+  "commit": "8d1f7c3",
+  "command": "python scripts/c3c_docs.py --serve --upload",
+  "result": "PASS",
+  "owner": "vio",
+  "datasets": 11,
+  "dbt": {
+    "returncode": 0,
+    "target": "dbt/target",
+    "copied": [
+      "index.html",
+      "manifest.json",
+      "catalog.json",
+      "graph_summary.json"
+    ],
+    "stderr_tail": "skipped"
+  },
+  "uploaded": [
+    "s3://docs/.gitkeep",
+    "s3://docs/README.md",
+    "s3://docs/data-dictionary.md",
+    "s3://docs/dbt/catalog.json",
+    "s3://docs/dbt/graph_summary.json",
+    "s3://docs/dbt/index.html",
+    "s3://docs/dbt/manifest.json",
+    "s3://docs/gx/index.html",
+    "s3://docs/index.html"
+  ],
+  "serve_error": "",
+  "http": {
+    "/": {
+      "status": 0,
+      "ok": false,
+      "error": "[Errno 111] Connection refused"
+    },
+    "/gx/": {
+      "status": 0,
+      "ok": false,
+      "error": "[Errno 111] Connection refused"
+    },
+    "/dbt/": {
+      "status": 0,
+      "ok": false,
+      "error": "[Errno 111] Connection refused"
+    }
+  },
+  "screenshot": null,
+  "data_dictionary": "docs/data-dictionary.md",
+  "site": "docs/_site"
+}

@@ -1,0 +1,167 @@
+{
+  "id": "CP3-orphan-removal",
+  "timestamp": "2026-11-27T19:53:21.698570+00:00",
+  "commit": "8d1f7c3",
+  "command": "python scripts/c3c_orphans.py",
+  "result": "PASS",
+  "owner": "vio",
+  "criteria": "S3 objects under <table>/data/ not referenced by any manifest, older than 24h",
+  "tables": {
+    "gold.mart_market": {
+      "bucket": "lakehouse",
+      "prefix": "warehouse/gold.db/mart_market",
+      "checked": 29,
+      "candidates": 28,
+      "deleted": 28,
+      "applied": true,
+      "sample": [
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-04f4f080-9bb6-4289-b01f-a9459528a139.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-0864a37a-eaa4-401f-96d2-7a7c8183a5f9.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-0a9facac-8f42-4894-be6d-a7010a041a53.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-17ff9c29-878c-42e4-b846-728c8fc1a9e6.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-22f8e8c8-473d-4fe1-aa9f-475337e75460.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-25916e32-064d-4812-9f54-b04dd132fec6.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-31adf1fb-5e50-48c8-b753-edf47aed3583.parquet",
+          "bytes": 6377
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-378925ed-d372-462f-b121-955588cb5f22.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-47543fb5-ca6d-4db6-9635-c562810f8d17.parquet",
+          "bytes": 6589
+        },
+        {
+          "key": "warehouse/gold.db/mart_market/data/event_date=2026-11-10/00000-0-4ca89ca4-5e33-47ac-bf5e-ae01d688d9df.parquet",
+          "bytes": 6589
+        }
+      ],
+      "limit": 50,
+      "remaining_candidates": 0
+    },
+    "gold.mart_ml": {
+      "bucket": "lakehouse",
+      "prefix": "warehouse/gold.db/mart_ml",
+      "checked": 55,
+      "candidates": 53,
+      "deleted": 50,
+      "applied": true,
+      "sample": [
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-07eaad97-10f2-4946-bf46-982bf098b9ad.parquet",
+          "bytes": 9998
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-098134a5-587c-4571-a718-874dc1108658.parquet",
+          "bytes": 9241
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-0fd3d6ce-3143-4c37-9462-ad379e71d2e6.parquet",
+          "bytes": 9241
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-1885e4a4-18d6-435b-93bd-f0a2c2953622.parquet",
+          "bytes": 9241
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-19e34e23-69a1-4e83-b71f-a88cfdf52ae7.parquet",
+          "bytes": 9241
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-2d2dcd86-3408-4492-bc05-5757f3cf3b36.parquet",
+          "bytes": 9781
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-33f86897-6ddf-4c45-a284-538bb3efae7c.parquet",
+          "bytes": 9241
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-387e57c6-23b9-497b-8c6a-d96df974e2de.parquet",
+          "bytes": 9998
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-390c33ad-5c11-4db8-8bfa-f70db9fb35a5.parquet",
+          "bytes": 9998
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-10/00000-0-433303fb-84ad-4c2b-8e17-ba7b8126956e.parquet",
+          "bytes": 9241
+        }
+      ],
+      "limit": 50,
+      "remaining_candidates": 3
+    },
+    "gold.mart_sentiment": {
+      "bucket": "lakehouse",
+      "prefix": "warehouse/gold.db/mart_sentiment",
+      "checked": 26,
+      "candidates": 25,
+      "deleted": 25,
+      "applied": true,
+      "sample": [
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-0e58e143-e0a9-4fbd-a6f4-4e99db165f88.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-0f0ea36e-1b1b-4f3f-a4a8-4690ce2a786e.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-1bddc4bd-c890-43ff-894a-f87f0a71f274.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-2721d192-d3b8-4158-abf7-38d1bbc78034.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-2fabaefa-4064-4ebb-af07-e907d3468c05.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-37389589-5e5a-43db-b3db-f2143fe89d31.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-5531ac0a-35af-4569-8905-13cb903988ae.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-55d66c81-ca18-47d1-ae74-596241653721.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-62461696-ff24-452d-be51-08e645eec530.parquet",
+          "bytes": 6414
+        },
+        {
+          "key": "warehouse/gold.db/mart_sentiment/data/event_date=2026-11-10/00000-0-8653edd8-10a5-474d-8920-3378945db976.parquet",
+          "bytes": 6414
+        }
+      ],
+      "limit": 50,
+      "remaining_candidates": 0
+    }
+  }
+}

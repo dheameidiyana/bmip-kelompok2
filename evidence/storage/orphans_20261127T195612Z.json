@@ -1,0 +1,57 @@
+{
+  "id": "CP3-orphan-removal",
+  "timestamp": "2026-11-27T19:56:12.964932+00:00",
+  "commit": "8d1f7c3",
+  "command": "python scripts/c3c_orphans.py",
+  "result": "PASS",
+  "owner": "vio",
+  "criteria": "S3 objects under <table>/data/ not referenced by any manifest, older than 24h",
+  "tables": {
+    "gold.mart_market": {
+      "bucket": "lakehouse",
+      "prefix": "warehouse/gold.db/mart_market",
+      "checked": 1,
+      "candidates": 0,
+      "deleted": 0,
+      "applied": true,
+      "sample": [],
+      "limit": 50,
+      "remaining_candidates": 0
+    },
+    "gold.mart_ml": {
+      "bucket": "lakehouse",
+      "prefix": "warehouse/gold.db/mart_ml",
+      "checked": 5,
+      "candidates": 3,
+      "deleted": 3,
+      "applied": true,
+      "sample": [
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-11/00000-0-eecf3a6e-b6cf-448d-82e0-e884e2245f9a.parquet",
+          "bytes": 9109
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-11/00000-0-f23aecf9-186e-42a1-af79-8115b2a93bca.parquet",
+          "bytes": 8360
+        },
+        {
+          "key": "warehouse/gold.db/mart_ml/data/event_date=2026-11-11/00000-0-f714052d-17ce-43e7-bad2-65892348a2ec.parquet",
+          "bytes": 8360
+        }
+      ],
+      "limit": 50,
+      "remaining_candidates": 0
+    },
+    "gold.mart_sentiment": {
+      "bucket": "lakehouse",
+      "prefix": "warehouse/gold.db/mart_sentiment",
+      "checked": 1,
+      "candidates": 0,
+      "deleted": 0,
+      "applied": true,
+      "sample": [],
+      "limit": 50,
+      "remaining_candidates": 0
+    }
+  }
+}

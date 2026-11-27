@@ -98,15 +98,20 @@ updated before the final C3-D freeze.
 | --- | --- | --- |
 | CP1 nodes | [`../deploy/compose-3node.yml`](../deploy/compose-3node.yml), [`../deploy/compose-4node.yml`](../deploy/compose-4node.yml) | PASS |
 | CP1 live | [`../deploy/two-node-live_20261127T165614Z.json`](../deploy/two-node-live_20261127T165614Z.json) | PASS for N1+N2 services on one host |
-| CP1 ACL | [`../security/tailscale-acl_20261127T092149Z.json`](../security/tailscale-acl_20261127T092149Z.json) | PASS offline; live test NOT RUN (`NeedsLogin`) |
+| CP1 e2e | [`../e2e/SMOKE-W1A_20261127T1833_8d1f7c3.txt`](../e2e/SMOKE-W1A_20261127T1833_8d1f7c3.txt) | PASS |
+| CP1 ACL | [`../security/tailscale-acl_20261127T092149Z.json`](../security/tailscale-acl_20261127T092149Z.json) | PASS offline; live test deferred to C3-D joint work (`NeedsLogin`) |
 | CP1 logs | `deploy/observability/loki.yml`, `deploy/observability/promtail.yml` | PARTIAL: Docker Hub image pull timed out |
 | CP2 catalog | [`../catalog/migration_20261127T121956Z.json`](../catalog/migration_20261127T121956Z.json) | PASS |
 | CP2 governance | [`../catalog/governance_20261127T123615Z.json`](../catalog/governance_20261127T123615Z.json), [`../catalog/metadata-test_20261127T123931Z.txt`](../catalog/metadata-test_20261127T123931Z.txt) | PASS |
 | CP2 views | [`../catalog/search_20261127T124116Z.txt`](../catalog/search_20261127T124116Z.txt), [`../catalog/views_20261127T124116Z.json`](../catalog/views_20261127T124116Z.json) | PASS |
 | CP3 docs | [`../deploy/docs-hosting_20261127T132119Z.json`](../deploy/docs-hosting_20261127T132119Z.json) | PASS |
+| CP3 docs S3 | [`../deploy/docs-hosting_20261127T185821Z.json`](../deploy/docs-hosting_20261127T185821Z.json) | PASS; 9 keys uploaded |
 | CP3 lifecycle | [`../storage/compaction_20261127T155958Z.json`](../storage/compaction_20261127T155958Z.json), [`../storage/retention_20261127T155958Z.txt`](../storage/retention_20261127T155958Z.txt) | PASS; compaction no-op (one file per partition) |
-| F-17 note | ACL live check | PARTIAL until C3-D logs in to Tailscale |
+| CP3 orphans | [`../storage/orphans_20261127T195321Z.json`](../storage/orphans_20261127T195321Z.json), [`../storage/orphans_20261127T195612Z.json`](../storage/orphans_20261127T195612Z.json) | PASS; 106 files deleted, 0 left |
+| CP3 prefect | [`../storage/prefect-compact-iceberg_20261127T185626Z.json`](../storage/prefect-compact-iceberg_20261127T185626Z.json) | PASS; flow Completed |
+| F-17 note | ACL live check | PARTIAL until C3-D logs in to Tailscale with Vio |
 | F-18 note | catalog governance | PASS for register/change/deprecate/delete + metadata test |
 
 C3-D must add the Loki runtime evidence after pulling the images; until then this
-section does not claim it. The live ACL test also remains C3-D work.
+section does not claim it. The live ACL test is joint C3-D/C3-C work because the
+ACL context sits with Vio. PNG screenshots remain missing.

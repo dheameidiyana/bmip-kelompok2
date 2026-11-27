@@ -19,6 +19,7 @@ def lifecycle_task(
     orphans: bool,
     apply_retention: list[str],
     as_of: str | None = None,
+    tables: list[str] | None = None,
 ) -> dict[str, Any]:
     from datetime import date
 
@@ -30,6 +31,7 @@ def lifecycle_task(
         orphans=orphans,
         retention_apply=set(apply_retention),
         as_of=date.fromisoformat(as_of) if as_of else None,
+        tables=tables,
     )
 
 
@@ -40,6 +42,7 @@ def compact_iceberg_flow(
     orphans: bool = True,
     apply_retention: list[str] | None = None,
     as_of: str | None = None,
+    tables: list[str] | None = None,
 ) -> dict[str, Any]:
     """Daily 01:00 UTC compaction, 7-day snapshot expiry, and retention.
 
@@ -54,4 +57,5 @@ def compact_iceberg_flow(
         orphans=orphans,
         apply_retention=apply_retention or [],
         as_of=as_of,
+        tables=tables,
     )

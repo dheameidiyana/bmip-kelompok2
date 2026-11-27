@@ -165,7 +165,12 @@ def _split_location(location: str) -> tuple[str, str]:
 
 
 def remove_orphans(
-    table, settings: Settings, *, apply: bool = False, min_age_hours: int = ORPHAN_AGE_HOURS
+    table,
+    settings: Settings,
+    *,
+    apply: bool = False,
+    min_age_hours: int = ORPHAN_AGE_HOURS,
+    limit: int = 50,
 ) -> dict[str, Any]:
     referenced = {
         row["file_path"]
@@ -191,7 +196,7 @@ def remove_orphans(
             orphans.append({"key": key, "bytes": item.get("Size", 0)})
     deleted = 0
     if apply:
-        for orphan in orphans:
+        for orphan in orphans[:limit]:
             client.delete_object(Bucket=bucket, Key=orphan["key"])
             deleted += 1
     return {
@@ -202,6 +207,8 @@ def remove_orphans(
         "deleted": deleted,
         "applied": apply,
         "sample": orphans[:10],
+        "limit": limit,
+        "remaining_candidates": max(0, len(orphans) - deleted),
     }
 
 
